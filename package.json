@@ -10,6 +10,11 @@
     "dev:webhook": "tsx src/webhook/event-server.ts",
     "dev:ws": "tsx src/webhook/ws-client.ts",
     "send:bot": "tsx src/webhook/bot.ts",
+    "notify:feishu": "tsx scripts/notify.ts",
+    "push": "tsx scripts/push.ts",
+    "watch:chat": "tsx scripts/watch-chat.ts",
+    "setup": "bash scripts/setup-all.sh",
+    "setup:hooks": "bash scripts/install-hooks.sh",
     "browser:feishu": "tsx src/browser/automation.ts",
     "mcp:login": "npx -y @larksuiteoapi/lark-mcp login"
   },

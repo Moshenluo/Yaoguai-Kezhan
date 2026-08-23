@@ -24,6 +24,9 @@ export const config = {
   encryptKey: optional('FEISHU_ENCRYPT_KEY'),
   verificationToken: optional('FEISHU_VERIFICATION_TOKEN'),
 
+  defaultChatId: optional('FEISHU_DEFAULT_CHAT_ID', 'oc_415dacf962ac4276abfdb7b6839ee9a6'),
+  pollIntervalMs: Number(optional('FEISHU_POLL_INTERVAL_SEC', '60')) * 1000,
+
   feishuWebUrl: optional('FEISHU_WEB_URL', 'https://www.feishu.cn/next/messenger/'),
   playwrightHeadless: optional('PLAYWRIGHT_HEADLESS', 'false') === 'true',
   playwrightUserDataDir: optional('PLAYWRIGHT_USER_DATA_DIR', './.playwright/feishu-profile'),

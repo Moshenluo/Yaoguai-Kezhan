@@ -3,6 +3,7 @@ dist/
 .env
 .env.local
 .cursor/mcp.json
+.feishu/
 *.log
 .playwright/
 playwright-report/

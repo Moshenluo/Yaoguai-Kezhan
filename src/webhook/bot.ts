@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import { config } from '../config.js';
+import { notifyFeishu } from '../notify/feishu.js';
 
 interface BotMessage {
   msg_type: 'text' | 'post' | 'interactive';
@@ -50,8 +51,8 @@ export async function sendBotText(text: string) {
 /** CLI 入口: npm run send:bot -- "消息内容" */
 async function main() {
   const text = process.argv[2] ?? '你好，来自妖怪客栈 Webhook 机器人的测试消息 🏮';
-  const result = await sendBotText(text);
-  console.log('发送成功:', result);
+  const result = await notifyFeishu(text);
+  console.log(`发送成功 (${result.method})`);
 }
 
 const isDirectRun = process.argv[1]?.includes('bot');

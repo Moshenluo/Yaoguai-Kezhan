@@ -34,7 +34,32 @@ git push -u origin main
 ### 队友克隆
 
 ```bash
-git clone https://origin.cursor.com/<团队名>/yaoguai-kezhan.git
+git clone https://origin.cursor.com/junyubi227/Yaoguai-Kezhan.git
+```
+
+---
+
+## 自动化（读取 + 推送）
+
+一键配置（WSL）：
+
+```bash
+npm run setup
+```
+
+| 命令 | 功能 |
+|------|------|
+| `npm run push` | 推送代码到 Cursor + 自动通知飞书群 |
+| `npm run watch:chat` | 每 60 秒轮询群消息，保存到 `.feishu/messages.jsonl` |
+| `npm run dev:ws` | 实时监听群消息（长连接） |
+| `npm run notify:feishu -- "消息"` | 手动推送到飞书群 |
+
+推送策略：Webhook 优先，失败自动回退**应用机器人** `cursor`。
+
+配置 `git push` 后自动通知飞书：
+
+```bash
+npm run setup:hooks   # WSL 中运行
 ```
 
 ---

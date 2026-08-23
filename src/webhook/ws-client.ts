@@ -4,8 +4,19 @@
  * 启动后，在飞书开放平台 → 事件与回调 → 选择「使用长连接接收事件」
  */
 import * as lark from '@larksuiteoapi/node-sdk';
+import fs from 'node:fs';
+import path from 'node:path';
 import { requireAppCredentials } from '../config.js';
 import { sendTextMessage } from '../api/client.js';
+
+const LOG_DIR = '.feishu';
+const LOG_FILE = path.join(LOG_DIR, 'messages.jsonl');
+
+function logMessage(chatId: string, text: string) {
+  fs.mkdirSync(LOG_DIR, { recursive: true });
+  const entry = { time: new Date().toISOString(), chat_id: chatId, text, source: 'ws' };
+  fs.appendFileSync(LOG_FILE, JSON.stringify(entry) + '\n');
+}
 
 const { appId, appSecret } = requireAppCredentials();
 
@@ -22,6 +33,7 @@ wsClient.start({
       const text = content.text ?? '';
 
       console.log(`[长连接] 收到消息: ${text} (chat_id: ${chatId})`);
+      logMessage(chatId, text);
 
       if (text.includes('ping')) {
         await client.im.v1.message.create({
