@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+.cursor/mcp.json
+*.log
+.playwright/
+playwright-report/
+test-results/
+.DS_Store
+Thumbs.db

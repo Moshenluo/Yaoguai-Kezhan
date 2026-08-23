@@ -1,0 +1,29 @@
+{
+  "name": "yaoguai-kezhan",
+  "version": "1.0.0",
+  "description": "妖怪客栈 - 飞书全渠道集成（MCP / Open API / Webhook / 浏览器自动化）",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev:api": "tsx src/api/demo.ts",
+    "read:chat": "tsx src/api/read-chat.ts",
+    "dev:webhook": "tsx src/webhook/event-server.ts",
+    "dev:ws": "tsx src/webhook/ws-client.ts",
+    "send:bot": "tsx src/webhook/bot.ts",
+    "browser:feishu": "tsx src/browser/automation.ts",
+    "mcp:login": "npx -y @larksuiteoapi/lark-mcp login"
+  },
+  "dependencies": {
+    "@larksuiteoapi/node-sdk": "^1.54.0",
+    "dotenv": "^16.4.7",
+    "playwright": "^1.51.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=18.14.1"
+  }
+}
