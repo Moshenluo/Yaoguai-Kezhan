@@ -7,8 +7,8 @@
 创建后填写：
 
 ```
-https://origin.cursor.com/<你的团队名>/yaoguai-kezhan.git
-网页：https://cursor.com/codebase/<你的团队名>/yaoguai-kezhan
+https://origin.cursor.com/junyubi227/Yaoguai-Kezhan.git
+网页：https://cursor.com/codebase/junyubi227/Yaoguai-Kezhan
 ```
 
 ## 新人加入（5 分钟）
@@ -16,7 +16,7 @@ https://origin.cursor.com/<你的团队名>/yaoguai-kezhan.git
 ### 1. 克隆代码
 
 ```bash
-git clone https://origin.cursor.com/<团队名>/yaoguai-kezhan.git
+git clone https://origin.cursor.com/junyubi227/Yaoguai-Kezhan.git
 cd yaoguai-kezhan
 npm install
 ```
