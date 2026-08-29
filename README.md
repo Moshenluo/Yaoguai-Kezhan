@@ -230,3 +230,9 @@ Cursor 已内置 `cursor-ide-browser` MCP，也可以直接让我操作飞书网
 **API 报权限不足？** 检查应用权限是否开通且已发布审批。
 
 **国际版 Lark？** 在 `.env` 设置 `FEISHU_DOMAIN=https://open.larksuite.com`，并在 `mcp.json` 追加 `"--domain", "https://open.larksuite.com"`。
+
+---
+
+## 协作者
+
+- kyl（本机已接入 Origin 同步，详见 `docs/MY-SETUP.md`）
