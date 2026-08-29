@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:../db/custom.db"
+}
+
+// 玩家云存档
+model PlayerSave {
+  id        String   @id @default(uuid())
+  name      String   @default("客栈掌柜")
+  data      String // GameSave JSON
+  level     Int      @default(1) // 快速索引字段
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 运营数据事件（抖音小游戏数据看板 · 飞书联动雏形）
+model TelemetryEvent {
+  id        String   @id @default(uuid())
+  playerId  String?
+  kind      String // save / night_start / battle_end / capture / ad_view / recruit
+  payload   String // JSON
+  createdAt DateTime @default(now())
+}

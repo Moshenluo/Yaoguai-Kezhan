@@ -13,6 +13,22 @@
 
 ---
 
+## 游戏（`game/`）
+
+Web 游戏本体（白天经营 + 夜晚塔防）位于 [`game/`](game/)：Next.js 16 + TypeScript + Tailwind + Prisma + Zustand。
+
+```bash
+cd game
+cp .env.example .env          # DATABASE_URL=file:./db/custom.db
+bun install                   # 或 npm install
+bunx prisma generate && bunx prisma db push --accept-data-loss
+bun run dev                   # http://localhost:3000
+```
+
+文档与 QA 截图见 `game/docs/`（含 `worklog.md`、`qa/`）。
+
+---
+
 ## Cursor 托管仓库（代码同步）
 
 代码存放在 Cursor Origin，飞书负责文档和沟通。
@@ -230,3 +246,9 @@ Cursor 已内置 `cursor-ide-browser` MCP，也可以直接让我操作飞书网
 **API 报权限不足？** 检查应用权限是否开通且已发布审批。
 
 **国际版 Lark？** 在 `.env` 设置 `FEISHU_DOMAIN=https://open.larksuite.com`，并在 `mcp.json` 追加 `"--domain", "https://open.larksuite.com"`。
+
+---
+
+## 协作者
+
+- kyl（本机已接入 Origin 同步，详见 `docs/MY-SETUP.md`）

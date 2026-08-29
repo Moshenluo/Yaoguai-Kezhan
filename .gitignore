@@ -10,3 +10,11 @@ playwright-report/
 test-results/
 .DS_Store
 Thumbs.db
+
+# game (Next.js)
+game/node_modules/
+game/.next/
+game/db/*.db
+game/db/*.db-journal
+game/.env
+game/.env.local
