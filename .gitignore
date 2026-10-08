@@ -25,3 +25,4 @@ game/.next.bak-*/
 game/src/game/*.bak.*
 软著申请/
 pv/
+__pycache__/
