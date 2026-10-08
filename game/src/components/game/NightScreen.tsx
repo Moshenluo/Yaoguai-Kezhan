@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ChevronLeft, Pause, Play } from 'lucide-react'
 import { BattleEngine, type LineupEntry } from '@/game/engine'
 import type { BattleEnemy, BattleResult } from '@/game/types'
 import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, PITY_ATTEMPTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
@@ -25,8 +24,16 @@ import { AdDialog } from './AdDialog'
 import { BattleField } from './BattleField'
 import { CaptureSuccessDialog } from './CaptureSuccessDialog'
 import { LineupBar } from './LineupBar'
-import { AnimNumber, HpBar, YaoAvatar } from './shared'
+import { AnimNumber, ConfigIcon, GemIcon, GoldIcon, HpBar, YaoAvatar } from './shared'
 import { cn } from '@/lib/utils'
+
+/** 夜战 HUD 漆木按钮（与白天 ui-wood 同调） */
+const HUD_BTN =
+  'flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#FFE9B8]/18 bg-black/30 text-[#FFE9B8] transition active:scale-95 disabled:opacity-40'
+
+/** 夜战信息芯片（墨色 / 旧金描边） */
+const HUD_CHIP =
+  'shrink-0 rounded-full border border-[#E8B84B]/35 bg-black/35 px-2 py-1 text-[10px] font-bold tabular-nums text-[#FFE9B8]'
 
 // ============ 夜晚塔防 · 夜战主容器 ============
 // 状态机：prep（布阵倒计时+LineupBar）→ fighting（实时渲染+捕捉流）
@@ -51,26 +58,27 @@ export function NightScreen({ level, onExit, bossNight, region = 1 }: NightScree
     return (
       <div
         className={cn(
-          'mx-auto flex h-dvh w-full max-w-[480px] flex-col items-center justify-center text-stone-300',
+          'mx-auto flex h-dvh w-full max-w-[480px] flex-col items-center justify-center text-[#E6DCC8]',
           bossNight
             ? 'bg-gradient-to-b from-[#1a060c] to-[#2e0a14]'
             : region === 2
-              ? 'bg-gradient-to-b from-[#14131c] to-[#2a2833]'
+              ? 'bg-gradient-to-b from-[#1a1816] to-[#2a2620]'
               : region === 3
                 ? 'bg-gradient-to-b from-[#1c0d08] to-[#33140b]'
-                : 'bg-gradient-to-b from-[#0b0a20] to-[#171338]'
+                : 'bg-gradient-to-b from-[#1C1915] to-[#2C241C]'
         )}
       >
-        <div className="animate-pulse text-4xl">{bossNight ? '👹' : region === 2 ? '🖌️' : region === 3 ? '🔥' : '🌙'}</div>
-        <p className="mt-3 text-sm tracking-[0.3em]">
-          {bossNight
-            ? '血月高悬，妖王压境…'
-            : region === 2
-              ? '谷雾如墨，笔锋藏杀…'
-              : region === 3
-                ? '地脉沸腾，火魅扑面…'
-                : '夜幕降临，妖影蠢动…'}
-        </p>
+        <div className="ui-wood rounded-2xl px-6 py-4 text-center">
+          <p className="font-display animate-pulse text-sm tracking-[0.3em] text-[#FFE9B8]">
+            {bossNight
+              ? '血月高悬，妖王压境…'
+              : region === 2
+                ? '谷雾如墨，笔锋藏杀…'
+                : region === 3
+                  ? '地脉沸腾，火魅扑面…'
+                  : '夜幕降临，妖影蠢动…'}
+          </p>
+        </div>
       </div>
     )
   }
@@ -456,13 +464,13 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
       next.add(e.uid)
       return next
     })
-    notify('📺 捕捉祝福生效：本次收服成功率 +20%！')
+    notify('捕捉祝福生效：本次收服成功率 +20%！')
   }, [captureTarget, notify])
 
   const handleRepairAdReward = useCallback(() => {
     sfx.play('claim')
     engine.repairInn()
-    notify('🏮 客栈修复完毕，血量已回满！')
+    notify('客栈修复完毕，血量已回满！')
   }, [engine, notify])
 
   // ---- 布阵 ----
@@ -471,7 +479,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
       const ownedEntry = useGameStore.getState().owned[yaoguaiId]
       if (!ownedEntry || ownedEntry.count <= 0) return
       if (slot >= maxSlots) {
-        notify(`🔒 站位 ${slot + 1} 尚未解锁`, `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`)
+        notify(`站位 ${slot + 1} 尚未解锁`, `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`)
         return
       }
       // 虚脱妖怪无法上阵（体力耗尽）
@@ -517,7 +525,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
     (slot: number) => {
       if (engine.state.phase !== 'prep') return
       if (slot >= maxSlots) {
-        notify(`🔒 站位 ${slot + 1} 尚未解锁`, `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`)
+        notify(`站位 ${slot + 1} 尚未解锁`, `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`)
         return
       }
       if (selectedYao) {
@@ -575,108 +583,39 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   const innHpPct = state.innMaxHp > 0 ? state.innHp / state.innMaxHp : 0
   const innLow = phase === 'fighting' && innHpPct < 0.4
   const showPauseOverlay = state.paused && !modalOpen && inBattle
+  const captureHint = captureTarget
+    ? wildTarget
+      ? '此妖桀骜不驯，今夜不肯归顺——放归可按击杀结算金币'
+      : legendTarget
+        ? `已挑战 ${attempts} 次 · 每次耗费 ${CAPTURE_GEM_COST.boss} 灵石${
+            attempts >= BOSS_NIGHT.pityAttempts
+              ? ' · 保底必成'
+              : ` · 每败+${Math.round(BOSS_NIGHT.attemptBonusRate * 100)}%（${BOSS_NIGHT.pityAttempts}次保底）`
+          }${captureTarget.protectedFlag ? ' · 残血保护中' : ''}`
+        : `已挑战 ${attempts} 次 · 每次耗费 ${CAPTURE_GEM_COST.normal} 灵石${
+            attempts >= PITY_ATTEMPTS
+              ? ' · 保底必成'
+              : attempts >= ATTEMPT_BONUS_STEP
+                ? ' · 累计加成+10%'
+                : ''
+          }${captureTarget.protectedFlag ? ' · 残血保护中' : ' · 血越低概率越高'}`
+    : ''
 
   return (
     <div
       className={cn(
-        'relative mx-auto flex h-dvh w-full max-w-[480px] touch-manipulation select-none flex-col overflow-hidden text-stone-100',
-        bossNight ? 'bg-[#170911]' : region === 2 ? 'bg-[#131318]' : region === 3 ? 'bg-[#1c0d08]' : 'bg-[#0b0a1e]'
+        'relative mx-auto h-dvh w-full max-w-[480px] touch-manipulation select-none overflow-hidden text-[#E6DCC8]',
+        bossNight ? 'bg-[#170911]' : region === 2 ? 'bg-[#131318]' : region === 3 ? 'bg-[#1c0d08]' : 'bg-[#1C1915]'
       )}
     >
-      {/* ======== 顶部战斗栏 ======== */}
-      <header
-        className={cn(
-          'z-40 flex items-center border-b px-2.5 py-2',
-          bossNight ? 'gap-1.5 border-rose-200/15 bg-[#2a0f16]/95' : 'gap-2 border-white/10 bg-[#151231]/95'
-        )}
-      >
-        <button
-          type="button"
-          aria-label="退出夜战"
-          onClick={() => setExitOpen(true)}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-stone-200 active:scale-95"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-
-        <div className="flex min-w-0 flex-1 items-center gap-1.5">
-          <span className="shrink-0 text-sm leading-none" role="img" aria-label="客栈生命">
-            ❤️
-          </span>
-          <HpBar
-            value={state.innHp}
-            max={state.innMaxHp}
-            height={8}
-            className="min-w-0 flex-1"
-            color={innHpPct > 0.4 ? 'bg-rose-400' : 'bg-rose-500'}
-          />
-          <span className="w-9 shrink-0 text-right text-[10px] font-bold tabular-nums text-rose-200">
-            {Math.round(innHpPct * 100)}%
-          </span>
-        </div>
-
-        {/* 妖王夜血色徽章 */}
-        {bossNight && (
-          <div className="shrink-0 rounded-full border border-rose-300/60 bg-gradient-to-r from-[#4a1120] to-[#7a1a2e] px-1.5 py-1 text-[10px] font-black text-rose-100 shadow-[0_0_10px_rgba(244,63,94,0.35)]">
-            👹妖王夜
-          </div>
-        )}
-
-        {/* 水墨幽谷墨色徽章（区域二）/ 沸火赤川火色徽章（区域三） */}
-        {!bossNight && region === 2 && (
-          <div className="shrink-0 rounded-full border border-stone-300/40 bg-gradient-to-r from-[#2f2d38] to-[#4a4658] px-1.5 py-1 text-[10px] font-black text-stone-100 shadow-[0_0_10px_rgba(148,158,180,0.28)]">
-            🖌️水墨幽谷
-          </div>
-        )}
-        {!bossNight && region === 3 && (
-          <div className="shrink-0 rounded-full border border-orange-300/50 bg-gradient-to-r from-[#5c1d10] to-[#a8402f] px-1.5 py-1 text-[10px] font-black text-orange-50 shadow-[0_0_10px_rgba(232,120,70,0.4)]">
-            🔥沸火赤川
-          </div>
-        )}
-
-        <div
-          className={cn(
-            'shrink-0 rounded-full border px-1.5 py-1 text-[10px] font-bold tabular-nums',
-            bossNight
-              ? 'border-rose-200/30 bg-rose-400/15 text-rose-100'
-              : 'border-amber-200/25 bg-amber-200/10 px-2 text-[11px] text-amber-100'
-          )}
-        >
-          {bossNight ? `妖王亲卫 ${state.wave}/${state.totalWaves}` : `第 ${state.wave}/${state.totalWaves} 波`}
-        </div>
-
-        <button
-          type="button"
-          aria-label={state.paused ? '继续战斗' : '暂停'}
-          disabled={!inBattle}
-          onClick={() => engine.togglePause()}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/5 text-stone-200 active:scale-95 disabled:opacity-40"
-        >
-          {state.paused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-        </button>
-        <button
-          type="button"
-          aria-label="切换战斗速度"
-          disabled={!inBattle}
-          onClick={() => engine.setSpeed(state.speed === 1 ? 2 : 1)}
-          className={cn(
-            'h-8 w-9 shrink-0 rounded-full border text-[11px] font-black tabular-nums active:scale-95 disabled:opacity-40',
-            state.speed > 1
-              ? 'border-amber-300/60 bg-amber-400/20 text-amber-200'
-              : 'border-white/15 bg-white/5 text-stone-200'
-          )}
-        >
-          {state.speed}x
-        </button>
-      </header>
-
-      {/* ======== 战斗场景 ======== */}
-      <main className="relative min-h-0 flex-1">
+      {/* ======== 全幅夜战场景（HUD 叠层，不裁切背景） ======== */}
+      <div className="absolute inset-0">
         <BattleField
           engine={engine}
           state={state}
           bossNight={bossNight}
           region={region}
+          selectedUid={captureTarget?.uid ?? null}
           onCapture={handleFieldCapture}
           onRelease={handleRelease}
           onSelectSlot={handleSelectSlot}
@@ -684,45 +623,59 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
           innLevel={innLevel}
         />
 
-        {/* 妖王降临横幅（妖王夜入场 3 秒） */}
+        {/* 顶部/底部柔光渐隐，衬托 HUD 可读性 */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 z-[15] h-24"
+          style={{
+            background: bossNight
+              ? 'linear-gradient(180deg, rgba(40,8,14,0.72) 0%, transparent 100%)'
+              : 'linear-gradient(180deg, rgba(28,25,21,0.65) 0%, transparent 100%)',
+          }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-[15] h-36"
+          style={{
+            background: bossNight
+              ? 'linear-gradient(0deg, rgba(40,8,14,0.78) 0%, transparent 100%)'
+              : 'linear-gradient(0deg, rgba(28,25,21,0.72) 0%, transparent 100%)',
+          }}
+        />
+
+        {/* 妖王降临横幅 */}
         <AnimatePresence>
           {bossBannerVisible && bossNight && bossDef && (
             <motion.div
               key="boss-banner"
               initial={{ y: -48, opacity: 0, x: '-50%' }}
-              animate={{ y: 10, opacity: 1, x: '-50%' }}
+              animate={{ y: 58, opacity: 1, x: '-50%' }}
               exit={{ y: -48, opacity: 0, x: '-50%' }}
               className="absolute left-1/2 top-0 z-30 w-[92%]"
             >
-              <div className="rounded-xl border border-rose-300/45 bg-gradient-to-r from-[#3a0f18]/95 via-[#57182a]/95 to-[#3a0f18]/95 px-3 py-2 text-center shadow-lg shadow-rose-950/50 backdrop-blur-sm">
-                <p className="text-sm font-black tracking-[0.2em] text-rose-100 drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]">
-                  👹 妖王降临 · {bossDef.name} 👹
+              <div className="rounded-xl border border-[#8B2E24]/70 bg-gradient-to-r from-[#3a0f18]/95 via-[#57182a]/95 to-[#3a0f18]/95 px-3 py-2 text-center shadow-lg shadow-rose-950/50 backdrop-blur-sm">
+                <p className="font-display text-sm font-black tracking-[0.2em] text-[#FFE9B8]">
+                  妖王降临 · {bossDef.name}
                 </p>
-                <p className="mt-0.5 text-[10px] text-rose-200/80">
-                  传说妖王亲卫压境 · 血战五波 · 胜利奖励翻倍
-                </p>
+                <p className="mt-0.5 text-[10px] text-[#E6DCC8]/85">传说亲卫压境 · 血战五波 · 胜利奖励翻倍</p>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* 移驻横幅（区域二/三入场 3 秒） */}
+        {/* 移驻横幅 */}
         <AnimatePresence>
           {regionBannerVisible && !bossNight && region === 2 && (
             <motion.div
               key="region-banner"
               initial={{ y: -48, opacity: 0, x: '-50%' }}
-              animate={{ y: 10, opacity: 1, x: '-50%' }}
+              animate={{ y: 58, opacity: 1, x: '-50%' }}
               exit={{ y: -48, opacity: 0, x: '-50%' }}
               className="absolute left-1/2 top-0 z-30 w-[92%]"
             >
-              <div className="rounded-xl border border-stone-300/35 bg-gradient-to-r from-[#26242e]/95 via-[#3d3a48]/95 to-[#26242e]/95 px-3 py-2 text-center shadow-lg shadow-stone-950/50 backdrop-blur-sm">
-                <p className="text-sm font-black tracking-[0.2em] text-stone-100 drop-shadow-[0_0_8px_rgba(203,213,225,0.4)]">
-                  🖌️ 水墨幽谷 · 水墨别院 🖌️
-                </p>
-                <p className="mt-0.5 text-[10px] text-stone-300/90">
-                  谷雾如墨 · 野妖更悍 · 通关奖励 +35%
-                </p>
+              <div className="rounded-xl border border-[#E8B84B]/35 bg-gradient-to-r from-[#2c2820]/95 via-[#3d3930]/95 to-[#2c2820]/95 px-3 py-2 text-center shadow-lg backdrop-blur-sm">
+                <p className="font-display text-sm font-black tracking-[0.2em] text-[#E6DCC8]">水墨幽谷 · 水墨别院</p>
+                <p className="mt-0.5 text-[10px] text-[#E6DCC8]/80">谷雾如墨 · 野妖更悍 · 通关奖励 +35%</p>
               </div>
             </motion.div>
           )}
@@ -730,17 +683,13 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
             <motion.div
               key="region3-banner"
               initial={{ y: -48, opacity: 0, x: '-50%' }}
-              animate={{ y: 10, opacity: 1, x: '-50%' }}
+              animate={{ y: 58, opacity: 1, x: '-50%' }}
               exit={{ y: -48, opacity: 0, x: '-50%' }}
               className="absolute left-1/2 top-0 z-30 w-[92%]"
             >
-              <div className="rounded-xl border border-orange-300/40 bg-gradient-to-r from-[#3a1108]/95 via-[#7c2d1f]/95 to-[#3a1108]/95 px-3 py-2 text-center shadow-lg shadow-orange-950/50 backdrop-blur-sm">
-                <p className="text-sm font-black tracking-[0.2em] text-orange-50 drop-shadow-[0_0_8px_rgba(255,160,100,0.5)]">
-                  🔥 沸火赤川 · 沸泉别馆 🔥
-                </p>
-                <p className="mt-0.5 text-[10px] text-orange-100/90">
-                  地脉沸腾 · 火魅凶猛 · 通关奖励 +80%
-                </p>
+              <div className="rounded-xl border border-[#E8A26B]/50 bg-gradient-to-r from-[#3a1108]/95 via-[#7c2d1f]/95 to-[#3a1108]/95 px-3 py-2 text-center shadow-lg backdrop-blur-sm">
+                <p className="font-display text-sm font-black tracking-[0.2em] text-[#FFE9B8]">沸火赤川 · 沸泉别馆</p>
+                <p className="mt-0.5 text-[10px] text-[#FFE9B8]/85">地脉沸腾 · 火魅凶猛 · 通关奖励 +80%</p>
               </div>
             </motion.div>
           )}
@@ -752,51 +701,48 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
             <motion.div
               key="fog-banner"
               initial={{ y: -48, opacity: 0, x: '-50%' }}
-              animate={{ y: 10, opacity: 1, x: '-50%' }}
+              animate={{ y: 58, opacity: 1, x: '-50%' }}
               exit={{ y: -48, opacity: 0, x: '-50%' }}
               className="absolute left-1/2 top-0 z-30 w-[92%]"
             >
-              <div className="rounded-xl border border-violet-300/30 bg-[#241d47]/90 px-3 py-2 text-center shadow-lg backdrop-blur-sm">
-                <p className="text-xs font-bold text-violet-100">
-                  🌫️ 妖雾降临！今夜将有限定稀有妖怪出没
-                </p>
+              <div className="ui-ink-chip rounded-xl px-3 py-2 text-center">
+                <p className="text-xs font-bold text-[#E6DCC8]">妖雾降临！今夜将有限定稀有妖怪出没</p>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* 胜负过场（1.2s 展示） */}
+        {/* 胜负过场 */}
         <AnimatePresence>
           {(phase === 'victory' || phase === 'failed') && (
             <motion.div
               key="battle-end"
-              initial={{ opacity: 0, scale: 0.85 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/45 backdrop-blur-[2px]"
+              className="pointer-events-none absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/50 backdrop-blur-[2px]"
             >
-              <div className="text-6xl drop-shadow-lg">
-                {phase === 'victory' ? (bossNight ? '👑' : '🎉') : bossNight ? '👹' : '💔'}
+              <div className="mx-6 w-[min(88%,300px)] rounded-2xl border-2 border-[#E8B84B]/70 bg-gradient-to-b from-[#FAF5EA] to-[#E8DFD0] px-5 py-6 text-center shadow-2xl">
+                <p
+                  className={cn(
+                    'font-display text-2xl font-black tracking-[0.18em]',
+                    phase === 'victory' ? 'text-[#8B2E24]' : 'text-[#5C3A24]'
+                  )}
+                >
+                  {phase === 'victory'
+                    ? bossNight
+                      ? '妖王退散'
+                      : '守店成功'
+                    : bossNight
+                      ? '妖王太过强大'
+                      : '客栈失守'}
+                </p>
+                <p className="mt-2 text-[11px] text-[#5C3A24]/75">正在结算战利品…</p>
               </div>
-              <p
-                className={cn(
-                  'mt-3 text-2xl font-black tracking-[0.2em]',
-                  phase === 'victory' ? 'text-amber-200' : 'text-rose-300'
-                )}
-              >
-                {phase === 'victory'
-                  ? bossNight
-                    ? '妖王退散！'
-                    : '守店成功！'
-                  : bossNight
-                    ? '妖王太过强大…'
-                    : '客栈失守…'}
-              </p>
-              <p className="mt-1 text-xs text-stone-300">正在结算战利品…</p>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* 暂停面板 */}
+        {/* 暂停面板 · 宣纸木框 */}
         <AnimatePresence>
           {showPauseOverlay && (
             <motion.div
@@ -804,36 +750,113 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 z-30 flex items-center justify-center bg-[#0b0a1e]/80 backdrop-blur-sm"
+              className="absolute inset-0 z-40 flex items-center justify-center bg-[#1C1915]/78 backdrop-blur-sm"
             >
-              <div className="w-64 rounded-2xl border border-white/15 bg-[#1a1636] p-5 text-center shadow-2xl">
-                <p className="text-lg font-black text-stone-100">⏸ 战斗暂停</p>
-                <p className="mt-1 text-[11px] text-stone-400">
-                  第 {state.wave} 波 · 击杀 {state.killCount} · 金币 +{state.waveGold}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => engine.togglePause()}
-                  className="mt-4 w-full rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 py-2.5 text-sm font-bold text-white shadow-lg shadow-amber-500/25 active:scale-95"
-                >
-                  ▶ 继续战斗
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setExitOpen(true)}
-                  className="mt-2 w-full rounded-xl border border-white/15 bg-white/5 py-2.5 text-sm text-stone-200 active:scale-95"
-                >
-                  🏠 退出战斗
-                </button>
+              <div className="w-[272px] overflow-hidden rounded-2xl border-2 border-[#5C3A24]/55 shadow-2xl">
+                <div className="ui-wood px-4 py-2.5 text-center">
+                  <p className="font-display text-base font-black tracking-[0.2em] text-[#FFE9B8]">战斗暂停</p>
+                </div>
+                <div className="bg-gradient-to-b from-[#FAF5EA] to-[#E8DFD0] px-4 py-4 text-center">
+                  <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[11px] text-[#5C3A24]/85">
+                    <span>第 {state.wave} 波</span>
+                    <span>·</span>
+                    <span>击杀 {state.killCount}</span>
+                    <span>·</span>
+                    <span className="inline-flex items-center gap-0.5">
+                      <GoldIcon size={12} />+{state.waveGold}
+                    </span>
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => engine.togglePause()}
+                    className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#E8B84B] to-[#D4933D] py-2.5 text-sm font-black text-[#5C3A1E] shadow-md active:scale-95"
+                  >
+                    <ConfigIcon icon="/images/ui/play.png" size={16} />
+                    继续战斗
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setExitOpen(true)}
+                    className="mt-2 w-full rounded-xl border-2 border-[#8B2E24]/45 bg-white/70 py-2.5 text-sm font-bold text-[#8B2E24] active:scale-95"
+                  >
+                    退出战斗
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
-      </main>
+      </div>
 
-      {/* ======== 底部：捕捉面板 + 布阵栏/战况条 ======== */}
-      <footer className="relative z-20 shrink-0">
-        {/* 收服面板（fighting 且存在可捕捉精英时弹出） */}
+      {/* ======== 顶部 HUD（叠在场景上） ======== */}
+      <header className="ui-wood absolute left-1.5 right-1.5 top-[max(0.35rem,env(safe-area-inset-top))] z-40 flex items-center gap-1.5 rounded-2xl px-1.5 py-1.5">
+        <button type="button" aria-label="退出夜战" onClick={() => setExitOpen(true)} className={HUD_BTN}>
+          <ConfigIcon icon="/images/ui/ui-back.png" size={18} />
+        </button>
+
+        <div className="flex min-w-0 flex-1 items-center gap-1.5 rounded-full border border-[#FFE9B8]/12 bg-black/30 px-2 py-1">
+          <span className="shrink-0 text-[10px] font-black text-[#F5A9A0]" aria-label="客栈生命">
+            寿
+          </span>
+          <HpBar
+            value={state.innHp}
+            max={state.innMaxHp}
+            height={7}
+            className="min-w-0 flex-1"
+            color={innHpPct > 0.4 ? 'bg-[#C0392B]' : 'bg-[#8B2E24]'}
+          />
+          <span className="w-8 shrink-0 text-right text-[10px] font-bold tabular-nums text-[#FFE9B8]">
+            {Math.round(innHpPct * 100)}%
+          </span>
+        </div>
+
+        {bossNight && (
+          <div className="shrink-0 rounded-full border border-[#8B2E24]/80 bg-gradient-to-r from-[#4a1120] to-[#7a1a2e] px-1.5 py-1 text-[9px] font-black text-[#FFE9B8]">
+            妖王夜
+          </div>
+        )}
+        {!bossNight && region === 2 && (
+          <div className={cn(HUD_CHIP, 'hidden min-[380px]:block')}>水墨</div>
+        )}
+        {!bossNight && region === 3 && (
+          <div className={cn(HUD_CHIP, 'border-[#E8A26B]/50 text-[#FFD9B8] hidden min-[380px]:block')}>沸火</div>
+        )}
+
+        <div className={HUD_CHIP}>
+          {bossNight ? `亲卫 ${state.wave}/${state.totalWaves}` : `${state.wave}/${state.totalWaves}波`}
+        </div>
+
+        <button
+          type="button"
+          aria-label={state.paused ? '继续战斗' : '暂停'}
+          disabled={!inBattle}
+          onClick={() => engine.togglePause()}
+          className={HUD_BTN}
+        >
+          {state.paused ? (
+            <ConfigIcon icon="/images/ui/play.png" size={18} />
+          ) : (
+            <ConfigIcon icon="/images/ui/pause.png" size={18} />
+          )}
+        </button>
+        <button
+          type="button"
+          aria-label="切换战斗速度"
+          disabled={!inBattle}
+          onClick={() => engine.setSpeed(state.speed === 1 ? 2 : 1)}
+          className={cn(
+            'h-9 w-9 shrink-0 rounded-xl border text-[11px] font-black tabular-nums active:scale-95 disabled:opacity-40',
+            state.speed > 1
+              ? 'border-[#E8B84B]/70 bg-[#E8B84B]/25 text-[#FFE9B8]'
+              : 'border-[#FFE9B8]/18 bg-black/30 text-[#FFE9B8]'
+          )}
+        >
+          {state.speed}x
+        </button>
+      </header>
+
+      {/* ======== 底部：捕捉 + 布阵/战况 ======== */}
+      <footer className="play-safe-b absolute inset-x-0 bottom-0 z-40">
         <AnimatePresence>
           {phase === 'fighting' && captureTarget && (
             <motion.div
@@ -843,181 +866,127 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
               exit={{ y: 56, opacity: 0 }}
               transition={{ type: 'spring', stiffness: 320, damping: 28 }}
               className={cn(
-                'border-t px-3 py-2.5',
-                bossNight
-                  ? 'border-rose-300/30 bg-gradient-to-b from-[#3a1420] to-[#240b12]'
-                  : 'border-amber-300/30 bg-gradient-to-b from-[#2a2142] to-[#1c1735]'
+                'mx-1.5 mb-1 overflow-hidden rounded-xl border-2 shadow-lg',
+                bossNight ? 'border-[#8B2E24]/70' : 'border-[#5C3A24]/55'
               )}
             >
-              {/* 多目标切换 */}
-              {capturables.length > 1 && (
-                <div className="mb-2 flex items-center gap-1.5">
-                  <span className="text-[10px] text-stone-400">可收服目标：</span>
-                  {capturables.map((c) => (
-                    <button
-                      key={c.uid}
-                      type="button"
-                      aria-label={`切换收服目标 ${c.name}${c.uncapturable ? '（野性难驯）' : ''}`}
-                      onClick={() => setCaptureUid(c.uid)}
-                      className={cn(
-                        'relative rounded-full p-0.5 active:scale-95',
-                        c.uid === captureTarget.uid
-                          ? c.uncapturable
-                            ? 'bg-stone-400/30 ring-1 ring-stone-300'
-                            : 'bg-amber-300/30 ring-1 ring-amber-300'
-                          : 'opacity-60'
-                      )}
-                    >
-                      <YaoAvatar id={c.yaoguaiId ?? 'lili'} size={26} />
-                      {c.uncapturable && (
-                        <span className="absolute -right-0.5 -top-1 text-[10px] leading-none">🚫</span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <div className="flex items-center gap-2.5">
-                <YaoAvatar id={captureTarget.yaoguaiId ?? 'lili'} size={46} />
+              <div
+                className={cn(
+                  'flex items-center gap-1.5 px-2 py-1.5',
+                  bossNight
+                    ? 'bg-gradient-to-b from-[#3a1420]/97 to-[#240b12]/97'
+                    : 'bg-gradient-to-b from-[#3a3228]/97 to-[#2a241c]/97'
+                )}
+                title={captureHint}
+                aria-label={captureHint}
+              >
+                <YaoAvatar id={captureTarget.yaoguaiId ?? 'lili'} size={36} />
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-1.5">
-                    <span className="truncate text-sm font-bold text-amber-100">
-                      {captureTarget.name}
-                    </span>
+                  <div className="flex items-center gap-1">
+                    <span className="truncate text-xs font-bold text-[#FFE9B8]">{captureTarget.name}</span>
                     {wildTarget ? (
-                      <span className="shrink-0 rounded bg-stone-500/50 px-1 text-[9px] font-black text-stone-100 ring-1 ring-stone-300/50">
-                        野性难驯
+                      <span className="shrink-0 rounded bg-stone-500/50 px-1 text-[8px] font-black text-stone-100 ring-1 ring-stone-300/50">
+                        野
                       </span>
                     ) : legendTarget ? (
-                      <span className="shrink-0 rounded bg-rose-500/40 px-1 text-[9px] font-black text-rose-50 ring-1 ring-rose-300/50">
+                      <span className="shrink-0 rounded bg-[#8B2E24]/70 px-1 text-[8px] font-black text-[#FFE9B8] ring-1 ring-[#E8B84B]/40">
                         妖王
                       </span>
                     ) : (
-                      <span className="shrink-0 rounded bg-rose-400/20 px-1 text-[9px] font-bold text-rose-200">
+                      <span className="shrink-0 rounded bg-[#8B2E24]/35 px-1 text-[8px] font-bold text-[#F5A9A0]">
                         精英
                       </span>
                     )}
                   </div>
-                  <div className="mt-1 flex items-center gap-2 text-[10px] text-stone-300">
-                    <span className="shrink-0">
-                      血量{' '}
-                      <b className="tabular-nums text-amber-200">
-                        {Math.round((captureTarget.hp / captureTarget.maxHp) * 100)}%
-                      </b>
+                  <div className="flex items-center gap-1.5 text-[10px] text-[#E6DCC8]/85">
+                    <span className="shrink-0 tabular-nums">
+                      <b className="text-[#E8B84B]">{Math.round((captureTarget.hp / captureTarget.maxHp) * 100)}%</b>
                     </span>
-                    <span className="truncate">
-                      成功率{' '}
+                    <span className="shrink-0">
+                      率{' '}
                       <b
                         className={cn(
                           'tabular-nums',
-                          captureRate >= 0.6
-                            ? 'text-emerald-300'
-                            : captureRate >= 0.3
-                              ? 'text-amber-300'
-                              : 'text-rose-300'
+                          wildTarget
+                            ? 'text-stone-300'
+                            : captureRate >= 0.6
+                              ? 'text-emerald-300'
+                              : captureRate >= 0.3
+                                ? 'text-[#E8B84B]'
+                                : 'text-[#F5A9A0]'
                         )}
                       >
                         {wildTarget ? '—' : `${Math.round(captureRate * 100)}%`}
                       </b>
-                      {!wildTarget && adBuffed && <span className="text-emerald-300">（含📺+20%）</span>}
-                      {!wildTarget && netBuffed && (
-                        <span className="text-sky-300">（含🕸️+{Math.round(CAPTURE_NET.bonus * 100)}%）</span>
-                      )}
                     </span>
-                  </div>
-                  <div className="mt-0.5 truncate text-[10px] text-stone-400">
-                    {wildTarget
-                      ? '🐴 此妖桀赊不驯，今夜不肯归顺——放归可按击杀结算金币'
-                      : legendTarget
-                        ? `已挑战 ${attempts} 次 · 每次耗费 ${CAPTURE_GEM_COST.boss} 灵石${
-                            attempts >= BOSS_NIGHT.pityAttempts
-                              ? ' · 保底必成'
-                              : ` · 每败+${Math.round(BOSS_NIGHT.attemptBonusRate * 100)}%（${BOSS_NIGHT.pityAttempts}次保底）`
-                          }${captureTarget.protectedFlag ? ' · 残血保护（免疫伤害，只能收服或放归）' : ''}`
-                        : `已挑战 ${attempts} 次 · 每次耗费 ${CAPTURE_GEM_COST.normal} 灵石${
-                            attempts >= PITY_ATTEMPTS
-                              ? ' · 保底必成'
-                              : attempts >= ATTEMPT_BONUS_STEP
-                                ? ' · 累计加成+10%'
-                                : ''
-                          }${captureTarget.protectedFlag ? ' · 残血保护（免疫伤害，只能收服或放归）' : ' · 血越低概率越高'}`}
+                    <span className="truncate text-[9px] text-[#E6DCC8]/50">{captureHint}</span>
                   </div>
                 </div>
-                <div className="flex shrink-0 flex-col items-stretch gap-1.5">
-                  <div className="flex gap-1.5">
-                    {!adBuffed && !wildTarget && (
-                      <button
-                        type="button"
-                        onClick={() => setCaptureAdOpen(true)}
-                        className="rounded-lg border border-emerald-300/50 bg-emerald-400/15 px-2 py-1.5 text-[11px] font-bold text-emerald-200 active:scale-95"
-                      >
-                        📺 +20%
-                      </button>
-                    )}
-                    {!netBuffed && netStock > 0 && (
-                      <button
-                        type="button"
-                        onClick={handleUseNet}
-                        aria-label={`张开缚妖网（本场收服成功率 +${Math.round(CAPTURE_NET.bonus * 100)}%，剩余 ${netStock} 张）`}
-                        title={`本场夜战收服成功率 +${Math.round(CAPTURE_NET.bonus * 100)}%，剩余 ${netStock} 张`}
-                        className="rounded-lg border border-sky-300/40 bg-sky-400/15 px-2 py-1.5 text-[11px] font-bold text-sky-200 active:scale-95"
-                      >
-                        🕸️ +{Math.round(CAPTURE_NET.bonus * 100)}%
-                      </button>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => handleRelease(captureTarget)}
-                      className={cn(
-                        'rounded-lg border px-2 py-1.5 text-[11px] active:scale-95',
-                        wildTarget
-                          ? 'border-amber-300/60 bg-amber-400/20 font-bold text-amber-100'
-                          : 'border-white/15 bg-white/5 text-stone-300'
-                      )}
-                    >
-                      {wildTarget ? '放归领赏' : '放归'}
-                    </button>
-                  </div>
+                {!adBuffed && !wildTarget && (
                   <button
                     type="button"
-                    disabled={wildTarget || gemsTooLow}
+                    onClick={() => setCaptureAdOpen(true)}
+                    className="shrink-0 rounded-md border border-emerald-300/45 bg-emerald-400/15 px-1.5 py-1 text-[10px] font-bold text-emerald-200 active:scale-95"
+                  >
+                    祝福
+                  </button>
+                )}
+                {!netBuffed && netStock > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleUseNet}
+                    aria-label={`张网（本场收服成功率 +${Math.round(CAPTURE_NET.bonus * 100)}%，剩余 ${netStock} 张）`}
+                    title={`张网：本场收服成功率 +${Math.round(CAPTURE_NET.bonus * 100)}%，剩余 ${netStock} 张`}
+                    className="flex h-9 shrink-0 items-center gap-0.5 rounded-lg border border-[#E8B84B]/45 bg-[#8B2E24]/40 px-1.5 text-[10px] font-bold text-[#FFE9B8] active:scale-95"
+                  >
+                    <ConfigIcon icon="/images/ui/prop-capture-net.png" size={18} />
+                    <span>张网</span>
+                    <span className="tabular-nums text-[#E8B84B]">{netStock}</span>
+                  </button>
+                )}
+                {wildTarget ? (
+                  <button
+                    type="button"
+                    onClick={() => handleRelease(captureTarget)}
+                    className="h-9 shrink-0 rounded-lg border border-[#E8B84B]/60 bg-[#E8B84B]/20 px-2.5 text-[11px] font-bold text-[#FFE9B8] active:scale-95"
+                  >
+                    放归领赏
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    disabled={gemsTooLow}
                     onClick={handleCaptureClick}
                     aria-label={
-                      wildTarget
-                        ? '野性难驯，无法收服'
-                        : gemsTooLow
-                          ? `灵石不足，收服需 ${captureGemCost} 灵石`
-                          : `收服（耗费 ${captureGemCost} 灵石）`
+                      gemsTooLow
+                        ? `灵石不足，收服需 ${captureGemCost} 灵石`
+                        : `收服（耗费 ${captureGemCost} 灵石）`
                     }
                     className={cn(
-                      'rounded-lg px-5 py-1.5 text-sm font-black tracking-widest shadow-lg active:scale-95',
-                      wildTarget
-                        ? 'cursor-not-allowed bg-stone-600/60 text-stone-400 shadow-none'
-                        : gemsTooLow
-                          ? 'cursor-not-allowed bg-stone-600/60 text-stone-400 shadow-none'
-                          : 'animate-pulse bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-amber-500/30'
+                      'h-9 shrink-0 rounded-lg px-2.5 text-sm font-black tracking-widest shadow-lg active:scale-95',
+                      gemsTooLow
+                        ? 'cursor-not-allowed border border-[#FFE9B8]/15 bg-black/40 text-[#E6DCC8]/45 shadow-none'
+                        : 'animate-pulse bg-gradient-to-r from-[#E8B84B] to-[#D4933D] text-[#5C3A1E] shadow-[#E8B84B]/25'
                     )}
                   >
-                    {wildTarget
-                      ? '无法收服'
-                      : gemsTooLow
-                        ? `灵石不足`
-                        : (
-                          <span className="flex items-center justify-center gap-1">
-                            收 服
-                            <span className="flex items-center gap-0.5 text-[10px] font-bold opacity-90">
-                              −{captureGemCost}
-                              <span className="inline-block h-2.5 w-2.5 rounded-full bg-gradient-to-br from-[#8FE3C0] to-[#3FA98A]" aria-hidden />
-                            </span>
-                          </span>
-                        )}
+                    {gemsTooLow ? (
+                      '灵石不足'
+                    ) : (
+                      <span className="flex items-center justify-center gap-0.5">
+                        收服
+                        <span className="flex items-center gap-px text-[10px] font-bold opacity-90">
+                          −{captureGemCost}
+                          <GemIcon size={12} />
+                        </span>
+                      </span>
+                    )}
                   </button>
-                </div>
+                )}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* prep：布阵栏；fighting/结算：战况条 */}
         {phase === 'prep' ? (
           <LineupBar
             lineup={lineup}
@@ -1031,60 +1000,70 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
             innLevel={innLevel}
           />
         ) : phase === 'victory' || phase === 'failed' ? (
-          <div
-            className={cn(
-              'border-t px-3 py-2.5 text-[11px]',
-              bossNight ? 'border-rose-200/15 bg-[#2a0f16]/95' : 'border-white/10 bg-[#151231]/95'
-            )}
-          >
+          <div className="ui-wood mx-1.5 mb-1 rounded-2xl px-3 py-2 text-[11px]">
             <span
               className={cn(
-                'font-bold',
-                phase === 'victory' ? 'text-amber-200' : 'text-rose-300'
+                'font-display font-bold tracking-wider',
+                phase === 'victory' ? 'text-[#E8B84B]' : 'text-[#F5A9A0]'
               )}
             >
               {phase === 'victory'
                 ? bossNight
-                  ? '👑 妖王退散，结算中…'
-                  : '🎉 守店成功，结算中…'
+                  ? '妖王退散，结算中…'
+                  : '守店成功，结算中…'
                 : bossNight
-                  ? '💔 妖王太过强大，结算中…'
-                  : '💔 战斗结束，结算中…'}
+                  ? '妖王太过强大，结算中…'
+                  : '战斗结束，结算中…'}
             </span>
           </div>
         ) : (
-          <div
-            className={cn(
-              'flex items-center gap-3 overflow-x-auto border-t px-3 py-2 text-[11px] text-stone-200',
-              bossNight ? 'border-rose-200/15 bg-[#2a0f16]/95' : 'border-white/10 bg-[#151231]/95'
-            )}
-          >
+          <div className="ui-wood mx-1.5 mb-1 flex items-center gap-2 overflow-x-auto rounded-2xl px-2 py-1.5 text-[11px] text-[#E6DCC8]">
+            <div className="flex shrink-0 items-center gap-1" aria-label="守店妖怪">
+              {state.defenders.map((d) => (
+                <span
+                  key={d.uid}
+                  className={cn('relative inline-flex', d.dead && 'opacity-35 grayscale')}
+                >
+                  <YaoAvatar id={d.yaoguaiId} size={26} />
+                  <span
+                    className="absolute inset-x-0 -bottom-0.5 mx-auto h-1 w-6 overflow-hidden rounded-full bg-black/55"
+                    aria-hidden
+                  >
+                    <span
+                      className="block h-full bg-[#C0392B]"
+                      style={{ width: `${d.maxHp > 0 ? Math.max(0, (d.hp / d.maxHp) * 100) : 0}%` }}
+                    />
+                  </span>
+                </span>
+              ))}
+            </div>
+            <span className="h-6 w-px shrink-0 bg-[#FFE9B8]/15" aria-hidden />
             <span className="flex shrink-0 items-center gap-1">
-              ⚔️ 击杀 <AnimNumber value={state.killCount} className="font-bold text-amber-200" />
+              击 <AnimNumber value={state.killCount} className="font-bold text-[#FFE9B8]" />
             </span>
             <span className="flex shrink-0 items-center gap-1">
-              💰 掉落
-              <AnimNumber value={state.waveGold} className="font-bold text-amber-300" />
-              金
+              <GoldIcon size={12} />
+              <AnimNumber value={state.waveGold} className="font-bold text-[#E8B84B]" />
             </span>
-            {/* 收服耗灵石（V1.3.1）：夜战实时透出灵石余额 */}
             <span className="flex shrink-0 items-center gap-1">
-              💎 灵石
-              <AnimNumber value={gems} className={cn('font-bold', gemsTooLow ? 'text-rose-300' : 'text-emerald-300')} />
+              <GemIcon size={12} />
+              <AnimNumber
+                value={gems}
+                className={cn('font-bold', gemsTooLow ? 'text-[#F5A9A0]' : 'text-[#C8F4E4]')}
+              />
             </span>
             {state.capturedThisBattle.length > 0 && (
-              <span className="flex shrink-0 items-center gap-1">
-                🎉 已收服 {state.capturedThisBattle.length}
+              <span className="flex shrink-0 items-center gap-1 text-[#E8B84B]">
+                收 {state.capturedThisBattle.length}
               </span>
             )}
-            <span className="ml-auto shrink-0" />
             {innLow && (
               <button
                 type="button"
                 onClick={() => setRepairAdOpen(true)}
-                className="animate-pulse shrink-0 rounded-full border border-emerald-300/50 bg-emerald-400/15 px-2.5 py-1 text-[11px] font-bold text-emerald-200 active:scale-95"
+                className="ml-auto animate-pulse shrink-0 rounded-full border border-[#E8B84B]/50 bg-[#E8B84B]/18 px-2.5 py-1 text-[11px] font-bold text-[#FFE9B8] active:scale-95"
               >
-                📺 修复客栈
+                修复
               </button>
             )}
           </div>
@@ -1092,45 +1071,47 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
       </footer>
 
       {/* ======== 弹窗层 ======== */}
-      {/* 撤退确认 */}
       <AlertDialog open={exitOpen} onOpenChange={setExitOpen}>
-        <AlertDialogContent className="max-w-[320px] rounded-2xl border-amber-200/25 bg-[#1c1836] p-5 text-stone-100">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-center text-lg">今夜就撤吗？</AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-xs leading-relaxed text-stone-300">
+        <AlertDialogContent className="max-w-[320px] gap-0 overflow-hidden rounded-2xl border-2 border-[#5C3A24]/55 bg-transparent p-0 text-[#1C1915] shadow-2xl">
+          <div className="ui-wood px-4 py-2.5">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="font-display text-center text-lg tracking-[0.15em] text-[#FFE9B8]">
+                今夜就撤吗？
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+          </div>
+          <div className="bg-gradient-to-b from-[#FAF5EA] to-[#E8DFD0] px-5 py-4">
+            <AlertDialogDescription className="text-center text-xs leading-relaxed text-[#5C3A24]/90">
               中途撤退只能带走一半战利金币（当前约 +
               {Math.floor(state.waveGold * 0.5)} 金），已收服的妖怪不受影响。
             </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="flex-row gap-2">
-            <AlertDialogCancel className="mt-0 flex-1 rounded-xl border-white/15 bg-white/5 text-stone-200 hover:bg-white/10 hover:text-stone-100">
-              继续守店
-            </AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmExit}
-              className="flex-1 rounded-xl border-0 bg-gradient-to-r from-amber-500 to-orange-500 font-bold text-white hover:from-amber-600 hover:to-orange-600"
-            >
-              撤退结算
-            </AlertDialogAction>
-          </AlertDialogFooter>
+            <AlertDialogFooter className="mt-4 flex-row gap-2 sm:space-x-0">
+              <AlertDialogCancel className="mt-0 flex-1 rounded-xl border-2 border-[#8B2E24]/35 bg-white/80 text-[#8B2E24] hover:bg-white hover:text-[#8B2E24]">
+                继续守店
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={confirmExit}
+                className="flex-1 rounded-xl border-0 bg-gradient-to-r from-[#E8B84B] to-[#D4933D] font-bold text-[#5C3A1E] hover:from-[#E8B84B] hover:to-[#C9922A]"
+              >
+                撤退结算
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </div>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* 广告：客栈修复 */}
       <AdDialog
         scene="inn-repair"
         open={repairAdOpen}
         onOpenChange={setRepairAdOpen}
         onReward={handleRepairAdReward}
       />
-      {/* 广告：捕捉加成 */}
       <AdDialog
         scene="capture-buff"
         open={captureAdOpen}
         onOpenChange={setCaptureAdOpen}
         onReward={handleCaptureAdReward}
       />
-      {/* 收服成功庆祝：以妖怪 id 为 key，每次收服都是全新弹窗 */}
       {captureSuccessId != null && (
         <CaptureSuccessDialog
           key={captureSuccessId}

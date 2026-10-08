@@ -10,7 +10,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { GoldIcon, HpBar } from '@/components/game/shared'
+import { ConfigIcon, GoldIcon, HpBar } from '@/components/game/shared'
 import { useGameStore } from '@/game/store'
 import {
   BRANCH_GOLD_BONUS,
@@ -105,14 +105,14 @@ const CARD_THEME: Record<1 | 2 | 3, CardTheme> = {
   // 区域一（区域一永不锁定，锁定相关字段为占位，实际不会渲染）
   1: {
     card: 'border-[#D4A574]/60 bg-white/85',
-    borderCurrent: 'border-[#2D5A3D]',
-    title: 'text-[#2D5A3D]',
+    borderCurrent: 'border-[#8B2E24]',
+    title: 'text-[#8B2E24]',
     tag: 'text-[#A87B3D]',
     desc: 'text-stone-500',
     info: 'text-stone-600',
     enemyLabel: 'text-stone-400',
-    enemyChip: 'bg-[#2D5A3D]/10 text-[#2D5A3D]',
-    stay: 'bg-[#2D5A3D]/10 text-[#2D5A3D]',
+    enemyChip: 'bg-[#8B2E24]/10 text-[#8B2E24]',
+    stay: 'bg-[#8B2E24]/10 text-[#8B2E24]',
     switchBtn: 'bg-gradient-to-b from-[#E8B84B] to-[#D4943C] text-white shadow-amber-700/25',
     lockPanel: 'bg-white/55',
     lockTitle: 'text-[#3A3644]',
@@ -273,9 +273,9 @@ export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px] border-x-2 border-t-[3px] border-[#D4A574] bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA]">
+      <DrawerContent className="panel-sheet mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px]">
         <DrawerHeader className="pb-1">
-          <DrawerTitle className="text-center text-xl font-black tracking-[0.3em] text-[#2D5A3D]">
+          <DrawerTitle className="panel-title text-center text-xl">
             世界地图
           </DrawerTitle>
           <DrawerDescription className="sr-only">世界地图 · 切换今夜驻扎区域与开设连锁分店</DrawerDescription>
@@ -299,8 +299,8 @@ export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
                 className="flex items-center gap-2.5 rounded-2xl border-2 px-3 py-2"
                 style={{ borderColor: `${curDef.themeColor}55`, backgroundColor: `${curDef.themeColor}0D` }}
               >
-                <span className="text-2xl" aria-hidden>
-                  {curDef.icon}
+                <span aria-hidden>
+                  <ConfigIcon icon={curDef.icon} size={28} />
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-[9px] font-black tracking-widest text-stone-400">当前驻扎</p>
@@ -367,10 +367,10 @@ export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
                         transition={
                           def.id === 3 || isCurrent ? { repeat: Infinity, duration: 3.2 } : undefined
                         }
-                        className={cn('text-3xl', locked && 'grayscale')}
+                        className={cn(locked && 'grayscale')}
                         aria-hidden
                       >
-                        {def.icon}
+                        <ConfigIcon icon={def.icon} size={32} />
                       </motion.span>
                       <div className="min-w-0 flex-1">
                         <p className={cn('text-base font-black', theme.title)}>
@@ -400,9 +400,15 @@ export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
 
                     {/* 情报行：关卡进度 / 战斗 BGM / 通关奖励 */}
                     <div className={cn('mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] font-bold', theme.info)}>
-                      <span>🌙 第 {regionLv} 夜</span>
-                      <span>🎵 BGM「{def.subtitle}」</span>
-                      <span>💰 通关奖励 +{rewardPct}%</span>
+                      <span className="inline-flex items-center gap-0.5">
+                        <ConfigIcon icon="/images/ui/status-moon.png" size={12} />
+                        第 {regionLv} 夜
+                      </span>
+                      <span>BGM「{def.subtitle}」</span>
+                      <span className="inline-flex items-center gap-0.5">
+                        <GoldIcon size={11} />
+                        通关奖励 +{rewardPct}%
+                      </span>
                     </div>
 
                     {/* 敌踪预览（各区域自动换皮野怪名） */}
@@ -410,7 +416,7 @@ export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
                       <span className={cn('text-[10px] font-bold', theme.enemyLabel)}>敌踪</span>
                       {ENEMY_KEYS.map((k) => (
                         <span key={k} className={cn('rounded-full px-2 py-0.5 text-[10px] font-bold', theme.enemyChip)}>
-                          🐾 {def.enemyNames[k]}
+                          {def.enemyNames[k]}
                         </span>
                       ))}
                     </div>
@@ -525,10 +531,10 @@ export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
                           )}
                         >
                           {goldShort > 0
-                            ? `${def.icon} 还差 ${goldShort.toLocaleString()} 金币`
+                            ? `还差 ${goldShort.toLocaleString()} 金币`
                             : arming
                               ? `⚠️ 确认开设？将花费 ${unlock.openCost} 金币`
-                              : `${def.icon} 开设${branchName}分店 · ${unlock.openCost}金币`}
+                              : `开设${branchName}分店 · ${unlock.openCost}金币`}
                         </motion.button>
                         <p className={cn('text-center text-[10px] font-bold', theme.readyHint)}>
                           {goldShort > 0

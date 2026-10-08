@@ -8,14 +8,36 @@ import { SLOTS, lineupSynergy, slotUnlockAt, staminaTier } from '@/game/config'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import { useGameStore } from '@/game/store'
 import { useToast } from '@/hooks/use-toast'
-import { StarBadge, YaoAvatar } from './shared'
+import { ConfigIcon, StarBadge, YaoAvatar } from './shared'
 import { ElementBadge } from './ElementBadge'
 import { StaminaTierChip } from './StaminaBadge'
 import { cn } from '@/lib/utils'
 
+/** 体力档位图：使用 config 图标路径（ConfigIcon） */
+function StaminaMark({
+  icon,
+  title,
+  color,
+}: {
+  icon: string
+  title: string
+  color: string
+}) {
+  return (
+    <span
+      title={title}
+      aria-label={title}
+      className="inline-flex h-[18px] w-[18px] items-center justify-center rounded-full border bg-black/70 leading-none shadow-md"
+      style={{ borderColor: color }}
+    >
+      <ConfigIcon icon={icon} size={12} />
+    </span>
+  )
+}
+
 // ============ 夜晚塔防 · 布阵栏 ============
 // 点选式布阵：点击卡池妖怪进入「选中」态 → 点击站位槽放置；点击已上阵槽位移除。
-// 站位扩容：前 4 格基础开放，第 5/6 格随客栈等级解锁（锁定格显示解锁条件）。
+// 站位扩容：前 4 格基础开放，第 5/6 格随客栈等级解锁；底栏单行 6 槽以免挡住战场。
 
 export interface LineupBarProps {
   /** 长度 6（前 4 基础 + 2 扩容），索引即站位 slot */
@@ -133,7 +155,7 @@ export function LineupBar({
   const handleSlotClick = useCallback(
     (slot: number) => {
       if (slot >= maxSlots) {
-        toast({ title: `🔒 站位 ${slot + 1} 尚未解锁`, description: `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`, duration: 2400 })
+        toast({ title: `站位 ${slot + 1} 尚未解锁`, description: `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`, duration: 2400 })
         return
       }
       if (!selected) {
@@ -179,23 +201,25 @@ export function LineupBar({
   }, [onRemove, lineup.length])
 
   return (
-    <div className="shrink-0 border-t border-white/10 bg-[#161233] px-3 pb-2 pt-2">
-      {/* 敌军来袭倒计时 */}
-      <div className="mb-2 flex items-center gap-2">
-        <span className="shrink-0 text-xs font-medium text-amber-100/90">⏳ 敌军来袭</span>
-        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-[width] duration-200"
-            style={{ width: `${pct}%` }}
-          />
+    <div className="mx-1.5 mb-1 shrink-0 overflow-hidden rounded-2xl border-2 border-[#5C3A24]/55 shadow-lg">
+      <div className="ui-wood px-3 py-1">
+        <div className="flex items-center gap-2">
+          <span className="shrink-0 font-display text-xs font-bold tracking-wider text-[#FFE9B8]">敌军来袭</span>
+          <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-black/35">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-[#E8B84B] to-[#D4933D] transition-[width] duration-200"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <span className="w-5 shrink-0 text-center text-sm font-black tabular-nums text-[#E8B84B]">
+            {Math.ceil(Math.max(0, countdown))}
+          </span>
         </div>
-        <span className="w-5 shrink-0 text-center text-sm font-black tabular-nums text-amber-300">
-          {Math.ceil(Math.max(0, countdown))}
-        </span>
       </div>
+      <div className="bg-gradient-to-b from-[#2C241C] to-[#1C1915] px-2.5 pb-1.5 pt-1.5">
 
-      {/* 站位槽（6 格：3×2 网格；锁定格显示解锁条件） */}
-      <div className="mb-2 grid grid-cols-3 gap-1.5">
+      {/* 站位槽：单行 6 格，少挡战场 */}
+      <div className="mb-1.5 grid grid-cols-6 gap-0.5">
         {Array.from({ length: SLOTS.length }, (_, slot) => {
           const entry = lineup[slot] ?? null
           const locked = slot >= maxSlots
@@ -204,12 +228,11 @@ export function LineupBar({
             return (
               <div
                 key={slot}
-                aria-label={`站位 ${slot + 1} 未解锁`}
-                className="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-white/10 bg-white/[0.02] py-2 opacity-70"
+                aria-label={`站位 ${slot + 1} 未解锁，客栈${unlockLv}级开放`}
+                className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[#FFE9B8]/15 bg-black/20 py-1 opacity-70"
               >
-                <span className="text-base leading-none opacity-70">🔒</span>
-                <span className="mt-1 text-[9px] font-bold text-stone-500">客栈{unlockLv}级解锁</span>
-                <span className="text-[8px] text-stone-600">当前 {innLevel} 级</span>
+                <ConfigIcon icon="/images/ui/status-lock.png" size={12} />
+                <span className="mt-0.5 text-[7px] font-bold leading-none text-[#E6DCC8]/50">{unlockLv}级</span>
               </div>
             )
           }
@@ -221,21 +244,22 @@ export function LineupBar({
                 type="button"
                 aria-label={`移除站位 ${slot + 1} 的 ${def?.name ?? ''}`}
                 onClick={() => onRemove(slot)}
-                className="group relative flex flex-col items-center rounded-xl border border-amber-200/30 bg-amber-100/5 py-1.5 active:scale-95"
+                className="relative flex flex-col items-center rounded-lg border border-[#E8B84B]/40 bg-[#E8B84B]/10 py-0.5 active:scale-95"
               >
-                <YaoAvatar id={entry.yaoguaiId} size={44} />
-                <span className="mt-0.5 max-w-full truncate px-1 text-[10px] text-stone-200">
+                <YaoAvatar id={entry.yaoguaiId} size={30} />
+                <span className="mt-0.5 max-w-full truncate px-0.5 text-[7px] leading-none text-[#E6DCC8]">
                   {def?.name ?? entry.yaoguaiId}
                 </span>
-                <StarBadge star={entry.star} />
-                {entry.level > 1 && (
-                  <span className="rounded-full bg-emerald-500/20 px-1 text-[8px] font-bold text-emerald-300">
-                    Lv.{entry.level}
-                  </span>
-                )}
-                <span className="absolute right-1 top-1 rounded-full bg-black/70 px-1 text-[9px] text-rose-300 opacity-0 transition-opacity group-hover:opacity-100">
-                  ✕
-                </span>
+                {(() => {
+                  const st = owned[entry.yaoguaiId]?.stamina ?? entry.stamina ?? 100
+                  const tier = staminaTier(st)
+                  if (tier.key === 'full' || tier.key === 'normal') return null
+                  return (
+                    <span className="absolute left-0 top-0 z-10 scale-90">
+                      <StaminaMark icon={tier.icon} title={tier.desc} color={tier.color} />
+                    </span>
+                  )
+                })()}
               </button>
             )
           }
@@ -246,14 +270,14 @@ export function LineupBar({
               aria-label={`站位 ${slot + 1} 放置妖怪`}
               onClick={() => handleSlotClick(slot)}
               className={cn(
-                'flex flex-col items-center justify-center rounded-xl border-2 border-dashed py-2.5 active:scale-95',
+                'flex flex-col items-center justify-center rounded-lg border border-dashed py-1 active:scale-95',
                 selected
-                  ? 'animate-pulse border-amber-300/80 bg-amber-200/10'
-                  : 'border-white/20 bg-white/[0.03]'
+                  ? 'animate-pulse border-[#E8B84B]/80 bg-[#E8B84B]/12'
+                  : 'border-[#FFE9B8]/20 bg-black/20'
               )}
             >
-              <span className="text-lg leading-none opacity-60">{selected ? '✚' : '⚔️'}</span>
-              <span className="mt-1 text-[9px] text-stone-300">{selected ? '点击放置' : `站位${slot + 1}`}</span>
+              <ConfigIcon icon="/images/ui/slot-pad.png" size={16} className="opacity-70" />
+              <span className="mt-0.5 text-[7px] leading-none text-[#E6DCC8]/70">{selected ? '放' : `${slot + 1}`}</span>
             </button>
           )
         })}
@@ -268,9 +292,9 @@ export function LineupBar({
           transition={{ type: 'spring', stiffness: 320, damping: 24 }}
           role="status"
           aria-label={`阵容相生加成：攻击+${Math.round(synergy.atkPct * 100)}%，生命+${Math.round(synergy.hpPct * 100)}%`}
-          className="mb-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-2 py-1.5"
+          className="mb-1.5 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-xl border border-emerald-400/35 bg-emerald-500/10 px-2 py-1"
         >
-          <span className="text-[10px] font-black text-emerald-300">🌿 相生加成</span>
+          <span className="text-[10px] font-black text-emerald-300">相生加成</span>
           {synergy.pairs.map((p) => (
             <span
               key={p.pair.join('+')}
@@ -289,8 +313,8 @@ export function LineupBar({
           </span>
         </motion.div>
       ) : (
-        <p className="mb-2 text-center text-[9px] text-stone-400">
-          🌿 上阵相生属性妖怪（如 金+水）可获全队加成
+        <p className="mb-1.5 text-center text-[8px] text-[#E6DCC8]/45">
+          相生属性可获全队加成
         </p>
       )}
 
@@ -301,9 +325,9 @@ export function LineupBar({
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 24 }}
           role="alert"
-          className="mb-2 flex items-center justify-center gap-1.5 rounded-xl border border-rose-400/40 bg-rose-500/15 px-2 py-1.5 text-[10px] font-black text-rose-200"
+          className="mb-1.5 flex items-center justify-center gap-1.5 rounded-xl border border-[#8B2E24]/55 bg-[#8B2E24]/20 px-2 py-1 text-[10px] font-black text-[#F5A9A0]"
         >
-          💀 全体妖怪体力虚脱，无法布阵 · 明天恢复后再战
+          全体妖怪体力虚脱，无法布阵 · 明天恢复后再战
         </motion.div>
       ) : weakInLineup.length > 0 ? (
         <motion.div
@@ -312,30 +336,24 @@ export function LineupBar({
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 320, damping: 24 }}
           role="status"
-          className="mb-2 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 rounded-xl border border-amber-300/40 bg-amber-400/10 px-2 py-1.5"
+          className="mb-1.5 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-0.5 rounded-xl border border-[#E8B84B]/45 bg-[#E8B84B]/12 px-2 py-1"
         >
-          <span className="text-[10px] font-black text-amber-300">⚠️ 阵中妖怪体力不支</span>
+          <span className="text-[10px] font-black text-[#E8B84B]">阵中妖怪体力不支</span>
           {weakInLineup.map((w) => (
-            <span key={w.name} className="text-[10px] font-bold" style={{ color: w.tier.color === '#C0392B' ? '#FCA5A5' : '#FCD34D' }}>
-              {w.tier.icon}{w.name}
+            <span key={w.name} className="inline-flex items-center gap-0.5 text-[10px] font-bold" style={{ color: w.tier.color === '#C0392B' ? '#FCA5A5' : '#FCD34D' }}>
+              <StaminaMark icon={w.tier.icon} title={w.tier.desc} color={w.tier.color} />
+              {w.name}
             </span>
           ))}
-          <span className="text-[10px] font-bold text-amber-200/90">
+          <span className="text-[10px] font-bold text-[#FFE9B8]/90">
             将受{weakInLineup.some((w) => w.tier.key === 'exhausted') ? '攻速/攻击' : '攻速'} debuff
           </span>
         </motion.div>
       ) : null}
 
-      {/* 站位扩容提示 */}
-      {maxSlots < SLOTS.length && (
-        <p className="mb-1.5 text-center text-[9px] text-amber-200/60">
-          💡 升级客栈可解锁更多站位（当前 {maxSlots}/{SLOTS.length} 格）
-        </p>
-      )}
-
       {/* 妖怪卡池（横向滚动） */}
       {pool.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-white/15 py-3 text-center text-[11px] text-stone-400">
+        <div className="rounded-xl border border-dashed border-[#FFE9B8]/20 py-3 text-center text-[11px] text-[#E6DCC8]/55">
           暂无可上阵妖怪，白天多招募些伙伴吧
         </div>
       ) : (
@@ -356,34 +374,30 @@ export function LineupBar({
                 className={cn(
                   'relative flex w-16 shrink-0 flex-col items-center rounded-xl border py-1.5 active:scale-95',
                   placed
-                    ? 'border-white/10 bg-white/[0.03] opacity-45'
-                    : 'border-white/15 bg-white/[0.05]',
-                  isSelected && !placed && !collapse && 'border-amber-300 bg-amber-200/15 ring-2 ring-amber-300/70',
+                    ? 'border-[#FFE9B8]/10 bg-black/25 opacity-45'
+                    : 'border-[#FFE9B8]/18 bg-black/30',
+                  isSelected && !placed && !collapse && 'border-[#E8B84B] bg-[#E8B84B]/15 ring-2 ring-[#E8B84B]/60',
                   collapse && 'grayscale opacity-60'
                 )}
               >
                 {placed && (
-                  <span className="absolute right-0.5 top-0.5 rounded-full bg-stone-900/90 px-1 text-[8px] text-stone-300">
+                  <span className="absolute right-0.5 top-0.5 rounded-full bg-[#1C1915]/90 px-1 text-[8px] text-[#E6DCC8]/70">
                     阵中
                   </span>
                 )}
-                {/* 体力角标（左上：档位 icon + 数值；与右上「阵中」错开） */}
                 {!placed && (
                   <span className="absolute left-0.5 top-0.5 z-10">
                     <StaminaTierChip value={p.stamina} compact />
                   </span>
                 )}
-                {/* 虚脱标签（右下，与体力角标错开） */}
                 {collapse && (
-                  <span
-                    className="absolute bottom-0.5 right-0.5 z-10 rounded-full border border-[#6B4E8E]/70 bg-[#EAE2F3] px-1 text-[9px] font-black leading-tight text-[#6B4E8E]"
-                  >
-                    💀虚脱
+                  <span className="absolute bottom-0.5 right-0.5 z-10 rounded-full border border-[#6B4E8E]/70 bg-[#EAE2F3] px-1 text-[9px] font-black leading-tight text-[#6B4E8E]">
+                    虚脱
                   </span>
                 )}
                 <YaoAvatar id={p.id} size={40} active={!collapse} />
                 <span className="mt-0.5 flex w-full items-center justify-center gap-0.5 px-0.5">
-                  <span className="max-w-full truncate text-[10px] text-stone-200">{p.def.name}</span>
+                  <span className="max-w-full truncate text-[10px] text-[#E6DCC8]">{p.def.name}</span>
                   <ElementBadge element={p.def.element} size="xs" hideNone />
                 </span>
                 <StarBadge star={p.star} />
@@ -392,7 +406,7 @@ export function LineupBar({
                     Lv.{p.level}
                   </span>
                 )}
-                <span className="mt-0.5 text-[8px] text-stone-400">{p.def.nightRoleName}</span>
+                <span className="mt-0.5 text-[8px] text-[#E6DCC8]/45">{p.def.nightRoleName}</span>
               </button>
             )
           })}
@@ -400,21 +414,23 @@ export function LineupBar({
       )}
 
       {/* 快捷操作 */}
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-1.5 flex items-center gap-2">
         <button
           type="button"
           onClick={handleClear}
-          className="flex-1 rounded-lg border border-white/15 bg-white/5 py-1.5 text-[11px] text-stone-200 active:scale-95"
+          className="flex-1 rounded-lg border border-[#FFE9B8]/20 bg-black/25 py-1 text-[11px] text-[#E6DCC8] active:scale-95"
         >
-          🧹 清空布阵
+          清空布阵
         </button>
         <button
           type="button"
           onClick={handleAuto}
-          className="flex-1 rounded-lg border border-amber-300/40 bg-amber-400/15 py-1.5 text-[11px] font-medium text-amber-200 active:scale-95"
+          disabled={allCollapse}
+          className="flex-1 rounded-lg border border-[#E8B84B]/45 bg-[#E8B84B]/18 py-1 text-[11px] font-medium text-[#FFE9B8] active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
         >
-          ⚡ 自动布阵
+          自动布阵
         </button>
+      </div>
       </div>
     </div>
   )

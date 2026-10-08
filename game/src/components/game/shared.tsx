@@ -5,24 +5,22 @@ import { GRADE_COLOR, GRADE_LABEL, YAOGUAI_MAP, yaoImg } from '@/game/yaoguai'
 import type { Grade } from '@/game/types'
 import { cn } from '@/lib/utils'
 
-/** 星级显示（高星微光） */
+/** 星级显示（金星徽，高星微光） */
 export function StarBadge({ star, size = 'sm' }: { star: number; size?: 'sm' | 'md' | 'lg' }) {
-  const cls = size === 'lg' ? 'text-base' : size === 'md' ? 'text-sm' : 'text-[10px]'
-  if (star >= 5) {
-    return (
-      <span className={cn(cls, 'inline-flex items-center gap-px animate-pulse')} aria-label={`${star}星`}>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <span key={i} className="drop-shadow-[0_0_4px_rgba(232,184,75,0.9)]">
-            ⭐
-          </span>
-        ))}
-      </span>
-    )
-  }
+  const px = size === 'lg' ? 14 : size === 'md' ? 12 : 10
+  const count = Math.max(0, Math.min(5, star))
   return (
-    <span className={cn(cls, 'inline-flex items-center gap-px')} aria-label={`${star}星`}>
-      {Array.from({ length: star }).map((_, i) => (
-        <span key={i}>⭐</span>
+    <span className={cn('inline-flex items-center gap-px', star >= 5 && 'animate-pulse')} aria-label={`${star}星`}>
+      {Array.from({ length: count }).map((_, i) => (
+        <img
+          key={i}
+          src="/images/ui/ui-star.png"
+          alt=""
+          width={px}
+          height={px}
+          draggable={false}
+          className={cn('inline-block object-contain', star >= 5 && 'drop-shadow-[0_0_4px_rgba(232,184,75,0.9)]')}
+        />
       ))}
     </span>
   )
@@ -33,7 +31,7 @@ export function GradeTag({ grade, className }: { grade: Grade; className?: strin
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-medium',
+        'inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-semibold tracking-wide shadow-sm',
         GRADE_COLOR[grade],
         className
       )}
@@ -59,14 +57,14 @@ export function YaoAvatar({
   const [failed, setFailed] = useState(false)
   const border =
     def?.grade === 'rare'
-      ? 'border-amber-400 shadow-[0_0_10px_rgba(232,184,75,0.45)]'
+      ? 'border-amber-400 ring-1 ring-amber-300/50'
       : def?.grade === 'legend'
-        ? 'border-rose-400 shadow-[0_0_10px_rgba(244,63,94,0.4)]'
-        : 'border-emerald-300'
+        ? 'border-rose-400 ring-1 ring-rose-300/40'
+        : 'border-[#5E9C7E]/70 ring-1 ring-[#5E9C7E]/20'
   return (
     <div
       className={cn(
-        'relative shrink-0 overflow-hidden rounded-full border-2 bg-gradient-to-b from-stone-50 to-stone-200 dark:from-stone-800 dark:to-stone-900',
+        'relative shrink-0 overflow-hidden rounded-full border-2 bg-gradient-to-b from-[#FFF9EE] to-[#E8DFD0]',
         border,
         !active && 'grayscale opacity-50',
         className
@@ -74,7 +72,6 @@ export function YaoAvatar({
       style={{ width: size, height: size }}
     >
       {!failed && def ? (
-         
         <img
           src={yaoImg(id)}
           alt={def.name}
@@ -84,7 +81,7 @@ export function YaoAvatar({
         />
       ) : (
         <div
-          className="flex h-full w-full items-center justify-center font-bold text-white"
+          className="font-display flex h-full w-full items-center justify-center font-bold text-white"
           style={{ background: def?.color ?? '#8B7355', fontSize: size * 0.36 }}
         >
           {def?.name?.[0] ?? '?'}
@@ -148,7 +145,7 @@ export function HpBar({
   color?: string
 }) {
   const pct = max > 0 ? Math.max(0, Math.min(100, (value / max) * 100)) : 0
-  const barColor = color ?? (pct > 50 ? 'bg-emerald-500' : pct > 25 ? 'bg-amber-500' : 'bg-rose-500')
+  const barColor = color ?? (pct > 50 ? 'bg-[#3E9B72]' : pct > 25 ? 'bg-amber-500' : 'bg-rose-500')
   return (
     <div
       className={cn('w-full overflow-hidden rounded-full bg-black/20', className)}
@@ -166,27 +163,49 @@ export function HpBar({
   )
 }
 
-/** 资源图标 */
-export function GoldIcon({ size = 16 }: { size?: number }) {
+/** 配置里的 icon：路径则渲染 PNG，否则保留 emoji/字符兼容 */
+export function ConfigIcon({
+  icon,
+  size = 20,
+  className,
+}: {
+  icon: string
+  size?: number
+  className?: string
+}) {
+  if (icon.startsWith('/')) {
+    return (
+      <img
+        src={icon}
+        alt=""
+        aria-hidden
+        width={size}
+        height={size}
+        draggable={false}
+        className={cn('inline-block shrink-0 object-contain', className)}
+      />
+    )
+  }
   return (
-    <span className="inline-flex items-center justify-center rounded-full bg-gradient-to-b from-amber-300 to-amber-500 text-[10px] font-bold text-amber-900 shadow-inner" style={{ width: size, height: size }}>
-      金
+    <span
+      aria-hidden
+      className={cn('inline-flex shrink-0 items-center justify-center leading-none', className)}
+      style={{ width: size, height: size, fontSize: Math.max(10, size * 0.85) }}
+    >
+      {icon}
     </span>
   )
+}
+
+/** 资源图标（山海志怪统一素材） */
+export function GoldIcon({ size = 16 }: { size?: number }) {
+  return <ConfigIcon icon="/images/ui/gold.png" size={size} />
 }
 
 export function GemIcon({ size = 16 }: { size?: number }) {
-  return (
-    <span className="inline-flex items-center justify-center rounded-sm bg-gradient-to-b from-teal-300 to-emerald-500 text-[10px] font-bold text-emerald-950" style={{ width: size, height: size }}>
-      灵
-    </span>
-  )
+  return <ConfigIcon icon="/images/ui/gem.png" size={size} />
 }
 
 export function TicketIcon({ size = 16 }: { size?: number }) {
-  return (
-    <span className="inline-flex items-center justify-center rounded-md bg-gradient-to-b from-orange-300 to-orange-500 text-[10px] font-bold text-orange-950" style={{ width: size, height: size }}>
-      券
-    </span>
-  )
+  return <ConfigIcon icon="/images/ui/ticket.png" size={size} />
 }

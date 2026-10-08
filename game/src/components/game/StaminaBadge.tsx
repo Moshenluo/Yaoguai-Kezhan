@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import { staminaTier } from '@/game/config'
 import type { StaminaTierDef } from '@/game/config'
+import { ConfigIcon } from '@/components/game/shared'
 import { cn } from '@/lib/utils'
 
 // ============ 妖怪体力徽章（五档：充沛/正常/疲惫/力竭/虚脱） ============
@@ -59,10 +60,11 @@ export function StaminaBar({ value, size = 'sm', showText = false, className }: 
           />
         </div>
         <span
-          className="shrink-0 text-[9px] font-black tabular-nums leading-none"
+          className="inline-flex shrink-0 items-center gap-0.5 text-[9px] font-black tabular-nums leading-none"
           style={{ color: tier.color }}
         >
-          ⚡{Math.round(v)}
+          <ConfigIcon icon={tier.icon} size={10} />
+          {Math.round(v)}
         </span>
       </div>
     )
@@ -116,7 +118,7 @@ export function StaminaTierChip({ value, compact = false, className }: StaminaTi
         )}
         style={{ background: tier.bg, borderColor: `${tier.color}99`, color: tier.color }}
       >
-        <span aria-hidden>{tier.icon}</span>
+        <ConfigIcon icon={tier.icon} size={11} />
         <span>{num}</span>
       </span>
     )
@@ -136,7 +138,7 @@ export function StaminaTierChip({ value, compact = false, className }: StaminaTi
       style={{ background: tier.bg, borderColor: `${tier.color}66`, color: tier.color }}
     >
       <span className="flex items-center gap-1 text-[11px] font-black tabular-nums">
-        <span aria-hidden>{tier.icon}</span>
+        <ConfigIcon icon={tier.icon} size={14} />
         <span>{tier.name}</span>
         <span className="opacity-60">·</span>
         <span>{num}/100</span>

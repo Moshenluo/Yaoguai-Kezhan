@@ -234,6 +234,8 @@ export interface GameSave {
     sfxVolume: number
     /** 背景音乐音量（0-1，存档持久化） */
     bgmVolume: number
+    /** 白天三步引导是否已看过（跳过/完成都记） */
+    seenDayGuide: boolean
   }
 }
 

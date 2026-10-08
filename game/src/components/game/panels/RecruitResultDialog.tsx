@@ -50,9 +50,9 @@ export function RecruitResultDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[380px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA] p-5">
+      <DialogContent className="max-w-[380px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
         <DialogHeader className="items-center space-y-0.5">
-          <DialogTitle className="text-lg font-black tracking-[0.2em] text-[#2D5A3D]">
+          <DialogTitle className="text-lg font-black tracking-[0.2em] text-[#8B2E24]">
             {isTen ? '十连 · 妖籍入册' : '招募结果'}
           </DialogTitle>
           <DialogDescription>
@@ -139,7 +139,7 @@ export function RecruitResultDialog({
             <button
               type="button"
               onClick={onContinue}
-              className="h-12 flex-1 rounded-xl border-2 border-[#2D5A3D]/50 bg-[#2D5A3D]/10 text-sm font-black text-[#2D5A3D] transition-transform active:scale-95"
+              className="h-12 flex-1 rounded-xl border-2 border-[#8B2E24]/50 bg-[#8B2E24]/10 text-sm font-black text-[#8B2E24] transition-transform active:scale-95"
             >
               继续招募
             </button>

@@ -18,3 +18,10 @@ game/db/*.db
 game/db/*.db-journal
 game/.env
 game/.env.local
+
+# 本地备份与无关工作目录
+game/.backup-*/
+game/.next.bak-*/
+game/src/game/*.bak.*
+软著申请/
+pv/

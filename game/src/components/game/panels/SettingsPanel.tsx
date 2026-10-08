@@ -26,6 +26,7 @@ import { SKINS, skinUnlocked } from '@/game/config'
 import type { SkinDef } from '@/game/config'
 import { sfx } from '@/game/audio'
 import { toast } from '@/hooks/use-toast'
+import { ConfigIcon } from '@/components/game/shared'
 import { cn } from '@/lib/utils'
 
 function notify(title: string, description?: string) {
@@ -115,9 +116,9 @@ export function SettingsPanel({
             initial={{ rotate: -120, scale: 0.6, opacity: 0 }}
             animate={{ rotate: 0, scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 260, damping: 18 }}
-            className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2D5A3D]/10 text-xl"
+            className="flex h-11 w-11 items-center justify-center rounded-full bg-[#8B2E24]/10"
           >
-            ⚙️
+            <ConfigIcon icon="/images/ui/settings.png" size={22} />
           </motion.div>
           <DialogTitle className="text-lg font-bold tracking-[0.2em] text-[#4A3728]">设置</DialogTitle>
           <DialogDescription className="text-xs text-[#8B7355]">调整游戏选项与查看经营数据</DialogDescription>
@@ -127,12 +128,12 @@ export function SettingsPanel({
         <div className="divide-y divide-[#E4D4B4] overflow-hidden rounded-2xl border border-[#D4A574]/60 bg-white/70">
           <div className="flex h-12 items-center justify-between px-4">
             <span className="flex items-center gap-2 text-sm font-medium text-[#4A3728]">
-              🎵 <span>背景音乐</span>
+              <span>背景音乐</span>
             </span>
             <Switch
               checked={settings.music}
               onCheckedChange={() => toggleSetting('music')}
-              className="data-[state=checked]:bg-[#2D5A3D]"
+              className="data-[state=checked]:bg-[#8B2E24]"
               aria-label="背景音乐"
             />
           </div>
@@ -166,7 +167,7 @@ export function SettingsPanel({
             <Switch
               checked={settings.sound}
               onCheckedChange={() => toggleSetting('sound')}
-              className="data-[state=checked]:bg-[#2D5A3D]"
+              className="data-[state=checked]:bg-[#8B2E24]"
               aria-label="游戏音效"
             />
           </div>
@@ -198,8 +199,11 @@ export function SettingsPanel({
         {/* 客栈装扮（皮肤） */}
         <div className="rounded-2xl border border-[#D4A574]/60 bg-white/70 p-3">
           <div className="mb-2 flex items-center justify-between px-0.5">
-            <p className="text-sm font-bold text-[#4A3728]">🏮 客栈装扮</p>
-            <span className="max-w-[150px] truncate rounded-full bg-[#2D5A3D]/10 px-2 py-0.5 text-[10px] font-bold text-[#2D5A3D]">
+            <p className="inline-flex items-center gap-1.5 text-sm font-bold text-[#4A3728]">
+              <ConfigIcon icon="/images/ui/skin-lantern.png" size={16} />
+              客栈装扮
+            </p>
+            <span className="max-w-[150px] truncate rounded-full bg-[#8B2E24]/10 px-2 py-0.5 text-[10px] font-bold text-[#8B2E24]">
               当前：{currentSkin?.name ?? '—'}
             </span>
           </div>
@@ -338,9 +342,9 @@ function SkinCard({
                 ? 'flex-row items-center gap-3 border-red-800/40 bg-gradient-to-r from-[#4A0E0E] via-[#5C1212] to-[#2E0808] text-white'
                 : 'flex-row items-center gap-3 border-red-900/25 bg-gradient-to-r from-[#332424]/60 via-[#2B1C1C]/60 to-[#241818]/60'
             : isCurrent
-              ? 'flex-col gap-1.5 border-[#2D5A3D] bg-[#2D5A3D] text-white'
+              ? 'flex-col gap-1.5 border-[#8B2E24] bg-[#8B2E24] text-white'
               : unlocked
-                ? 'flex-col gap-1.5 border-[#2D5A3D]/50 bg-white/85 hover:border-[#2D5A3D]'
+                ? 'flex-col gap-1.5 border-[#8B2E24]/50 bg-white/85 hover:border-[#8B2E24]'
                 : 'flex-col gap-1.5 border-stone-300/70 bg-stone-100/80'
         )}
       >
@@ -356,10 +360,10 @@ function SkinCard({
           <span
             className={cn(
               'absolute inset-0 flex items-center justify-center',
-              wide ? 'text-3xl drop-shadow-[0_0_6px_rgba(255,180,140,0.55)]' : 'text-sm'
+              wide ? 'drop-shadow-[0_0_6px_rgba(255,180,140,0.55)]' : ''
             )}
           >
-            {wide ? skin.icon : '🏮'}
+            <ConfigIcon icon={wide ? skin.icon : '/images/ui/skin-default.png'} size={wide ? 36 : 18} />
           </span>
         </div>
 
@@ -403,8 +407,8 @@ function SkinCard({
           <>
             {/* 图标 + 名称 + 描述 */}
             <div className="flex items-start gap-1.5">
-              <span className={cn('text-base leading-none', !unlocked && 'opacity-50 grayscale')}>
-                {skin.icon}
+              <span className={cn('leading-none', !unlocked && 'opacity-50 grayscale')}>
+                <ConfigIcon icon={skin.icon} size={18} />
               </span>
               <div className="min-w-0 flex-1">
                 <p
@@ -423,11 +427,11 @@ function SkinCard({
 
             {/* 状态行 */}
             {isCurrent ? (
-              <span className="inline-flex w-fit items-center rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-[#2D5A3D]">
+              <span className="inline-flex w-fit items-center rounded-full bg-white/95 px-2 py-0.5 text-[10px] font-black text-[#8B2E24]">
                 ✓ 穿戴中
               </span>
             ) : unlocked ? (
-              <span className="inline-flex w-fit items-center rounded-full border border-[#2D5A3D]/60 px-2 py-0.5 text-[10px] font-black text-[#2D5A3D]">
+              <span className="inline-flex w-fit items-center rounded-full border border-[#8B2E24]/60 px-2 py-0.5 text-[10px] font-black text-[#8B2E24]">
                 穿 戴
               </span>
             ) : (

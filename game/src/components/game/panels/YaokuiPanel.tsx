@@ -19,7 +19,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
-import { GemIcon, GradeTag, StarBadge, YaoAvatar } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GradeTag, StarBadge, YaoAvatar } from '@/components/game/shared'
 import { ElementBadge, ElementChip } from '@/components/game/ElementBadge'
 import { StaminaBar, StaminaTierChip } from '@/components/game/StaminaBadge'
 import { AdDialog } from '@/components/game/AdDialog'
@@ -209,35 +209,38 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px] border-x-2 border-t-[3px] border-[#D4A574] bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA]">
+        <DrawerContent className="panel-sheet mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px]">
           <DrawerHeader className="pb-1">
-            <DrawerTitle className="text-center text-xl font-black tracking-[0.3em] text-[#2D5A3D]">
+            <DrawerTitle className="panel-title text-center text-xl">
               妖 库
             </DrawerTitle>
             <DrawerDescription className="sr-only">管理收藏的妖怪，升星强化与安排白天打工</DrawerDescription>
             <div className="flex flex-col items-center gap-0.5">
               <div className="flex items-center justify-center gap-1 text-[11px] text-stone-600">
-                🛖 已上岗
-                <b className="text-[#2D5A3D]">{deployedCount}</b>
+                上岗
+                <b className="text-[#8B2E24]">{deployedCount}</b>
                 <span>/ 上限 {workerLimit}</span>
                 <span className="ml-1 text-[10px] text-stone-400">（升级客房解锁更多）</span>
               </div>
               {/* 双线养成汇总：平均等级 + 药水库存 */}
               <div className="flex items-center justify-center gap-2 text-[11px] tabular-nums text-stone-600">
                 <span>
-                  ⬆️ 平均等级 <b className="text-emerald-600">{avgLevel.toFixed(1)}</b>
+                  均级 <b className="text-emerald-600">{avgLevel.toFixed(1)}</b>
                 </span>
                 <span className="text-[#D4A574]">·</span>
-                <span>
-                  🧪<b className="text-stone-700">{potions.small}</b> 🍶
-                  <b className="text-stone-700">{potions.medium}</b> 🏺
+                <span className="inline-flex items-center gap-1">
+                  <ConfigIcon icon="/images/ui/potion-exp-small.png" size={14} />
+                  <b className="text-stone-700">{potions.small}</b>
+                  <ConfigIcon icon="/images/ui/potion-exp-medium.png" size={14} />
+                  <b className="text-stone-700">{potions.medium}</b>
+                  <ConfigIcon icon="/images/ui/potion-exp-large.png" size={14} />
                   <b className="text-stone-700">{potions.large}</b>
                 </span>
               </div>
               {/* 体力与轮换汇总：平均体力 + 广告恢复 + 自动轮换开关 */}
               <div className="flex w-full items-center justify-center gap-2 text-[11px] tabular-nums text-stone-600">
                 <span>
-                  ⚡ 平均体力 <b className="text-[#B9770E]">{Math.round(avgStamina)}</b>
+                  均体 <b className="text-[#B9770E]">{Math.round(avgStamina)}</b>
                 </span>
                 <span className="text-[#D4A574]">·</span>
                 <button
@@ -248,11 +251,11 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
                   className={cn(
                     'flex h-8 items-center gap-1 rounded-full border px-2.5 text-[10px] font-black shadow-sm transition-transform active:scale-95',
                     oneClickReady
-                      ? 'border-[#2D5A3D]/60 bg-emerald-50 text-[#2D5A3D]'
+                      ? 'border-[#8B2E24]/60 bg-emerald-50 text-[#8B2E24]'
                       : 'cursor-not-allowed border-stone-200 bg-stone-100 text-stone-400'
                   )}
                 >
-                  ⚡一键补充
+                  一键补充
                 </button>
                 <button
                   type="button"
@@ -262,7 +265,7 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
                   }}
                   className="flex h-8 items-center gap-1 rounded-full border border-[#E8B84B]/80 bg-amber-50 px-2.5 text-[10px] font-black text-[#8A5A1E] shadow-sm transition-transform active:scale-95"
                 >
-                  📺 广告恢复
+                  广告恢复
                 </button>
               </div>
               <div className="flex w-full items-center justify-center gap-1.5">
@@ -281,25 +284,25 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
               <TabsList className="h-10 w-full justify-between rounded-xl border border-[#D4A574]/50 bg-white/70 p-1">
                 <TabsTrigger
                   value="all"
-                  className="rounded-lg text-xs data-[state=active]:bg-[#2D5A3D] data-[state=active]:text-[#F5F0E8]"
+                  className="rounded-lg text-xs data-[state=active]:bg-[#8B2E24] data-[state=active]:text-[#E6DCC8]"
                 >
                   全部 {counts.all}
                 </TabsTrigger>
                 <TabsTrigger
                   value="normal"
-                  className="rounded-lg text-xs data-[state=active]:bg-[#2D5A3D] data-[state=active]:text-[#F5F0E8]"
+                  className="rounded-lg text-xs data-[state=active]:bg-[#8B2E24] data-[state=active]:text-[#E6DCC8]"
                 >
                   普通小妖 {counts.normal}
                 </TabsTrigger>
                 <TabsTrigger
                   value="rare"
-                  className="rounded-lg text-xs data-[state=active]:bg-[#2D5A3D] data-[state=active]:text-[#F5F0E8]"
+                  className="rounded-lg text-xs data-[state=active]:bg-[#8B2E24] data-[state=active]:text-[#E6DCC8]"
                 >
                   稀有精怪 {counts.rare}
                 </TabsTrigger>
                 <TabsTrigger
                   value="legend"
-                  className="rounded-lg text-xs data-[state=active]:bg-[#2D5A3D] data-[state=active]:text-[#F5F0E8]"
+                  className="rounded-lg text-xs data-[state=active]:bg-[#8B2E24] data-[state=active]:text-[#E6DCC8]"
                 >
                   传说 {counts.legend}
                 </TabsTrigger>
@@ -314,7 +317,7 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
             <ScrollArea className="h-full w-full">
               {filtered.length === 0 ? (
                 <div className="flex h-40 flex-col items-center justify-center gap-2 text-stone-400">
-                  <span className="text-3xl">🏮</span>
+                  <ConfigIcon icon="/images/ui/region-1.png" size={36} />
                   <p className="text-xs">这里还空空如也，去商店招募或夜间捉妖吧</p>
                 </div>
               ) : (
@@ -337,7 +340,7 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
                         className="relative flex min-h-[150px] flex-col items-center gap-1 rounded-2xl border border-[#D4A574]/50 bg-white/80 p-2 shadow-sm transition-transform active:scale-95"
                       >
                         {o.deployed && (
-                          <span className="absolute left-1 top-1 z-10 rounded-full bg-[#2D5A3D] px-1.5 py-px text-[9px] font-bold text-[#F5F0E8] shadow">
+                          <span className="absolute left-1 top-1 z-10 rounded-full bg-[#8B2E24] px-1.5 py-px text-[9px] font-bold text-[#E6DCC8] shadow">
                             打工中
                           </span>
                         )}
@@ -348,10 +351,10 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
                             aria-label="体力虚脱"
                             className="absolute right-1 top-1 z-[11] rounded-full border border-[#6B4E8E] bg-[#EAE2F3] px-1 py-px text-[10px] leading-tight shadow"
                           >
-                            💀
+                            <ConfigIcon icon="/images/ui/stamina-collapse.png" size={12} />
                           </span>
                         )}
-                        {/* 技能精进角标（右上偏下，与 💀 虚脱角标/升星红点垂直错开；金底白字，Lv.1 不显示不占位） */}
+                        {/* 技能精进角标（右上偏下，与虚脱角标/升星红点垂直错开；金底白字，Lv.1 不显示不占位） */}
                         {skillLv > 1 && (
                           <span
                             title={`技能精进 Lv.${skillLv}：效果 +${Math.round((skillLv - 1) * SKILL_LEVEL_BONUS * 100)}%`}
@@ -449,7 +452,7 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
           if (!o) setDetailId(null)
         }}
       >
-        <DialogContent className="max-h-[86vh] max-w-[400px] overflow-y-auto rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA] p-5">
+        <DialogContent className="max-h-[86vh] max-w-[400px] overflow-y-auto rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
           {detailDef && detailOwned && <YaoDetail
             def={detailDef}
             o={detailOwned}
@@ -577,8 +580,8 @@ function YaoDetail({
   // 素材持有量全部 ?? 0 兜底；图标同源取自 MATERIALS_MAP（妖丹💊 / 稀有妖丹🔴）
   const pillNormalStock = materials['pill-normal'] ?? 0
   const pillRareStock = materials['pill-rare'] ?? 0
-  const pillNormalIcon = MATERIALS_MAP['pill-normal']?.icon ?? '💊'
-  const pillRareIcon = MATERIALS_MAP['pill-rare']?.icon ?? '🔴'
+  const pillNormalIcon = MATERIALS_MAP['pill-normal']?.icon ?? '/images/ui/mat-pill-normal.png'
+  const pillRareIcon = MATERIALS_MAP['pill-rare']?.icon ?? '/images/ui/mat-pill-rare.png'
   const skillGoldOk = gold >= (nextSkillCost?.gold ?? 0)
   const skillGemsOk = gems >= (nextSkillCost?.gems ?? 0)
   const skillPillOk = pillNormalStock >= (nextSkillCost?.pillNormal ?? 0)
@@ -593,16 +596,16 @@ function YaoDetail({
     skillPillRareOk
 
   const stats = [
-    { icon: '⚔️', label: '攻击', value: Math.round(def.atk * mult * lvlAtkMult).toString() },
-    { icon: '💚', label: '生命', value: Math.round(def.hp * mult * lvlHpMult).toString() },
-    { icon: '⚡', label: '攻速', value: `${def.attackSpeed}/秒` },
-    { icon: '🎯', label: '射程', value: `${def.range}格` },
+    { icon: '/images/ui/stat-atk.png', label: '攻击', value: Math.round(def.atk * mult * lvlAtkMult).toString() },
+    { icon: '/images/ui/stat-hp.png', label: '生命', value: Math.round(def.hp * mult * lvlHpMult).toString() },
+    { icon: '/images/ui/stat-as.png', label: '攻速', value: `${def.attackSpeed}/秒` },
+    { icon: '/images/ui/stat-range.png', label: '射程', value: `${def.range}格` },
   ]
 
   return (
     <div className="flex flex-col gap-3">
       <DialogHeader className="items-center space-y-1">
-        <DialogTitle className="flex items-center gap-2 text-lg font-black text-[#2D5A3D]">
+        <DialogTitle className="flex items-center gap-2 text-lg font-black text-[#8B2E24]">
           {def.name}
           <span className="text-xs font-normal text-stone-400">{def.pinyin}</span>
         </DialogTitle>
@@ -688,8 +691,8 @@ function YaoDetail({
                     : 'border-[#D4A574]/60 bg-white/90 text-stone-700 shadow-sm'
                 )}
               >
-                <span className={cn('text-base leading-none', disabled && 'grayscale')} aria-hidden>
-                  {p.icon}
+                <span className={cn('leading-none', disabled && 'grayscale')} aria-hidden>
+                  <ConfigIcon icon={p.icon} size={20} />
                 </span>
                 <span className="text-[10px] font-bold">体力 +{p.value}</span>
                 <span
@@ -723,7 +726,9 @@ function YaoDetail({
                   : 'border-[#D4A574]/60 bg-white/90 text-stone-700 shadow-sm'
               )}
             >
-              <span aria-hidden className={cn(disabled && 'grayscale')}>{p.icon}</span>
+              <span aria-hidden className={cn(disabled && 'grayscale')}>
+                <ConfigIcon icon={p.icon} size={16} />
+              </span>
               <span>{p.name} · 全体 +{p.value}</span>
               <span
                 className={cn(
@@ -744,11 +749,17 @@ function YaoDetail({
       {/* 白天 / 夜晚 */}
       <div className="grid grid-cols-2 gap-2">
         <div className="rounded-2xl border border-amber-200 bg-amber-50/70 p-2.5">
-          <p className="text-[10px] font-black text-amber-700">☀️ 白天 · {def.dayJobName}</p>
+          <p className="flex items-center gap-1 text-[10px] font-black text-amber-700">
+            <ConfigIcon icon="/images/ui/ui-sun.png" size={12} />
+            白天 · {def.dayJobName}
+          </p>
           <p className="mt-1 text-[11px] leading-relaxed text-stone-600">{def.dayBuff}</p>
         </div>
-        <div className="rounded-2xl border border-[#2D5A3D]/30 bg-[#2D5A3D]/5 p-2.5">
-          <p className="text-[10px] font-black text-[#2D5A3D]">🌙 夜晚 · {def.nightRoleName}</p>
+        <div className="rounded-2xl border border-[#8B2E24]/30 bg-[#8B2E24]/5 p-2.5">
+          <p className="flex items-center gap-1 text-[10px] font-black text-[#8B2E24]">
+            <ConfigIcon icon="/images/ui/status-moon.png" size={12} />
+            夜晚 · {def.nightRoleName}
+          </p>
           <p className="mt-1 text-[11px] font-bold text-stone-700">「{def.skillName}」</p>
           <p className="mt-0.5 text-[11px] leading-relaxed text-stone-600">{def.skillDesc}</p>
           {/* 技能精进联动提示（数据同源；Lv.1 不透出避免 +0% 噪音，与卡片角标显隐同约定） */}
@@ -768,7 +779,7 @@ function YaoDetail({
               key={s.label}
               className="flex flex-col items-center gap-0.5 rounded-xl border border-[#D4A574]/50 bg-white/80 py-2"
             >
-              <span className="text-sm">{s.icon}</span>
+              <ConfigIcon icon={s.icon} size={18} />
               <span className="text-[9px] text-stone-400">{s.label}</span>
               <span className="text-xs font-black tabular-nums text-stone-800">{s.value}</span>
             </div>
@@ -865,7 +876,9 @@ function YaoDetail({
                     : 'border-emerald-600/30 bg-white/90 text-stone-700 shadow-sm hover:border-emerald-500/60'
                 )}
               >
-                <span className={cn('text-base leading-none', disabled && 'grayscale')}>{p.icon}</span>
+                <span className={cn('leading-none', disabled && 'grayscale')}>
+                  <ConfigIcon icon={p.icon} size={20} />
+                </span>
                 <span className="text-[10px] font-bold tabular-nums">+{p.exp}经验</span>
                 <span
                   className={cn(
@@ -894,8 +907,8 @@ function YaoDetail({
           }}
         >
           <div className="mb-2 flex items-center justify-between">
-            <span className="flex items-center gap-1 text-xs font-black text-stone-700">
-              <span aria-hidden>{stoneMat?.icon ?? '🔷'}</span>
+              <span className="flex items-center gap-1 text-xs font-black text-stone-700">
+              {stoneMat?.icon ? <ConfigIcon icon={stoneMat.icon} size={14} /> : null}
               属性石强化 · {ELEMENTS[detailElement].name}属性
             </span>
             {stoneMaxed ? (
@@ -936,7 +949,7 @@ function YaoDetail({
                   {!gemsOk && <span className="text-[9px]">灵石不足</span>}
                 </span>
                 <span className={cn('flex items-center gap-1', stonesOk ? 'text-stone-600' : 'font-bold text-red-500')}>
-                  <span aria-hidden>{stoneMat?.icon}</span>
+                  {stoneMat?.icon ? <ConfigIcon icon={stoneMat.icon} size={14} /> : null}
                   {stoneCost.stones}
                   <span className="text-[9px] text-stone-400">库存 {stoneStock}</span>
                 </span>
@@ -1035,7 +1048,7 @@ function YaoDetail({
             </span>
             {nextSkillCost.pillNormal > 0 && (
               <span className={cn('flex items-center gap-1', skillPillOk ? 'text-stone-600' : 'font-bold text-red-500')}>
-                <span aria-hidden>{pillNormalIcon}</span>
+                <ConfigIcon icon={pillNormalIcon} size={14} />
                 {nextSkillCost.pillNormal}
                 <span className="text-[9px] text-stone-400">持有 {pillNormalStock}</span>
               </span>
@@ -1044,7 +1057,7 @@ function YaoDetail({
               <span
                 className={cn('flex items-center gap-1', skillPillRareOk ? 'text-stone-600' : 'font-bold text-red-500')}
               >
-                <span aria-hidden>{pillRareIcon}</span>
+                <ConfigIcon icon={pillRareIcon} size={14} />
                 {nextSkillCost.pillRare}
                 <span className="text-[9px] text-stone-400">持有 {pillRareStock}</span>
               </span>
@@ -1065,7 +1078,10 @@ function YaoDetail({
           </div>
         ) : starCapped ? (
           <div className="flex h-11 w-full items-center justify-center rounded-xl border border-stone-300/70 bg-stone-100/80 text-sm font-black text-stone-500">
-            ⭐ 需先升星（{o.star}星上限 Lv.{skillCap}）
+            <span className="inline-flex items-center gap-1">
+              <ConfigIcon icon="/images/ui/ui-star.png" size={14} />
+              需先升星（{o.star}星上限 Lv.{skillCap}）
+            </span>
           </div>
         ) : (
           <button
@@ -1092,7 +1108,10 @@ function YaoDetail({
       {/* 升星区块 */}
       <div className="rounded-2xl border border-[#D4A574]/50 bg-[#FAF5EA] p-3">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-xs font-black text-stone-700">⭐ 升星强化</span>
+          <span className="inline-flex items-center gap-1 text-xs font-black text-stone-700">
+            <ConfigIcon icon="/images/ui/ui-star.png" size={13} />
+            升星强化
+          </span>
           {atMax ? (
             <span className="text-[10px] font-bold text-amber-600">已达最高星级</span>
           ) : (
@@ -1142,10 +1161,10 @@ function YaoDetail({
           className={cn(
             'h-11 min-w-[88px] rounded-xl px-4 text-sm font-black transition-transform active:scale-95',
             o.deployed
-              ? 'border border-[#2D5A3D]/40 bg-[#2D5A3D]/10 text-[#2D5A3D]'
+              ? 'border border-[#8B2E24]/40 bg-[#8B2E24]/10 text-[#8B2E24]'
               : slotsFull
                 ? 'cursor-not-allowed bg-stone-200 text-stone-400'
-                : 'bg-[#2D5A3D] text-[#F5F0E8] shadow-md'
+                : 'bg-[#8B2E24] text-[#E6DCC8] shadow-md'
           )}
         >
           {o.deployed ? '安排休息' : slotsFull ? '打工位已满' : '上岗打工'}

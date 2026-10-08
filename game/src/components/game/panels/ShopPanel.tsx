@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/drawer'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { AdDialog } from '@/components/game/AdDialog'
-import { GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
 import { RecruitResultDialog } from '@/components/game/panels/RecruitResultDialog'
 import { useGameStore } from '@/game/store'
 import { RARE_IDS, YAOGUAI_MAP } from '@/game/yaoguai'
@@ -229,9 +229,9 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px] border-x-2 border-t-[3px] border-[#D4A574] bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA]">
+        <DrawerContent className="panel-sheet mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px]">
           <DrawerHeader className="pb-1">
-            <DrawerTitle className="text-center text-xl font-black tracking-[0.3em] text-[#2D5A3D]">
+            <DrawerTitle className="panel-title text-center text-xl">
               商 店
             </DrawerTitle>
             <DrawerDescription className="sr-only">招募妖怪与道具购买</DrawerDescription>
@@ -257,8 +257,9 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
               <div className="flex flex-col gap-3 p-2">
                 {/* 招募池区域轮换提示（V1.3.1）：稀有精怪随驻扎区域轮换 */}
                 <div className="rounded-2xl border-2 border-[#8AB8A0]/70 bg-gradient-to-br from-[#EDF5EF] to-[#E2EEE5] p-3">
-                  <p className="text-[11px] font-black text-[#2D5A3D]">
-                    📍 招募池随区域轮换 · 当前：{regionInfo.icon} {regionInfo.name}
+                  <p className="flex items-center gap-1.5 text-[11px] font-black text-[#8B2E24]">
+                    📍 招募池随区域轮换 · 当前：
+                    <ConfigIcon icon={regionInfo.icon} size={16} /> {regionInfo.name}
                   </p>
                   <p className="mt-1 text-[10px] leading-relaxed text-[#4A6B54]">
                     本区独占稀有：{regionRares.map((id) => YAOGUAI_MAP[id]?.name ?? id).join(' / ')}
@@ -273,9 +274,9 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                     <motion.div
                       animate={freeUsed ? undefined : { rotate: [0, -8, 8, 0] }}
                       transition={freeUsed ? undefined : { repeat: Infinity, duration: 2.4 }}
-                      className={cn('text-4xl', freeUsed && 'grayscale opacity-50')}
+                      className={cn(freeUsed && 'grayscale opacity-50')}
                     >
-                      🎁
+                      <ConfigIcon icon="/images/ui/gift.png" size={40} />
                     </motion.div>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-black text-[#8A5A1E]">每日免费招募</p>
@@ -332,7 +333,7 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                   onClick={() => setAdOpen(true)}
                   className="flex w-full items-center gap-3 rounded-2xl border-2 border-dashed border-[#E8B84B] bg-amber-50/70 p-3 transition-transform active:scale-95"
                 >
-                  <span className="text-2xl">📺</span>
+                  <ConfigIcon icon="/images/ui/gift.png" size={28} />
                   <span className="min-w-0 flex-1 text-left">
                     <span className="block text-sm font-black text-[#8A5A1E]">免费高级招募</span>
                     <span className="block text-[10px] text-[#A87B3D]">
@@ -359,7 +360,10 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                 {/* 经验药水 */}
                 <div>
                   <div className="mb-2 flex items-baseline justify-between">
-                    <p className="text-xs font-black text-[#2D5A3D]">🧪 经验药水</p>
+                    <p className="inline-flex items-center gap-1 text-xs font-black text-[#8B2E24]">
+                      <ConfigIcon icon="/images/ui/potion-exp-small.png" size={14} />
+                      经验药水
+                    </p>
                     <p className="text-[9px] text-stone-400">喂给妖怪提升等级</p>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -374,10 +378,9 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                           <motion.span
                             animate={held > 0 ? { rotate: [0, -6, 6, 0] } : undefined}
                             transition={held > 0 ? { repeat: Infinity, duration: 3.2 } : undefined}
-                            className="text-2xl"
                             aria-hidden
                           >
-                            {p.icon}
+                            <ConfigIcon icon={p.icon} size={28} />
                           </motion.span>
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-black text-stone-800">{p.name}</p>
@@ -410,7 +413,10 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                 {/* 体力药铺：三档体力药水（单只小/中 + 全体大） */}
                 <div>
                   <div className="mb-2 flex items-baseline justify-between">
-                    <p className="text-xs font-black text-[#2D5A3D]">🏮 体力药铺</p>
+                    <p className="inline-flex items-center gap-1 text-xs font-black text-[#8B2E24]">
+                      <ConfigIcon icon="/images/ui/potion-stamina-small.png" size={14} />
+                      体力药铺
+                    </p>
                     <p className="text-[9px] text-stone-400">妖怪疲惫/力竭时喝一瓶回状态</p>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -425,10 +431,9 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                           <motion.span
                             animate={held > 0 ? { rotate: [0, -6, 6, 0] } : undefined}
                             transition={held > 0 ? { repeat: Infinity, duration: 3.2 } : undefined}
-                            className="text-2xl"
                             aria-hidden
                           >
-                            {p.icon}
+                            <ConfigIcon icon={p.icon} size={28} />
                           </motion.span>
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-black text-stone-800">
@@ -466,7 +471,7 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                 {/* 杂货铺：食材与建材 */}
                 <div>
                   <div className="mb-2 flex items-baseline justify-between">
-                    <p className="text-xs font-black text-[#2D5A3D]">🧺 杂货铺</p>
+                    <p className="text-xs font-black text-[#8B2E24]">🧺 杂货铺</p>
                     <p className="text-[9px] text-stone-400">仓库有空位才能购买</p>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
@@ -484,8 +489,8 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                             !affordable && 'opacity-55'
                           )}
                         >
-                          <span className="text-2xl" aria-hidden>
-                            {def?.icon}
+                          <span aria-hidden>
+                            {def?.icon ? <ConfigIcon icon={def.icon} size={28} /> : null}
                           </span>
                           <span className="text-[11px] font-bold text-stone-700">{def?.name}</span>
                           <span className="flex h-6 items-center gap-1 rounded-lg bg-amber-50 px-2 text-[11px] font-black tabular-nums text-amber-700">
@@ -510,8 +515,8 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                             !affordable && 'opacity-55'
                           )}
                         >
-                          <span className="text-2xl" aria-hidden>
-                            {g.icon}
+                          <span aria-hidden>
+                            <ConfigIcon icon={g.icon} size={28} />
                           </span>
                           <span className="min-w-0 flex-1">
                             <span className="block text-[12px] font-black text-stone-800">{g.name}</span>
@@ -532,7 +537,7 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                 {/* 法宝铺（V1.1 道具实装：缚妖网 / 聚宝符；妖王诱引香在上方灵石区） */}
                 <div>
                   <div className="mb-2 flex items-baseline justify-between">
-                    <p className="text-xs font-black text-[#2D5A3D]">🧿 法宝铺</p>
+                    <p className="text-xs font-black text-[#8B2E24]">🧿 法宝铺</p>
                     <p className="text-[9px] text-stone-400">关键时刻的神器，存仓库随时取用</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
@@ -540,7 +545,7 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                       [
                         {
                           id: CAPTURE_NET.id,
-                          icon: '🕸️',
+                          icon: MATERIALS_MAP[CAPTURE_NET.id]?.icon ?? '/images/ui/prop-capture-net.png',
                           name: CAPTURE_NET.name,
                           desc: CAPTURE_NET.desc,
                           price: CAPTURE_NET.price,
@@ -549,7 +554,7 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                         },
                         {
                           id: HASTE_TALISMAN.id,
-                          icon: '🧿',
+                          icon: MATERIALS_MAP[HASTE_TALISMAN.id]?.icon ?? '/images/ui/prop-haste-talisman.png',
                           name: HASTE_TALISMAN.name,
                           desc: HASTE_TALISMAN.desc,
                           price: HASTE_TALISMAN.price,
@@ -564,8 +569,8 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                           key={it.id}
                           className="flex flex-col items-center gap-1 rounded-2xl border-2 border-[#7BA05B]/50 bg-gradient-to-b from-white/95 to-[#F2F7EC] p-2.5 shadow-sm"
                         >
-                          <span className="text-2xl" aria-hidden>
-                            {it.icon}
+                          <span aria-hidden>
+                            <ConfigIcon icon={it.icon} size={28} />
                           </span>
                           <span className="text-[11px] font-black text-stone-800">{it.name}</span>
                           <span className="text-center text-[9px] leading-tight text-stone-500">{it.desc}</span>

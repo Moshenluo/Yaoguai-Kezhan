@@ -393,7 +393,7 @@ export class BattleEngine {
     })
 
     let delay = 0
-    const lanes = [30, 45, 60, 38, 52, 66, 34, 48]
+    const lanes = [52, 58, 64, 55, 61, 67, 54, 63]
     let li = 0
     const types: Array<'minion' | 'brute' | 'sprite'> = []
     for (let i = 0; i < wave.minions; i++) types.push('minion')
@@ -481,7 +481,7 @@ export class BattleEngine {
       dead: false,
       protectedFlag: false,
       captureFailCount: 0,
-      lane: 46,
+      lane: 58,
       spawnDelay: delay,
     }
   }
@@ -521,7 +521,7 @@ export class BattleEngine {
       dead: false,
       protectedFlag: false,
       captureFailCount: 0,
-      lane: 46,
+      lane: 58,
       spawnDelay: delay,
     }
     // 登记妖王技能计时（入场后 12-15 秒首次施放）
@@ -584,7 +584,7 @@ export class BattleEngine {
     if (wishAltarLv3 && !this.innShieldUsed && this.state.innHp > 0 && this.state.innHp / this.state.innMaxHp < 0.2) {
       this.innShieldUsed = true
       this.innShieldUntil = now + (facilityAbilityEnhanced(this.opts.facilities, 'wishAltar') ? 3 : 2)
-      this.float(70, 12, '🌟神灵庇佑！', 'heal')
+      this.float(70, 12, '神灵庇佑！', 'heal')
     }
     if (this.innShieldUntil > now) {
       this.float(INN_X, lane, '庇佑', 'skill')

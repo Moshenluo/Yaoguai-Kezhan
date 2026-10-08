@@ -23,7 +23,7 @@ import {
   matCap,
 } from '@/game/config'
 import type { MaterialCat } from '@/game/config'
-import { GoldIcon } from '../shared'
+import { ConfigIcon, GoldIcon } from '../shared'
 import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
@@ -121,7 +121,7 @@ function MaterialCard({ id }: { id: string }) {
           )}
           aria-hidden
         >
-          {def.icon}
+          <ConfigIcon icon={def.icon} size={28} />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-1">
@@ -193,12 +193,12 @@ function CookSection({ now }: { now: number }) {
   return (
     <section className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between px-0.5">
-        <p className="text-xs font-black text-[#2D5A3D]">🍳 灶火做饭</p>
+        <p className="text-xs font-black text-[#8B2E24]">🍳 灶火做饭</p>
         <p className="text-[9px] text-stone-400">上菜限时提升挂机收益</p>
       </div>
 
       {/* 体力恢复联动提示（与 config.staminaRegenRate 的烹饪加成同源） */}
-      <div className="flex items-center gap-1.5 rounded-xl border border-[#2D5A3D]/25 bg-[#E2F0E4]/60 px-2.5 py-1.5 text-[10px] font-bold leading-snug text-[#2D5A3D]">
+      <div className="flex items-center gap-1.5 rounded-xl border border-[#8B2E24]/25 bg-[#E8DFD0]/60 px-2.5 py-1.5 text-[10px] font-bold leading-snug text-[#8B2E24]">
         <span aria-hidden>🍲</span>
         <span>烹饪期间全体妖怪体力恢复 +{Math.round(COOK_STAMINA_BONUS * 100)}%</span>
       </div>
@@ -239,8 +239,8 @@ function CookSection({ now }: { now: number }) {
               key={dish.id}
               className="flex items-center gap-3 rounded-2xl border-2 border-[#D4A574]/60 bg-white/85 p-3 shadow-sm"
             >
-              <span className="text-2xl" aria-hidden>
-                {dish.icon}
+              <span aria-hidden>
+                <ConfigIcon icon={dish.icon} size={28} />
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-black text-stone-800">{dish.name}</p>
@@ -257,7 +257,7 @@ function CookSection({ now }: { now: number }) {
                           have >= n ? 'text-[#6B5240]' : 'text-rose-600'
                         )}
                       >
-                        {def?.icon}×{n}
+                        {def?.icon ? <ConfigIcon icon={def.icon} size={14} /> : null}×{n}
                         <span className="ml-0.5 text-[9px] text-stone-400">({have})</span>
                       </span>
                     )
@@ -298,7 +298,7 @@ function SynthSection() {
   return (
     <section className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between px-0.5">
-        <p className="text-xs font-black text-[#2D5A3D]">🧰 万物合成</p>
+        <p className="text-xs font-black text-[#8B2E24]">🧰 万物合成</p>
         <p className="text-[9px] text-stone-400">低级建材聚成高级货</p>
       </div>
       <div className="flex flex-col gap-2">
@@ -315,15 +315,15 @@ function SynthSection() {
             >
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <div className="flex flex-wrap items-center gap-1.5 text-[13px] font-black text-stone-800">
-                  <span className={cn(haveFrom >= r.from.n ? '' : 'text-rose-600')}>
-                    {r.from.n}×{from?.icon}
+                  <span className={cn('inline-flex items-center gap-0.5', haveFrom >= r.from.n ? '' : 'text-rose-600')}>
+                    {r.from.n}×{from?.icon ? <ConfigIcon icon={from.icon} size={16} /> : null}
                     <span className="ml-0.5 text-[11px] font-bold">{from?.name}</span>
                   </span>
                   <span className="text-[#B8860B]" aria-hidden>
                     ➜
                   </span>
-                  <span>
-                    {r.to.n}×{to?.icon}
+                  <span className="inline-flex items-center gap-0.5">
+                    {r.to.n}×{to?.icon ? <ConfigIcon icon={to.icon} size={16} /> : null}
                     <span className="ml-0.5 text-[11px] font-bold">{to?.name}</span>
                   </span>
                 </div>
@@ -404,10 +404,10 @@ export function BagPanel({ open, onOpenChange }: BagPanelProps) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px] border-x-2 border-t-[3px] border-[#D4A574] bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA]">
+      <DrawerContent className="panel-sheet mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px]">
         <DrawerHeader className="pb-1">
-          <DrawerTitle className="text-center text-xl font-black tracking-[0.3em] text-[#2D5A3D]">
-            📦 仓库
+          <DrawerTitle className="panel-title text-center text-xl">
+            仓 库
           </DrawerTitle>
           <DrawerDescription className="sr-only">素材仓库与灶火做饭、合成</DrawerDescription>
 
@@ -467,7 +467,7 @@ export function BagPanel({ open, onOpenChange }: BagPanelProps) {
                   />
                 )}
                 <span className="relative z-10 flex items-center gap-1">
-                  <span aria-hidden>{c.icon}</span>
+                  <ConfigIcon icon={c.icon} size={14} />
                   {c.name}
                 </span>
                 <span
@@ -501,8 +501,8 @@ export function BagPanel({ open, onOpenChange }: BagPanelProps) {
 
               {/* 分类标题 + 一键出售 */}
               <div className="flex items-center justify-between gap-2 px-0.5">
-                <p className="min-w-0 truncate text-[11px] font-bold text-[#8B7355]">
-                  {catMeta?.icon} {catMeta?.desc}
+                <p className="flex min-w-0 items-center gap-1 truncate text-[11px] font-bold text-[#8B7355]">
+                  {catMeta?.icon ? <ConfigIcon icon={catMeta.icon} size={14} /> : null} {catMeta?.desc}
                 </p>
                 {tab !== 'growth' && tab !== 'prop' ? (
                   <button

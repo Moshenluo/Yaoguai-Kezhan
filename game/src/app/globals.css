@@ -6,8 +6,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,75 +42,86 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-cinnabar: var(--cinnabar);
+  --color-brass: var(--brass);
+  --color-parchment: var(--parchment);
+  --color-lacquer: var(--lacquer);
+  --color-night: var(--night);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.7rem;
+
+  /* 山海志怪色板：墨 · 硃砂 · 旧金 · 旧纸 · 漆木 */
+  --ink: #1c1915;
+  --ink-soft: #2c241c;
+  --cinnabar: #8b2e24;
+  --cinnabar-bright: #b83a2e;
+  --brass: #c9a227;
+  --brass-soft: #dfc56a;
+  --parchment: #e6dcc8;
+  --parchment-deep: #d2c4a8;
+  --lacquer: #5c3a24;
+  --lacquer-deep: #3f2718;
+  --night: #0e1424;
+  --pine: #243d32;
+  --pine-deep: #1a2c24;
+
+  --background: #e6dcc8;
+  --foreground: #1c1915;
+  --card: #efe6d4;
+  --card-foreground: #1c1915;
+  --popover: #efe6d4;
+  --popover-foreground: #1c1915;
+  --primary: #8b2e24;
+  --primary-foreground: #f3ebe0;
+  --secondary: #d2c4a8;
+  --secondary-foreground: #1c1915;
+  --muted: #d8cdb8;
+  --muted-foreground: #6b5a48;
+  --accent: #c9a227;
+  --accent-foreground: #1c1915;
+  --destructive: #8b2e24;
+  --border: #5c3a2466;
+  --input: #5c3a2488;
+  --ring: #8b2e24;
+  --chart-1: #8b2e24;
+  --chart-2: #c9a227;
+  --chart-3: #243d32;
+  --chart-4: #5c3a24;
+  --chart-5: #0e1424;
+  --sidebar: #efe6d4;
+  --sidebar-foreground: #1c1915;
+  --sidebar-primary: #8b2e24;
+  --sidebar-primary-foreground: #f3ebe0;
+  --sidebar-accent: #d2c4a8;
+  --sidebar-accent-foreground: #1c1915;
+  --sidebar-border: #5c3a2466;
+  --sidebar-ring: #8b2e24;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #12100e;
+  --foreground: #e6dcc8;
+  --card: #1c1915;
+  --card-foreground: #e6dcc8;
+  --popover: #1c1915;
+  --popover-foreground: #e6dcc8;
+  --primary: #b83a2e;
+  --primary-foreground: #f3ebe0;
+  --secondary: #2c241c;
+  --secondary-foreground: #e6dcc8;
+  --muted: #2c241c;
+  --muted-foreground: #b5a48c;
+  --accent: #c9a227;
+  --accent-foreground: #12100e;
+  --destructive: #b83a2e;
+  --border: #ffffff14;
+  --input: #ffffff1f;
+  --ring: #b83a2e;
 }
 
 @layer base {
@@ -117,6 +129,292 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans), "PingFang SC", "Microsoft YaHei", sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-serif), "Noto Serif SC", "Songti SC", serif;
+  }
+
+  /* 漆木条：更深更沉，少一点「温馨木桌」 */
+  .ui-wood {
+    background:
+      linear-gradient(180deg, rgba(201, 162, 39, 0.12) 0%, transparent 40%),
+      linear-gradient(180deg, #6a442c 0%, #52331f 52%, #3f2718 100%);
+    border: 1px solid rgba(28, 25, 21, 0.65);
+    box-shadow:
+      inset 0 1px 0 rgba(223, 197, 106, 0.18),
+      inset 0 -2px 5px rgba(0, 0, 0, 0.35),
+      0 10px 22px rgba(0, 0, 0, 0.35);
+  }
+
+  /* 旧卷纸片 */
+  .ui-paper-chip {
+    background: linear-gradient(180deg, #f0e6d2 0%, #ddd0b6 60%, #cbb896 100%);
+    border: 1px solid rgba(92, 58, 36, 0.45);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      inset 0 -1px 2px rgba(60, 40, 25, 0.3),
+      0 1px 2px rgba(0, 0, 0, 0.2);
+    color: #1c1915;
+  }
+
+  /* 墨色信息条（取代松绿治愈条） */
+  .ui-ink-chip {
+    background: linear-gradient(180deg, rgba(44, 36, 28, 0.94), rgba(28, 25, 21, 0.96));
+    border: 1px solid rgba(184, 58, 46, 0.45);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+  }
+
+  /* 兼容旧类名 */
+  .ui-pine-chip {
+    background: linear-gradient(180deg, rgba(44, 36, 28, 0.94), rgba(28, 25, 21, 0.96));
+    border: 1px solid rgba(184, 58, 46, 0.45);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+  }
+
+  .game-stage {
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(184, 58, 46, 0.06), transparent 50%),
+      linear-gradient(180deg, #e8deca 0%, #d7cbb2 100%);
+    box-shadow:
+      0 0 0 1px rgba(232, 184, 75, 0.32),
+      0 0 0 5px rgba(28, 25, 21, 0.92),
+      0 0 0 6px rgba(139, 46, 36, 0.5),
+      0 0 34px rgba(0, 0, 0, 0.55),
+      0 0 110px rgba(0, 0, 0, 0.72);
+  }
+
+  /* 画轴侧景：远山剪影 + 灯笼暖光晕，让黑边变成「留白」 */
+  .game-shell-bg {
+    background:
+      radial-gradient(ellipse 46rem 30rem at calc(50% + 21rem) 6%, rgba(232, 150, 60, 0.1), transparent 55%),
+      radial-gradient(ellipse 46rem 30rem at calc(50% - 21rem) 6%, rgba(232, 150, 60, 0.08), transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900' preserveAspectRatio='xMidYMax slice'%3E%3Cg fill='%2313110e' opacity='0.85'%3E%3Cpath d='M0 660 Q140 520 280 610 Q420 700 560 580 Q700 460 840 600 Q980 720 1120 570 Q1260 440 1400 590 Q1500 680 1600 620 L1600 900 L0 900 Z'/%3E%3C/g%3E%3Cg fill='%23151310' opacity='0.9'%3E%3Cpath d='M0 750 Q180 660 340 730 Q500 800 660 700 Q820 610 980 720 Q1140 810 1300 690 Q1450 600 1600 710 L1600 900 L0 900 Z'/%3E%3C/g%3E%3Cg fill='%23171411' opacity='0.95'%3E%3Cpath d='M0 830 Q200 770 400 820 Q600 870 800 800 Q1000 740 1200 825 Q1400 880 1600 810 L1600 900 L0 900 Z'/%3E%3C/g%3E%3C/svg%3E") center bottom / 100% auto no-repeat,
+      radial-gradient(ellipse at 18% 12%, rgba(184, 58, 46, 0.14), transparent 42%),
+      radial-gradient(ellipse at 85% 88%, rgba(14, 20, 36, 0.55), transparent 48%),
+      linear-gradient(165deg, #100e0c 0%, #1a1612 48%, #0a0908 100%);
+  }
+
+  .paper-grain::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    opacity: 0.055;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* 硃砂印角 */
+  .seal-mark {
+    position: relative;
+  }
+  .seal-mark::after {
+    content: "印";
+    position: absolute;
+    right: -0.35rem;
+    top: -0.55rem;
+    width: 1.35rem;
+    height: 1.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid rgba(184, 58, 46, 0.85);
+    border-radius: 2px;
+    color: rgba(184, 58, 46, 0.9);
+    font-size: 0.55rem;
+    font-weight: 900;
+    letter-spacing: 0;
+    transform: rotate(12deg);
+    opacity: 0.85;
+  }
+
+  @keyframes lantern-sway {
+    0%,
+    100% {
+      transform: rotate(-5deg) translateY(0);
+    }
+    50% {
+      transform: rotate(5deg) translateY(-3px);
+    }
+  }
+  .lantern-sway {
+    animation: lantern-sway 2.4s ease-in-out infinite;
+    transform-origin: top center;
+  }
+
+  @keyframes ink-breathe {
+    0%,
+    100% {
+      opacity: 0.45;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+  .ink-breathe {
+    animation: ink-breathe 3.4s ease-in-out infinite;
+  }
+
+  /* ===== 白天经营布局（DayScreen） ===== */
+  .day-stage {
+    background: linear-gradient(180deg, #e8deca 0%, #d7cbb2 100%);
+  }
+
+  .day-hud {
+    background:
+      linear-gradient(180deg, rgba(201, 162, 39, 0.1) 0%, transparent 55%),
+      linear-gradient(180deg, rgba(82, 51, 31, 0.78) 0%, rgba(63, 39, 24, 0.62) 100%);
+    border-bottom: 1px solid rgba(28, 25, 21, 0.35);
+    box-shadow:
+      inset 0 1px 0 rgba(223, 197, 106, 0.12),
+      0 8px 18px rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(6px);
+  }
+
+  .day-res-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 233, 184, 0.14);
+    background: rgba(0, 0, 0, 0.32);
+    padding: 0.2rem 0.45rem;
+  }
+
+  /* 设施热点：圆钉图钉，少挡场景 */
+  .day-hotspot {
+    display: flex;
+    min-width: 2.75rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.12rem;
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: #fff6df;
+    transition: transform 0.15s;
+  }
+  .day-hotspot-pin {
+    position: relative;
+    display: flex;
+    height: 2.45rem;
+    width: 2.45rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, #f0e6d2 0%, #ddd0b6 55%, #cbb896 100%);
+    border: 1.5px solid rgba(106, 68, 44, 0.8);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 250, 235, 0.65),
+      0 0 0 1px rgba(201, 162, 39, 0.28),
+      0 4px 10px rgba(0, 0, 0, 0.32),
+      0 11px 16px -4px rgba(20, 14, 8, 0.42);
+  }
+  .day-hotspot-lv {
+    position: absolute;
+    right: -3px;
+    bottom: -3px;
+    min-width: 0.95rem;
+    border-radius: 9999px;
+    background: rgba(28, 25, 21, 0.82);
+    border: 1px solid rgba(232, 184, 75, 0.4);
+    padding: 0 3px;
+    font-size: 8px;
+    font-weight: 900;
+    line-height: 0.9rem;
+    color: #f5d77e;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  }
+  .day-hotspot-name {
+    max-width: 3.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+  }
+  .day-hotspot:active {
+    transform: scale(0.94);
+  }
+  .day-hotspot:hover .day-hotspot-pin {
+    border-color: rgba(232, 184, 75, 0.95);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 250, 235, 0.7),
+      0 0 0 1px rgba(232, 184, 75, 0.45),
+      0 6px 14px rgba(106, 68, 44, 0.4);
+  }
+
+  .play-safe-b {
+    padding-bottom: max(0.4rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .panel-sheet {
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 3px;
+    border-color: #c9a06a;
+    background: linear-gradient(180deg, #f7f0e2 0%, #efe6d4 42%, #e8dfd0 100%);
+  }
+  .panel-title {
+    font-family: var(--font-serif), "Noto Serif SC", "Songti SC", serif;
+    font-weight: 900;
+    letter-spacing: 0.28em;
+    color: #8b2e24;
+  }
+
+  .day-dock {
+    padding-bottom: max(0.35rem, env(safe-area-inset-bottom, 0px));
+  }
+  /* 坞栏上缘过渡带：草地→木色渐隐，消掉硬接缝 */
+  .day-dock::before {
+    content: "";
+    pointer-events: none;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
+    height: 2.75rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(48, 30, 18, 0.38) 100%);
+  }
+
+  .day-cta-night {
+    background:
+      linear-gradient(180deg, rgba(184, 58, 46, 0.35) 0%, transparent 42%),
+      linear-gradient(180deg, #2c241c 0%, #1c1915 100%);
+    border: 1.5px solid rgba(184, 58, 46, 0.85);
+    box-shadow:
+      inset 0 1px 0 rgba(245, 215, 126, 0.22),
+      0 6px 16px rgba(0, 0, 0, 0.4),
+      0 0 20px rgba(184, 58, 46, 0.25);
+  }
+  .day-cta-night[data-region='2'] {
+    border-color: rgba(185, 192, 204, 0.75);
+    background:
+      linear-gradient(180deg, rgba(120, 130, 150, 0.25) 0%, transparent 42%),
+      linear-gradient(180deg, #4a4658 0%, #33313e 100%);
+  }
+  .day-cta-night[data-region='3'] {
+    border-color: rgba(232, 162, 107, 0.85);
+    background:
+      linear-gradient(180deg, rgba(168, 64, 47, 0.4) 0%, transparent 42%),
+      linear-gradient(180deg, #a8402f 0%, #7c2d1f 100%);
+  }
+
+  .day-seal {
+    font-family: var(--font-serif), "Noto Serif SC", "Songti SC", serif;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    color: #8b2e24;
+    text-shadow: 0 1px 0 rgba(255, 250, 235, 0.55);
   }
 }

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { ELEMENTS, counteredBy, countersOf } from '@/game/config'
 import type { Element } from '@/game/types'
 import { cn } from '@/lib/utils'
+import { ConfigIcon } from '@/components/game/shared'
 
 // ============ 妖怪属性徽章（五行 + 光暗） ============
 // 纯展示组件：ElementBadge 圆形小徽章（卡片/头像角标）；
@@ -114,7 +115,7 @@ export function ElementChip({ element, dim = false, className }: ElementChipProp
       )}
       style={{ background: el.bg, borderColor: `${el.color}88`, color: el.color }}
     >
-      <span aria-hidden>{el.icon}</span>
+      <ConfigIcon icon={el.icon} size={14} />
       <span>{el.name}</span>
       <span className="opacity-70">·</span>
       <span>克{counterName}</span>

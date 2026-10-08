@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { AdDialog } from './AdDialog'
 import { useGameStore } from '@/game/store'
 import { sfx } from '@/game/audio'
-import { AnimNumber, GoldIcon, GemIcon } from './shared'
+import { AnimNumber, GoldIcon, GemIcon, ConfigIcon } from './shared'
 import { toast } from '@/hooks/use-toast'
 
 /** 秒 → 「X小时Y分钟」 */
@@ -73,7 +73,9 @@ export function OfflineDialog({
         className="max-w-[340px] rounded-2xl border-[#D4A574] bg-gradient-to-b from-[#FBF5E8] to-[#F3E7CC] p-5"
       >
         <DialogHeader className="items-center space-y-1">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#2D5A3D]/10 text-2xl">🌙</div>
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8B2E24]/10">
+            <ConfigIcon icon="/images/ui/status-moon.png" size={28} />
+          </div>
           <DialogTitle className="text-lg font-bold text-[#4A3728]">掌柜的回来啦！</DialogTitle>
           <DialogDescription className="text-sm text-[#8B7355]">
             离线 {pending ? formatDuration(pending.seconds) : '—'}，妖怪们替你看店：
@@ -104,7 +106,7 @@ export function OfflineDialog({
           <button
             type="button"
             onClick={handleClaim}
-            className="flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-[#2D5A3D]/45 bg-[#F5F0E8] text-sm font-bold text-[#2D5A3D] transition hover:border-[#2D5A3D]/70 hover:bg-[#EFE6D2] active:scale-95"
+            className="flex h-11 items-center justify-center gap-2 rounded-xl border-2 border-[#8B2E24]/45 bg-[#E6DCC8] text-sm font-bold text-[#8B2E24] transition hover:border-[#8B2E24]/70 hover:bg-[#EFE6D2] active:scale-95"
           >
             不看了，直接领取
           </button>

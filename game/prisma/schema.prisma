@@ -1,5 +1,8 @@
 generator client {
   provider = "prisma-client-js"
+  // 工程最初在 WSL/Linux 下生成 Prisma Client，这里补齐 Windows 引擎，
+  // 使同一份 schema 在 WSL 与 Windows 上都能直接运行。
+  binaryTargets = ["native", "windows", "debian-openssl-3.0.x"]
 }
 
 datasource db {

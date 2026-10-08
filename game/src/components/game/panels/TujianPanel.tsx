@@ -22,7 +22,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { AdDialog } from '@/components/game/AdDialog'
 import { ElementBadge, ElementChip } from '@/components/game/ElementBadge'
-import { GemIcon, GoldIcon, GradeTag, TicketIcon, YaoAvatar } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GoldIcon, GradeTag, TicketIcon, YaoAvatar } from '@/components/game/shared'
 import { useGameStore } from '@/game/store'
 import { TUJIAN_REWARDS, lineupSynergy } from '@/game/config'
 import { YAOGUAI, YAOGUAI_MAP } from '@/game/yaoguai'
@@ -92,9 +92,9 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px] border-x-2 border-t-[3px] border-[#D4A574] bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA]">
+        <DrawerContent className="panel-sheet mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px]">
           <DrawerHeader className="pb-1">
-            <DrawerTitle className="text-center text-xl font-black tracking-[0.3em] text-[#2D5A3D]">
+            <DrawerTitle className="panel-title text-center text-xl">
               图 鉴
             </DrawerTitle>
             <DrawerDescription className="sr-only">山海经妖怪收集进度与收集奖励</DrawerDescription>
@@ -111,7 +111,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                 <div className="rounded-2xl border border-[#D4A574]/50 bg-white/80 p-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-xs font-black text-stone-700">📜 收集进度</span>
-                    <span className="text-xs font-black tabular-nums text-[#2D5A3D]">
+                    <span className="text-xs font-black tabular-nums text-[#8B2E24]">
                       已收集 {tujian.length} / {total}
                     </span>
                   </div>
@@ -205,7 +205,10 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
 
                 {/* 收集奖励横排 */}
                 <div className="rounded-2xl border border-[#D4A574]/50 bg-white/80 p-2.5">
-                  <p className="mb-1.5 text-xs font-black text-stone-700">🎁 收集奖励</p>
+                  <p className="mb-1.5 inline-flex items-center gap-1 text-xs font-black text-stone-700">
+                    <ConfigIcon icon="/images/ui/gift.png" size={14} />
+                    收集奖励
+                  </p>
                   <div className="flex items-start justify-between gap-1.5">
                     {TUJIAN_REWARDS.map((r) => {
                       const { claimed, claimable } = rewardState(r.count)
@@ -226,12 +229,21 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                         >
                           <span
                             className={cn(
-                              'text-2xl leading-none',
+                              'leading-none',
                               claimed && 'grayscale',
                               !claimed && !claimable && 'opacity-40 grayscale'
                             )}
                           >
-                            {claimed ? '📂' : claimable ? '🎁' : '🔒'}
+                            <ConfigIcon
+                              icon={
+                                claimed
+                                  ? '/images/ui/nav-bag.png'
+                                  : claimable
+                                    ? '/images/ui/gift.png'
+                                    : '/images/ui/status-lock.png'
+                              }
+                              size={22}
+                            />
                           </span>
                           <span className="text-[10px] font-bold text-stone-600">{r.count} 妖</span>
                           <span className="flex items-center gap-0.5 text-[9px] font-bold text-stone-500">
@@ -339,11 +351,11 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
           if (!o) setDetailId(null)
         }}
       >
-        <DialogContent className="max-w-[360px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA] p-5">
+        <DialogContent className="max-w-[360px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
           {detailDef && (
             <div className="flex flex-col gap-3">
               <DialogHeader className="items-center space-y-1">
-                <DialogTitle className="flex items-center gap-2 text-lg font-black text-[#2D5A3D]">
+                <DialogTitle className="flex items-center gap-2 text-lg font-black text-[#8B2E24]">
                   {detailDef.name}
                   <span className="text-xs font-normal text-stone-400">{detailDef.pinyin}</span>
                 </DialogTitle>
@@ -371,11 +383,17 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-2 text-center">
-                  <p className="text-[9px] text-amber-600">☀️ 白天职业</p>
+                  <p className="inline-flex items-center justify-center gap-1 text-[9px] text-amber-600">
+                    <ConfigIcon icon="/images/ui/ui-sun.png" size={11} />
+                    白天职业
+                  </p>
                   <p className="mt-0.5 text-[11px] font-bold text-stone-700">{detailDef.dayJobName}</p>
                 </div>
-                <div className="rounded-xl border border-[#2D5A3D]/30 bg-[#2D5A3D]/5 p-2 text-center">
-                  <p className="text-[9px] text-[#2D5A3D]">🌙 夜晚定位</p>
+                <div className="rounded-xl border border-[#8B2E24]/30 bg-[#8B2E24]/5 p-2 text-center">
+                  <p className="inline-flex items-center justify-center gap-1 text-[9px] text-[#8B2E24]">
+                    <ConfigIcon icon="/images/ui/status-moon.png" size={11} />
+                    夜晚定位
+                  </p>
                   <p className="mt-0.5 text-[11px] font-bold text-stone-700">{detailDef.nightRoleName}</p>
                 </div>
               </div>
@@ -396,12 +414,12 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
           if (!o) setLockedId(null)
         }}
       >
-        <DialogContent className="max-w-[340px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA] p-5">
+        <DialogContent className="max-w-[340px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
           {lockedDef && (
             <div className="flex flex-col items-center gap-3">
               <DialogHeader className="items-center">
-                <DialogTitle className="text-base font-black text-[#2D5A3D]">
-                  {lockedDef.grade === 'legend' ? '👑 传说妖王' : '未解锁 · 神秘妖怪'}
+                <DialogTitle className="text-base font-black text-[#8B2E24]">
+                  {lockedDef.grade === 'legend' ? '传说妖王' : '未解锁 · 神秘妖怪'}
                 </DialogTitle>
               </DialogHeader>
 
@@ -426,7 +444,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                       animate={{ opacity: 1, y: 0 }}
                       className="w-full rounded-2xl border border-amber-200 bg-amber-50/80 p-3"
                     >
-                      <p className="mb-1 text-[10px] font-black text-amber-600">🔍 线索 · 形态</p>
+                      <p className="mb-1 text-[10px] font-black text-amber-600">线索 · 形态</p>
                       <p className="text-[11px] leading-relaxed text-stone-700">{lockedDef.form}</p>
                       <p className="mt-1.5 text-[10px] text-stone-400">
                         在夜间守店中寻找它的踪迹，控血捕捉即可收录
@@ -441,7 +459,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                         onClick={() => setHintAdOpen(true)}
                         className="h-11 w-full rounded-xl bg-gradient-to-r from-[#E8B84B] to-[#D4933D] text-sm font-black text-white shadow-md shadow-amber-500/30 transition-transform active:scale-95"
                       >
-                        📺 看广告解锁线索
+                        看广告解锁线索
                       </Button>
                     </>
                   )}

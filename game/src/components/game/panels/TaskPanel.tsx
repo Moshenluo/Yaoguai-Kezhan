@@ -10,7 +10,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { Progress } from '@/components/ui/progress'
-import { GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
 import { achievementProgress, taskProgress, useGameStore } from '@/game/store'
 import { sfx } from '@/game/audio'
 import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORY_LABEL, DAILY_TASKS } from '@/game/config'
@@ -24,21 +24,21 @@ export interface TaskPanelProps {
 }
 
 const TASK_ICON: Record<string, string> = {
-  login: '🎁',
-  night: '🌙',
-  capture: '🕸️',
-  recruit: '📜',
-  ad: '📺',
-  upgrade: '🔨',
-  starup: '⭐',
+  login: '/images/ui/gift.png',
+  night: '/images/ui/status-moon.png',
+  capture: '/images/ui/prop-capture-net.png',
+  recruit: '/images/ui/ticket.png',
+  ad: '/images/ui/gift.png',
+  upgrade: '/images/ui/cat-build.png',
+  starup: '/images/ui/ui-star.png',
 }
 
 const CATEGORY_ICON: Record<AchievementCategory, string> = {
-  capture: '🕸️',
-  battle: '⚔️',
-  boss: '👹',
-  business: '🏮',
-  growth: '⭐',
+  capture: '/images/ui/prop-capture-net.png',
+  battle: '/images/ui/battle-inn.png',
+  boss: '/images/ui/prop-boss-lure.png',
+  business: '/images/ui/festival-lantern.png',
+  growth: '/images/ui/ui-star.png',
 }
 
 /** 成就进度展示格式（大数字缩写） */
@@ -86,9 +86,9 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px] border-x-2 border-t-[3px] border-[#D4A574] bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA]">
+      <DrawerContent className="panel-sheet mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px]">
         <DrawerHeader className="pb-1">
-          <DrawerTitle className="text-center text-xl font-black tracking-[0.3em] text-[#2D5A3D]">
+          <DrawerTitle className="panel-title text-center text-xl">
             任 务 · 成 就
           </DrawerTitle>
           <DrawerDescription className="sr-only">每日任务与成就进度</DrawerDescription>
@@ -100,14 +100,14 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
               onClick={() => setTab('daily')}
               className={cn(
                 'relative flex-1 rounded-full py-1.5 text-xs font-black transition-all active:scale-95',
-                tab === 'daily' ? 'text-[#F5F0E8]' : 'text-stone-500'
+                tab === 'daily' ? 'text-[#E6DCC8]' : 'text-stone-500'
               )}
             >
               {tab === 'daily' && (
                 <motion.span
                   layoutId="task-tab-pill"
                   transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                  className="absolute inset-0 rounded-full bg-[#2D5A3D] shadow-md"
+                  className="absolute inset-0 rounded-full bg-[#8B2E24] shadow-md"
                   aria-hidden
                 />
               )}
@@ -121,14 +121,14 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
               onClick={() => setTab('achievement')}
               className={cn(
                 'relative flex-1 rounded-full py-1.5 text-xs font-black transition-all active:scale-95',
-                tab === 'achievement' ? 'text-[#F5F0E8]' : 'text-stone-500'
+                tab === 'achievement' ? 'text-[#E6DCC8]' : 'text-stone-500'
               )}
             >
               {tab === 'achievement' && (
                 <motion.span
                   layoutId="task-tab-pill"
                   transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                  className="absolute inset-0 rounded-full bg-[#2D5A3D] shadow-md"
+                  className="absolute inset-0 rounded-full bg-[#8B2E24] shadow-md"
                   aria-hidden
                 />
               )}
@@ -146,13 +146,13 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
                 <span>每日 0 点刷新</span>
                 <span>·</span>
                 <span>
-                  已完成 <b className="text-[#2D5A3D]">{doneCount}</b>/{DAILY_TASKS.length}
+                  已完成 <b className="text-[#8B2E24]">{doneCount}</b>/{DAILY_TASKS.length}
                 </span>
               </>
             ) : (
               <>
                 <span>
-                  成就达成 <b className="text-[#2D5A3D]">{achievementSummary.achieved}</b>/{achievementSummary.total}
+                  成就达成 <b className="text-[#8B2E24]">{achievementSummary.achieved}</b>/{achievementSummary.total}
                 </span>
                 {achievementSummary.claimable > 0 && (
                   <span className="animate-pulse font-black text-[#D4933D]">
@@ -184,8 +184,8 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
                   transition={{ delay: idx * 0.05 }}
                   className="relative flex items-center gap-3 rounded-2xl border border-[#D4A574]/50 bg-white/80 p-3"
                 >
-                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#2D5A3D]/10 text-xl">
-                    {TASK_ICON[t.id] ?? '📋'}
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#8B2E24]/10">
+                    <ConfigIcon icon={TASK_ICON[t.id] ?? '/images/ui/nav-task.png'} size={22} />
                   </div>
 
                   <div className="min-w-0 flex-1">
@@ -269,8 +269,8 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
             {(['capture', 'battle', 'boss', 'business', 'growth'] as AchievementCategory[]).map((cat) => (
               <div key={cat} className="flex flex-col gap-2">
                 {/* 分类标题 */}
-                <div className="sticky top-0 z-10 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#FAF6ED] via-[#F5EDD8] to-[#FAF6ED] px-2 py-1 text-[11px] font-black tracking-wider text-[#2D5A3D]">
-                  <span>{CATEGORY_ICON[cat]}</span>
+                <div className="sticky top-0 z-10 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#EFE6D4] via-[#E6DCC8] to-[#EFE6D4] px-2 py-1 text-[11px] font-black tracking-wider text-[#8B2E24]">
+                  <ConfigIcon icon={CATEGORY_ICON[cat]} size={14} />
                   {ACHIEVEMENT_CATEGORY_LABEL[cat]}成就
                   <span className="text-stone-400">
                     {achievementSummary.byCategory(cat).filter((a) => save.achievements.includes(a.id)).length}/
@@ -302,7 +302,7 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
                       {/* 成就徽章 */}
                       <div
                         className={cn(
-                          'flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xl',
+                          'flex h-11 w-11 shrink-0 items-center justify-center rounded-full',
                           isClaimed
                             ? 'bg-emerald-100 ring-1 ring-[#E8B84B]/60'
                             : claimable
@@ -310,7 +310,7 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
                               : 'bg-stone-100 grayscale'
                         )}
                       >
-                        {CATEGORY_ICON[cat]}
+                        <ConfigIcon icon={CATEGORY_ICON[cat]} size={22} />
                       </div>
 
                       <div className="min-w-0 flex-1">

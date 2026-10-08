@@ -10,7 +10,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { HpBar, StarBadge, YaoAvatar } from '@/components/game/shared'
+import { ConfigIcon, HpBar, StarBadge, YaoAvatar } from '@/components/game/shared'
 import { StaminaTierChip } from '@/components/game/StaminaBadge'
 import { useGameStore } from '@/game/store'
 import {
@@ -131,12 +131,12 @@ function GathererPicker({
                 </span>
               )}
               {row.current ? (
-                <span className="rounded-full bg-[#E8B84B]/20 px-1.5 py-px text-[9px] font-black text-[#8A5A1E]">📍 现任</span>
+                <span className="rounded-full bg-[#E8B84B]/20 px-1.5 py-px text-[9px] font-black text-[#8A5A1E]">现任</span>
               ) : row.gathering ? (
-                <span className="rounded-full bg-[#2D5A3D]/10 px-1.5 py-px text-[9px] font-black text-[#2D5A3D]">🎒 出野中</span>
+                <span className="rounded-full bg-[#8B2E24]/10 px-1.5 py-px text-[9px] font-black text-[#8B2E24]">出野</span>
               ) : null}
               {row.deployed && (
-                <span className="rounded-full bg-amber-100 px-1.5 py-px text-[9px] font-black text-[#8A5A1E]">🛖 打工中</span>
+                <span className="rounded-full bg-amber-100 px-1.5 py-px text-[9px] font-black text-[#8A5A1E]">打工</span>
               )}
             </span>
           </div>
@@ -213,7 +213,7 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
     const res = useGameStore.getState().collectGather()
     if (res.ok) {
       sfx.play('claim')
-      toast({ title: '🌾 采收入账', description: res.message, duration: 2800 })
+      toast({ title: '采收入账', description: res.message, duration: 2800 })
     } else {
       toast({ title: res.message, duration: 2800 })
     }
@@ -236,9 +236,9 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px] border-x-2 border-t-[3px] border-[#D4A574] bg-gradient-to-b from-[#FAF6ED] to-[#F1EADA]">
+      <DrawerContent className="panel-sheet mx-auto h-[78vh] max-h-[78vh] max-w-[480px] rounded-t-[28px]">
         <DrawerHeader className="pb-1">
-          <DrawerTitle className="text-center text-xl font-black tracking-[0.3em] text-[#2D5A3D]">
+          <DrawerTitle className="panel-title text-center text-xl">
             山野采集
           </DrawerTitle>
           <DrawerDescription className="sr-only">山野采集队 · 遣妖出野采集山货素材</DrawerDescription>
@@ -262,11 +262,11 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
                 className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-2xl border-2 border-[#D4A574]/45 bg-white/70 px-3 py-2 text-[11px] font-bold text-stone-600"
               >
                 <span>
-                  🎒 已派遣 <span className="font-black text-[#2D5A3D]">{assignedCount}/{GATHER_TASKS.length}</span> 位
+                  🎒 已派遣 <span className="font-black text-[#8B2E24]">{assignedCount}/{GATHER_TASKS.length}</span> 位
                 </span>
                 <span className="text-stone-300">·</span>
                 <span>
-                  🌾 累计采收 <span className="font-black tabular-nums text-[#2D5A3D]">{gatherTotal.toLocaleString()}</span> 个
+                  🌾 累计采收 <span className="font-black tabular-nums text-[#8B2E24]">{gatherTotal.toLocaleString()}</span> 个
                 </span>
                 <span className="text-stone-300">·</span>
                 <span className={cn(warehouseFull && 'text-[#C0392B]')}>
@@ -289,11 +289,19 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
                     : 'cursor-not-allowed bg-stone-200 text-stone-400 shadow-none',
                 )}
               >
-                {canCollect
-                  ? `🌾 采收全部（共 ${collectCount} 个）`
-                  : accTotal >= 1
-                    ? '🏮 仓库已满 · 先去仓库清清货'
-                    : '暂无可收取产出'}
+                {canCollect ? (
+                  <>
+                    <ConfigIcon icon="/images/ui/nav-gather.png" size={16} />
+                    采收全部（共 {collectCount} 个）
+                  </>
+                ) : accTotal >= 1 ? (
+                  <>
+                    <ConfigIcon icon="/images/ui/facility-warehouse.png" size={16} />
+                    仓库已满 · 先去仓库清清货
+                  </>
+                ) : (
+                  '暂无可收取产出'
+                )}
               </motion.button>
 
               {/* 任务卡 ×7（stagger 弹入） */}
@@ -326,37 +334,38 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
                       <motion.span
                         animate={locked ? undefined : { rotate: [0, -6, 6, 0] }}
                         transition={locked ? undefined : { repeat: Infinity, duration: 3.2 }}
-                        className="text-3xl"
                         aria-hidden
                       >
-                        {task.icon}
+                        <ConfigIcon icon={task.icon} size={32} />
                       </motion.span>
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-black text-stone-800">
                           {task.name}
                           {locked && (
-                            <span className="ml-1.5 text-xs" aria-label="未解锁">
-                              🔒
+                            <span className="ml-1.5 inline-flex align-middle" aria-label="未解锁">
+                              <ConfigIcon icon="/images/ui/status-lock.png" size={12} />
                             </span>
                           )}
                         </p>
                         <p className="text-[10px] text-stone-400">{task.desc}</p>
                       </div>
-                      <span className="shrink-0 rounded-full border border-[#D4A574]/50 bg-amber-50 px-2 py-0.5 text-[10px] font-black text-amber-800">
-                        {mat?.icon} {mat?.name ?? task.material}
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full border border-[#D4A574]/50 bg-amber-50 px-2 py-0.5 text-[10px] font-black text-amber-800">
+                        {mat?.icon ? <ConfigIcon icon={mat.icon} size={14} /> : null}
+                        {mat?.name ?? task.material}
                       </span>
                     </div>
 
                     {locked ? (
                       /* 未解锁：灰态提示 */
-                      <p className="mt-2.5 rounded-xl bg-stone-200/60 px-2 py-2 text-center text-[11px] font-bold text-stone-500">
-                        🔒 客栈 {task.unlockInnLevel} 级解锁此采集位
+                      <p className="mt-2.5 flex items-center justify-center gap-1 rounded-xl bg-stone-200/60 px-2 py-2 text-center text-[11px] font-bold text-stone-500">
+                        <ConfigIcon icon="/images/ui/status-lock.png" size={12} />
+                        客栈 {task.unlockInnLevel} 级解锁此采集位
                       </p>
                     ) : (
                       <>
                         {/* 速率行：当前速率（一位小数）+ 任命妖亲和 pill */}
                         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
-                          <span className="text-[11px] font-black tabular-nums text-[#2D5A3D]">
+                          <span className="text-[11px] font-black tabular-nums text-[#8B2E24]">
                             ⚡ {rate.toFixed(1)} 个/小时
                           </span>
                           {yid && aff > 0 && (
@@ -389,7 +398,7 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
                               type="button"
                               onClick={() => setExpandedTask(expanded ? null : task.id)}
                               aria-label={`更换「${task.name}」的采集妖怪`}
-                              className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl border-2 border-[#D4A574]/50 bg-[#FAF6ED]/70 p-2 text-left transition-transform active:scale-[0.98]"
+                              className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl border-2 border-[#D4A574]/50 bg-[#EFE6D4]/70 p-2 text-left transition-transform active:scale-[0.98]"
                             >
                               <YaoAvatar id={yid} size={40} />
                               <span className="min-w-0 flex-1">

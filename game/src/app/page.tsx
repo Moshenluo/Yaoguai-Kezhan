@@ -1,12 +1,18 @@
 'use client'
 
+// 副作用导入：把 Web Audio / localStorage 注入逻辑层桥接（bridge）。
+// 必须排在其他 @/game/* 导入之前，逻辑层才拿得到浏览器能力。
+import '@/game/adapters-web'
+
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useGameStore } from '@/game/store'
 import type { BattleResult } from '@/game/types'
 import type { BgmTrackName } from '@/game/audio'
 import { saveCloud, trackEvent } from '@/game/cloud'
 import { BgmPlayer } from '@/components/game/BgmPlayer'
+import { ConfigIcon } from '@/components/game/shared'
 import { DayScreen } from '@/components/game/DayScreen'
 import { NightScreen } from '@/components/game/NightScreen'
 import { SettlementDialog } from '@/components/game/SettlementDialog'
@@ -76,6 +82,7 @@ export default function Home() {
 
   // ---------- 昼夜切换（仪式感动画，普通夜/妖王夜共用） ----------
   const startNight = useCallback((target: NightStage) => {
+    setPanel(null)
     setTransition('to-night')
     setLastNightStage(target)
     trackEvent(target === 'boss-night' ? 'boss_night_start' : 'night_start', {
@@ -176,9 +183,9 @@ export default function Home() {
   }, [])
 
   return (
-    <main className="game-shell relative h-dvh w-full overflow-hidden bg-[#1a1610]">
+    <main className="game-shell game-shell-bg relative h-dvh w-full overflow-hidden">
       {/* 桌面端舞台居中 */}
-      <div className="relative mx-auto flex h-dvh w-full max-w-[480px] flex-col overflow-hidden bg-[#F5F0E8] shadow-[0_0_60px_rgba(0,0,0,0.6)]">
+      <div className="game-stage paper-grain relative mx-auto flex h-dvh w-full max-w-[480px] flex-col overflow-hidden">
         {!hasHydrated ? (
           <SplashLoading />
         ) : stage === 'splash' ? (
@@ -213,6 +220,10 @@ export default function Home() {
       <WorldMapPanel open={panel === 'map'} onOpenChange={(o) => !o && setPanel(null)} />
       <GatherPanel open={panel === 'gather'} onOpenChange={(o) => !o && setPanel(null)} />
 
+      {stage === 'day' && panel !== null && (
+        <DayNightFab onNight={goNight} region={region} />
+      )}
+
       {/* 夜战结算 */}
       <SettlementDialog
         open={settleOpen}
@@ -225,97 +236,146 @@ export default function Home() {
   )
 }
 
+/** 抽屉打开时坞栏入夜被 overlay(z-50) 挡住；悬浮 CTA 挂到 body，z-[70] 仍可点 */
+function DayNightFab({ onNight, region }: { onNight: () => void; region: number }) {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null
+  return createPortal(
+    <div className="pointer-events-none fixed inset-0 z-[70] flex justify-center">
+      <div className="relative h-full w-full max-w-[480px]">
+        <motion.button
+          type="button"
+          onClick={onNight}
+          whileTap={{ scale: 0.92 }}
+          aria-label="入夜守店"
+          data-region={region}
+          className="day-cta-night pointer-events-auto absolute bottom-[max(1.15rem,env(safe-area-inset-bottom,0px))] right-3 flex h-14 w-14 flex-col items-center justify-center rounded-xl text-[#E6DCC8]"
+        >
+          <ConfigIcon
+            icon="/images/ui/status-moon.png"
+            size={22}
+            className="drop-shadow-[0_0_6px_rgba(232,184,75,0.55)]"
+          />
+          <span className="mt-0.5 text-[9px] font-bold leading-none tracking-widest">入夜</span>
+        </motion.button>
+      </div>
+    </div>,
+    document.body
+  )
+}
+
 // ============ 启动页 ============
 
 function SplashLoading() {
   return (
-    <div className="flex h-dvh flex-col items-center justify-center gap-4 bg-gradient-to-b from-[#2D5A3D] to-[#1d3d2a]">
-      <motion.div
-        className="text-5xl"
-        animate={{ rotate: [0, -10, 10, 0], scale: [1, 1.1, 1] }}
-        transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.6 }}
-      >
-        🏮
-      </motion.div>
-      <p className="text-sm tracking-[0.4em] text-amber-200/80">妖怪客栈 · 载入中</p>
+    <div className="relative flex h-dvh flex-col items-center justify-center gap-5 overflow-hidden bg-gradient-to-b from-[#1a1612] via-[#12100e] to-[#0a0908]">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(ellipse at 50% 28%, rgba(184,58,46,0.22), transparent 52%), radial-gradient(ellipse at 70% 80%, rgba(14,20,36,0.5), transparent 45%)',
+        }}
+        aria-hidden
+      />
+      <div className="lantern-sway drop-shadow-[0_10px_18px_rgba(0,0,0,0.55)]" aria-hidden>
+        <ConfigIcon icon="/images/ui/festival-lantern.png" size={64} />
+      </div>
+      <div className="relative z-10 flex flex-col items-center gap-2">
+        <p className="font-display text-xl font-black tracking-[0.4em] text-[#E6DCC8]">妖怪客栈</p>
+        <p className="ink-breathe text-[11px] tracking-[0.5em] text-[#B83A2E]/90">载入中</p>
+      </div>
+      <div className="mt-1 h-0.5 w-32 overflow-hidden bg-[#2C241C]">
+        <div className="h-full w-2/5 animate-pulse bg-gradient-to-r from-[#8B2E24] to-[#C9A227]" />
+      </div>
     </div>
   )
 }
 
 function SplashScreen({ onStart }: { onStart: () => void }) {
   return (
-    <div className="relative flex h-dvh flex-col items-center justify-between overflow-hidden bg-gradient-to-b from-[#17233a] via-[#1d2c47] to-[#0f1524] px-6 py-14">
-      {/* 背景主视觉 */}
+    <div className="relative flex h-dvh flex-col items-center justify-between overflow-hidden px-6 py-12">
       <div
-        className="absolute inset-0 bg-cover bg-center opacity-90"
+        className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: 'url(/images/logo.png)' }}
         aria-hidden
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/70" aria-hidden />
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(10,9,8,0.55) 0%, rgba(14,20,36,0.25) 36%, rgba(10,9,8,0.55) 70%, rgba(8,7,6,0.92) 100%)',
+        }}
+        aria-hidden
+      />
 
-      {/* 星星 */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {[
           { l: '12%', t: '16%', d: '0s' },
           { l: '78%', t: '12%', d: '0.8s' },
-          { l: '66%', t: '30%', d: '1.6s' },
+          { l: '64%', t: '30%', d: '1.5s' },
           { l: '20%', t: '38%', d: '0.4s' },
           { l: '88%', t: '44%', d: '1.2s' },
         ].map((s, i) => (
           <motion.span
             key={i}
-            className="absolute h-1 w-1 rounded-full bg-amber-100"
+            className="absolute h-1 w-1 rounded-full bg-[#DFC56A]"
             style={{ left: s.l, top: s.t }}
-            animate={{ opacity: [0.2, 1, 0.2] }}
-            transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2.4, delay: parseFloat(s.d) }}
+            animate={{ opacity: [0.12, 0.85, 0.12] }}
+            transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3, delay: parseFloat(s.d) }}
           />
         ))}
       </div>
 
-      {/* 标题区 */}
       <motion.div
-        className="relative z-10 mt-16 flex flex-col items-center"
-        initial={{ opacity: 0, y: 24 }}
+        className="relative z-10 mt-10 flex flex-col items-center"
+        initial={{ opacity: 0, y: 28 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 0.85, ease: 'easeOut' }}
       >
         <motion.div
-          className="rounded-2xl border border-amber-300/30 bg-black/30 px-6 py-3 backdrop-blur-sm"
-          animate={{ y: [0, -6, 0] }}
-          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3 }}
+          className="ui-wood seal-mark relative rounded-xl px-8 py-4"
+          animate={{ y: [0, -4, 0] }}
+          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3.6, ease: 'easeInOut' }}
         >
-          <h1 className="text-center text-4xl font-black tracking-widest text-amber-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+          <div className="pointer-events-none absolute inset-x-5 top-1 h-px bg-gradient-to-r from-transparent via-[#B83A2E]/55 to-transparent" />
+          <h1 className="font-display text-center text-[2.6rem] font-black leading-none tracking-[0.32em] text-[#E6DCC8] drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
             妖怪客栈
           </h1>
+          <div className="pointer-events-none absolute inset-x-5 bottom-1 h-px bg-gradient-to-r from-transparent via-[#C9A227]/35 to-transparent" />
         </motion.div>
-        <p className="mt-3 text-xs tracking-[0.5em] text-amber-200/70">山海经 · 放置经营 × 夜间守店</p>
+        <p className="mt-4 text-[11px] font-medium tracking-[0.38em] text-[#B83A2E]">
+          山海志怪 · 昼营夜守
+        </p>
       </motion.div>
 
       <div className="flex-1" />
 
-      {/* 开始按钮 */}
       <motion.div
-        className="relative z-10 mb-6 flex w-full flex-col items-center gap-4"
-        initial={{ opacity: 0, y: 20 }}
+        className="relative z-10 mb-4 flex w-full flex-col items-center gap-4"
+        initial={{ opacity: 0, y: 22 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4, duration: 0.7 }}
+        transition={{ delay: 0.35, duration: 0.7 }}
       >
         <motion.button
           onClick={onStart}
-          className="h-14 w-64 rounded-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 text-lg font-bold text-white shadow-[0_8px_30px_rgba(232,150,75,0.45)] active:scale-95"
-          animate={{ scale: [1, 1.04, 1] }}
-          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 2 }}
+          whileTap={{ scale: 0.97 }}
+          className="ui-wood group relative h-[3.35rem] w-[16.5rem] overflow-hidden rounded-xl text-lg font-bold tracking-[0.2em] text-[#E6DCC8] active:brightness-95"
         >
-          🏮 开始经营客栈
+          <span className="relative z-10 inline-flex items-center gap-2">
+            <ConfigIcon icon="/images/ui/festival-lantern.png" size={22} />
+            推门入店
+          </span>
+          <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#8B2E24]/35 to-transparent opacity-70 transition group-hover:opacity-100" />
         </motion.button>
-        <div className="flex items-center gap-3 text-[10px] text-stone-300/60">
-          <span>白日挂机赚钱</span>
-          <span>·</span>
-          <span>入夜布阵守店</span>
-          <span>·</span>
-          <span>控血捉妖收伙伴</span>
+        <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-[#B5A48C]/80">
+          <span>白日经营</span>
+          <span className="text-[#B83A2E]/70">·</span>
+          <span>入夜守店</span>
+          <span className="text-[#B83A2E]/70">·</span>
+          <span>控血捉妖</span>
         </div>
-        <p className="text-[10px] text-stone-400/50">v1.0 · 灵感源自《山海经》 · 无内购纯广告演示</p>
+        <p className="text-[10px] text-[#8A7A66]/70">灵感源自《山海经》 · 无内购纯广告演示</p>
       </motion.div>
     </div>
   )
@@ -336,26 +396,33 @@ function DayNightTransition({ kind }: { kind: 'to-night' | 'to-day' }) {
       <div
         className={
           isNight
-            ? 'absolute inset-0 bg-gradient-to-b from-[#0a0e21] to-[#1a1435]'
-            : 'absolute inset-0 bg-gradient-to-b from-[#ffd98a] to-[#f5f0e8]'
+            ? 'absolute inset-0 bg-gradient-to-b from-[#0a0d18] via-[#12182a] to-[#1a1020]'
+            : 'absolute inset-0 bg-gradient-to-b from-[#c9a227]/80 via-[#e6dcc8] to-[#d2c4a8]'
         }
       />
       {/* 日/月升起点缀 */}
       <motion.div
-        className="relative text-6xl"
+        className="relative"
         initial={{ y: 80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1.1, ease: 'easeOut' }}
       >
-        {isNight ? '🌙' : '☀️'}
+        <ConfigIcon
+          icon={isNight ? '/images/ui/status-moon.png' : '/images/ui/ui-sun.png'}
+          size={96}
+        />
       </motion.div>
       <motion.p
-        className={isNight ? 'absolute bottom-1/3 text-sm tracking-[0.5em] text-stone-200/70' : 'absolute bottom-1/3 text-sm tracking-[0.5em] text-amber-800/70'}
+        className={
+          isNight
+            ? 'font-display absolute bottom-1/3 text-sm tracking-[0.45em] text-[#E6DCC8]/75'
+            : 'font-display absolute bottom-1/3 text-sm tracking-[0.45em] text-[#8B2E24]/80'
+        }
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.6, duration: 0.6 }}
       >
-        {isNight ? '夜幕降临 · 妖怪来袭' : '天亮了 · 客栈新的一天'}
+        {isNight ? '夜幕将至 · 妖怪出没' : '晨光初破 · 客栈开张'}
       </motion.p>
       {isNight && (
         <div className="pointer-events-none absolute inset-0" aria-hidden>

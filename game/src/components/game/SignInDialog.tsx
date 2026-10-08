@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
 import { SEVEN_DAY_REWARDS } from '@/game/config'
 import type { SignInReward } from '@/game/config'
 import { signInAvailable, useGameStore } from '@/game/store'
@@ -72,7 +72,7 @@ function SignInBody() {
 
   // 轻量彩带（签到成功时一次性播放，随 justClaimed 卸载）
   const confetti = useMemo<ConfettiPiece[]>(() => {
-    const colors = ['#E8B84B', '#D4A574', '#F5F0E8', '#E8C97A', '#C98A3D', '#2D5A3D']
+    const colors = ['#E8B84B', '#D4A574', '#E6DCC8', '#E8C97A', '#C98A3D', '#8B2E24']
     return Array.from({ length: 16 }, (_, i) => ({
       id: i,
       left: 6 + Math.random() * 88,
@@ -105,14 +105,16 @@ function SignInBody() {
   return (
     <>
       <DialogHeader className="items-center space-y-1">
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#2D5A3D]/10 text-xl">🎁</div>
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#8B2E24]/10">
+          <ConfigIcon icon="/images/ui/gift.png" size={26} />
+        </div>
         <DialogTitle className="text-lg font-bold text-[#4A3728]">七日签到</DialogTitle>
         <DialogDescription className="text-xs text-[#8B7355]">每日登录领取厚礼，连续签到更丰盛</DialogDescription>
       </DialogHeader>
 
       {/* 本轮进度 */}
       <div className="mx-auto flex w-fit items-center gap-1 rounded-full border border-[#D4A574]/50 bg-white/60 px-3 py-1 text-[10px] font-bold text-[#8B7355]">
-        本轮已签 <span className="font-black text-[#2D5A3D]">{claimedThisRound}</span> / 7 天
+        本轮已签 <span className="font-black text-[#8B2E24]">{claimedThisRound}</span> / 7 天
       </div>
 
       {/* 7 天奖励网格（首行 4 张 + 次行 2 张 + 第 7 天宽卡） */}
@@ -138,7 +140,7 @@ function SignInBody() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center text-[11px] font-bold text-[#B8860B]"
         >
-          🎉 本轮已签满 7 天，明日开启新一轮
+          本轮已签满 7 天，明日开启新一轮
         </motion.p>
       )}
 
@@ -152,11 +154,19 @@ function SignInBody() {
           transition={{ repeat: Infinity, duration: 1.6, ease: 'easeInOut' }}
           className="flex h-12 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-[#F0C75E] via-[#E8B84B] to-[#D4933D] text-base font-black text-[#5C3A1E] shadow-lg shadow-amber-500/40"
         >
-          🎁 签到领取
+          <ConfigIcon icon="/images/ui/gift.png" size={18} />
+          签到领取
         </motion.button>
       ) : (
         <div className="flex h-12 w-full items-center justify-center gap-1.5 rounded-xl border border-[#D4A574]/50 bg-[#EFE6D2]/70 text-sm font-bold text-[#8B7355]">
-          {justClaimed !== null ? '✓ 今日已签' : '🌙 明日再来'}
+          {justClaimed !== null ? (
+            '今日已签'
+          ) : (
+            <>
+              <ConfigIcon icon="/images/ui/status-moon.png" size={16} />
+              明日再来
+            </>
+          )}
         </div>
       )}
 
@@ -246,7 +256,7 @@ function SignInCard({
         )}
         {/* 已领角标 */}
         {claimed && (
-          <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#2D5A3D] text-[10px] font-black text-white shadow">
+          <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-[#8B2E24] text-[10px] font-black text-white shadow">
             ✓
           </span>
         )}
@@ -283,7 +293,7 @@ function SignInCard({
             isDay7 ? 'text-[9px] font-black text-[#B8860B]' : 'text-[9px] text-[#8B7355]'
           )}
         >
-          {isDay7 ? '✨ 传说大礼包 ✨' : reward.label}
+          {isDay7 ? '传说大礼包' : reward.label}
         </span>
       </motion.div>
     </motion.div>

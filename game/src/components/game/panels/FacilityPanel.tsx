@@ -24,7 +24,7 @@ import {
 } from '@/game/config'
 import type { FacilityConfig } from '@/game/config'
 import type { GameSave } from '@/game/types'
-import { GoldIcon, HpBar } from '../shared'
+import { ConfigIcon, GoldIcon, HpBar } from '../shared'
 import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
@@ -207,11 +207,10 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="mx-auto max-w-[480px] rounded-t-3xl border-t-2 border-[#D4A574] bg-gradient-to-b from-[#FBF5E8] to-[#F3E7CC]">
-        <div className="mx-auto mt-3 h-1.5 w-24 rounded-full bg-[#D4A574]/60" />
+      <DrawerContent className="panel-sheet mx-auto max-w-[480px] rounded-t-3xl">
         <DrawerHeader className="pb-2 text-center">
-          <DrawerTitle className="text-lg font-black tracking-wide text-[#4A3728]">
-            🏮 客栈设施
+          <DrawerTitle className="panel-title text-lg tracking-wide">
+            客栈设施
           </DrawerTitle>
           <DrawerDescription className="text-xs font-medium leading-relaxed text-[#8B7355]">
             设施等级提升白天收益与对应定位妖怪的夜晚战力
@@ -259,7 +258,7 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                         animate={{ opacity: 1, y: -26, scale: 1.1 }}
                         exit={{ opacity: 0, y: -36 }}
                         transition={{ duration: 0.7, ease: 'easeOut' }}
-                        className="pointer-events-none absolute right-4 top-3 z-10 rounded-full bg-[#2D5A3D] px-2 py-0.5 text-[11px] font-bold text-[#F5D77E] shadow-lg"
+                        className="pointer-events-none absolute right-4 top-3 z-10 rounded-full bg-[#8B2E24] px-2 py-0.5 text-[11px] font-bold text-[#F5D77E] shadow-lg"
                       >
                         +1 级 ✨
                       </motion.span>
@@ -275,7 +274,7 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                           : 'border-stone-300 bg-stone-100 opacity-70 grayscale'
                       )}
                     >
-                      {cfg.icon}
+                      <ConfigIcon icon={cfg.icon} size={30} />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5">
@@ -328,7 +327,10 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                   {innLocked && (
                     <div className="mt-2 flex flex-col gap-1.5 rounded-xl border border-dashed border-[#C9B896] bg-[#F5F0E4]/70 px-2.5 py-2">
                       <div className="flex items-center justify-between text-[11px] font-bold">
-                        <span className="text-[#8B7355]">🔒 客栈 {innNeed} 级解锁建造</span>
+                    <span className="inline-flex items-center gap-1 text-[#8B7355]">
+                      <ConfigIcon icon="/images/ui/status-lock.png" size={12} />
+                      客栈 {innNeed} 级解锁建造
+                    </span>
                         <span className="tabular-nums text-[#8B7355]">
                           {innLevel}/{innNeed}
                         </span>
@@ -343,8 +345,10 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                   )}
 
                   {/* 白天收益行 */}
-                  <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-xl bg-[#F5EDD8]/80 px-2.5 py-1.5 text-[11px] text-[#6B5240]">
-                    <span aria-hidden>☀️</span>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-xl bg-[#E6DCC8]/80 px-2.5 py-1.5 text-[11px] text-[#6B5240]">
+                    <span aria-hidden>
+                      <ConfigIcon icon="/images/ui/ui-sun.png" size={13} />
+                    </span>
                     <span>
                       每级 <span className="font-bold text-[#B8860B]">+{cfg.goldPerLevel}</span> 金币/秒
                     </span>
@@ -356,8 +360,10 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
 
                   {/* 温泉：全体休息体力恢复联动（与 config.staminaRegenRate 温泉乘区同源：每级 +8%，Lv.3 硫磺疗愈 ×1.5） */}
                   {cfg.key === 'hotSpring' && level > 0 && (
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 rounded-xl border border-[#2D5A3D]/25 bg-[#E2F0E4]/70 px-2.5 py-1.5 text-[11px] leading-snug text-[#2D5A3D]">
-                      <span aria-hidden>♨️</span>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 rounded-xl border border-[#8B2E24]/25 bg-[#E8DFD0]/70 px-2.5 py-1.5 text-[11px] leading-snug text-[#8B2E24]">
+                      <span aria-hidden>
+                        <ConfigIcon icon="/images/ui/facility-hotSpring.png" size={13} />
+                      </span>
                       <span>
                         全体妖怪休息体力恢复 +
                         <span className="font-black text-[#1E5C34]">{Math.round(level * 8)}%</span>
@@ -368,8 +374,10 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
 
                   {/* 客房：体力恢复联动说明（与 config.staminaRegenRate 同源的加成数值） */}
                   {cfg.key === 'guestRoom' && (
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 rounded-xl border border-[#2D5A3D]/25 bg-[#E2F0E4]/70 px-2.5 py-1.5 text-[11px] leading-snug text-[#2D5A3D]">
-                      <span aria-hidden>🛏️</span>
+                    <div className="mt-1.5 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 rounded-xl border border-[#8B2E24]/25 bg-[#E8DFD0]/70 px-2.5 py-1.5 text-[11px] leading-snug text-[#8B2E24]">
+                      <span aria-hidden>
+                        <ConfigIcon icon="/images/ui/facility-guestRoom.png" size={13} />
+                      </span>
                       <span>
                         客房等级越高，休息中的妖怪体力恢复越快
                         <span className="font-black text-[#1E5C34]">
@@ -389,11 +397,14 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                       className={cn(
                         'mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 rounded-xl border px-2.5 py-1.5 text-[11px]',
                         matOk
-                          ? 'border-[#D4A574]/40 bg-[#F5EDD8]/80'
+                          ? 'border-[#D4A574]/40 bg-[#E6DCC8]/80'
                           : 'border-rose-300 bg-rose-50/80'
                       )}
                     >
-                      <span className="font-bold text-[#6B5240]">{level === 0 ? '🧰 建造还需' : '🧰 升级还需'}</span>
+                      <span className="inline-flex items-center gap-1 font-bold text-[#6B5240]">
+                        <ConfigIcon icon="/images/ui/cat-build.png" size={13} />
+                        {level === 0 ? '建造还需' : '升级还需'}
+                      </span>
                       {matEntries.map(([id, n]) => {
                         const have = materials[id] ?? 0
                         return (
@@ -405,7 +416,12 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                               have >= n ? 'text-[#6B5240]' : 'text-rose-600'
                             )}
                           >
-                            {MATERIALS_MAP[id]?.icon} {MATERIALS_MAP[id]?.name}×{n}
+                            <span className="inline-flex items-center gap-1">
+                              {MATERIALS_MAP[id]?.icon ? (
+                                <ConfigIcon icon={MATERIALS_MAP[id]!.icon} size={14} />
+                              ) : null}
+                              {MATERIALS_MAP[id]?.name}×{n}
+                            </span>
                           </span>
                         )
                       })}
@@ -414,15 +430,15 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                     isBuilt &&
                     level < 3 && (
                       <p className="mt-1 px-1 text-[9px] text-[#A89880]">
-                        🧰 Lv.4 起升级需建材（杂货铺有售）
+                        Lv.4 起升级需建材（杂货铺有售）
                       </p>
                     )
                   )}
 
                   {/* 夜晚联动行 */}
-                  <div className="mt-1.5 flex items-start gap-1.5 rounded-xl bg-gradient-to-r from-[#2D5A3D] to-[#254A35] px-2.5 py-1.5 text-[11px] leading-snug text-[#EDE6D4] shadow-inner">
+                  <div className="mt-1.5 flex items-start gap-1.5 rounded-xl bg-gradient-to-r from-[#8B2E24] to-[#5C3A24] px-2.5 py-1.5 text-[11px] leading-snug text-[#EDE6D4] shadow-inner">
                     <span className="shrink-0 drop-shadow-[0_0_3px_rgba(232,184,75,0.6)]" aria-hidden>
-                      🌙
+                      <ConfigIcon icon="/images/ui/status-moon.png" size={13} />
                     </span>
                     <span className="min-w-0 flex-1">{cfg.nightDesc}</span>
                   </div>

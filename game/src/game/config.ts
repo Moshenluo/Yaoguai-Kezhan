@@ -52,12 +52,12 @@ export const ENEMY_TYPES = {
 
 /** 站位格（6 格：前 4 格基础站位，后 2 格随客栈等级解锁，路径百分比坐标） */
 export const SLOTS = [
-  { slot: 0, x: 30, y: 32 },
-  { slot: 1, x: 52, y: 62 },
-  { slot: 2, x: 66, y: 26 },
-  { slot: 3, x: 76, y: 58 },
-  { slot: 4, x: 44, y: 24 },
-  { slot: 5, x: 36, y: 56 },
+  { slot: 0, x: 28, y: 58 },
+  { slot: 1, x: 44, y: 66 },
+  { slot: 2, x: 58, y: 54 },
+  { slot: 3, x: 70, y: 62 },
+  { slot: 4, x: 36, y: 52 },
+  { slot: 5, x: 50, y: 70 },
 ]
 
 /** 基础站位数（默认开放） */
@@ -150,7 +150,7 @@ export const REGIONS: RegionDef[] = [
     id: 1,
     name: '客栈山道',
     subtitle: '夜袭客栈',
-    icon: '🏮',
+    icon: '/images/ui/region-1.png',
     desc: '客栈门前的山道，入夜总有野妖摸黑来偷吃。妖王英招偶尔压阵第 5 波。',
     bgmTrack: 'night',
     enemyFilter: 'none',
@@ -160,14 +160,14 @@ export const REGIONS: RegionDef[] = [
     rewardMult: 1,
     eliteBonus: 0,
     enemyNames: { minion: '小妖', brute: '山怪', sprite: '精怪' },
-    themeColor: '#2D5A3D',
+    themeColor: '#8B2E24',
     scene: '/images/scene/scene-night.png',
   },
   {
     id: 2,
     name: '水墨幽谷',
     subtitle: '水墨藏锋',
-    icon: '🖌️',
+    icon: '/images/ui/region-2.png',
     desc: '谷中雾气如墨、笔锋藏杀，栖息着水墨系野妖。分店「水墨别院」坐落于此，守店收益丰厚。',
     bgmTrack: 'night2',
     enemyFilter: 'grayscale(0.82) contrast(1.22) brightness(1.02) saturate(0.55)',
@@ -184,7 +184,7 @@ export const REGIONS: RegionDef[] = [
     id: 3,
     name: '沸火赤川',
     subtitle: '赤川沸火',
-    icon: '🔥',
+    icon: '/images/ui/region-3.png',
     desc: '地脉奔涌的赤色火川，熔岩为溪、火魅成群。分店「沸泉别馆」依地热而建，守店收益极丰。',
     bgmTrack: 'night3',
     enemyFilter: 'sepia(0.45) saturate(1.9) hue-rotate(-18deg) contrast(1.18) brightness(0.96)',
@@ -340,63 +340,63 @@ export interface FacilityConfig {
 
 export const FACILITIES: FacilityConfig[] = [
   {
-    key: 'kitchen', name: '后厨', icon: '🍲', desc: '火候正旺，荤香四溢',
+    key: 'kitchen', name: '后厨', icon: '/images/ui/facility-kitchen.png', desc: '火候正旺，荤香四溢',
     baseCost: 200, costGrow: 1.6, goldPerLevel: 0.8, maxLevel: 30,
     role: 'atk', roleName: '攻击型', roleColor: '#C0392B', targetRoles: ['ranged'],
     nightBonus: { atk: 5, crit: 2 }, nightDesc: '攻击型妖怪 攻击+5%/级 · 暴击+2%/级',
     ability: { name: '美食增益', desc: '守卫开场首击造成 150% 伤害', enhanceDesc: 'Lv.5 强化：首击 175% 伤害' },
   },
   {
-    key: 'guestRoom', name: '客房', icon: '🛏️', desc: '妖客安睡，养精蓄锐',
+    key: 'guestRoom', name: '客房', icon: '/images/ui/facility-guestRoom.png', desc: '妖客安睡，养精蓄锐',
     baseCost: 150, costGrow: 1.55, goldPerLevel: 0.5, maxLevel: 30,
-    role: 'def', roleName: '防御型', roleColor: '#2D5A3D', targetRoles: ['tank'],
+    role: 'def', roleName: '防御型', roleColor: '#8B2E24', targetRoles: ['tank'],
     nightBonus: { hp: 8, def: 5 }, nightDesc: '防御型妖怪 生命+8%/级 · 防御减伤+5%/级',
     ability: { name: '舒适休憩', desc: '守卫每 3 秒回复 2% 生命', enhanceDesc: 'Lv.5 强化：每 3 秒回 3% 生命' },
   },
   {
-    key: 'hall', name: '大堂', icon: '🏮', desc: '迎来送往，宾至如归',
+    key: 'hall', name: '大堂', icon: '/images/ui/facility-hall.png', desc: '迎来送往，宾至如归',
     baseCost: 180, costGrow: 1.58, goldPerLevel: 0.45, maxLevel: 30,
     role: 'support', roleName: '辅助型', roleColor: '#B9770E', targetRoles: ['support'],
     nightBonus: { skillDmg: 6, heal: 8 }, nightDesc: '辅助型妖怪 技能效果+6%/级 · 治疗+8%/级',
     ability: { name: '热情服务', desc: '守卫技能作用范围 +20%', enhanceDesc: 'Lv.5 强化：范围 +30%' },
   },
   {
-    key: 'warehouse', name: '仓库', icon: '📦', desc: '奇物囤积，陷阱暗藏',
+    key: 'warehouse', name: '仓库', icon: '/images/ui/facility-warehouse.png', desc: '奇物囤积，陷阱暗藏',
     baseCost: 120, costGrow: 1.55, goldPerLevel: 0.35, maxLevel: 30,
     role: 'ctrl', roleName: '控制型', roleColor: '#6B4E8E', targetRoles: ['controller'],
     nightBonus: { ctrl: 10, slow: 5 }, nightDesc: '控制型妖怪 控制时长+10%/级 · 减速+5%/级',
     ability: { name: '陷阱布置', desc: '守卫普攻 20% 概率眩晕敌人 1 秒', enhanceDesc: 'Lv.5 强化：概率提升至 25%' },
   },
   {
-    key: 'powerPool', name: '妖力池', icon: '🌀', desc: '灵气汇聚，妖力涌动',
+    key: 'powerPool', name: '妖力池', icon: '/images/ui/facility-powerPool.png', desc: '灵气汇聚，妖力涌动',
     baseCost: 800, costGrow: 1.62, goldPerLevel: 0.6, maxLevel: 30,
     role: 'mage', roleName: '法术型', roleColor: '#16777B', targetRoles: ['mage'],
     nightBonus: { skillDmg: 7, energy: 5 }, nightDesc: '法术型妖怪 技能伤害+7%/级 · 技能CD -5%/级',
     ability: { name: '妖力涌动', desc: '击杀后 5 秒攻速 +30%', enhanceDesc: 'Lv.5 强化：攻速 +45%' },
   },
   {
-    key: 'smithy', name: '铁匠铺', icon: '⚒️', desc: '炉火不熄，利刃出鞘',
+    key: 'smithy', name: '铁匠铺', icon: '/images/ui/facility-smithy.png', desc: '炉火不熄，利刃出鞘',
     baseCost: 1200, costGrow: 1.62, goldPerLevel: 0.55, maxLevel: 30,
     role: 'phys', roleName: '物理型', roleColor: '#8B5E3C', targetRoles: ['assassin'],
     nightBonus: { atk: 3, crit: 1 }, nightDesc: '物理型妖怪 攻击+3%/级 · 暴击+1%/级',
     ability: { name: '利刃打磨', desc: '普攻 15% 概率造成双倍伤害', enhanceDesc: 'Lv.5 强化：概率提升至 20%' },
   },
   {
-    key: 'pharmacy', name: '药房', icon: '⚗️', desc: '丹香弥漫，妙手回春',
+    key: 'pharmacy', name: '药房', icon: '/images/ui/facility-pharmacy.png', desc: '丹香弥漫，妙手回春',
     baseCost: 2000, costGrow: 1.62, goldPerLevel: 0.5, maxLevel: 30,
     role: 'heal', roleName: '治疗型', roleColor: '#C2185B', targetRoles: ['healer'],
     nightBonus: { heal: 10 }, nightDesc: '治疗型妖怪 治疗效果+10%/级',
     ability: { name: '丹药储备', desc: '守卫首次致死免死并回 30% 生命', enhanceDesc: 'Lv.5 强化：回复 45% 生命' },
   },
   {
-    key: 'wishAltar', name: '许愿台', icon: '🌟', desc: '神灵庇佑，福泽满门',
+    key: 'wishAltar', name: '许愿台', icon: '/images/ui/facility-wishAltar.png', desc: '神灵庇佑，福泽满门',
     baseCost: 3000, costGrow: 1.65, goldPerLevel: 0.4, maxLevel: 30,
     role: 'global', roleName: '全局', roleColor: '#E8B84B', targetRoles: 'global',
     nightBonus: { atk: 2, hp: 2 }, nightDesc: '全体妖怪 攻击/生命 +2%/级（不受定位限制）',
     ability: { name: '神灵庇佑', desc: '客栈血量低于 20% 时无敌 2 秒（每场一次）', enhanceDesc: 'Lv.5 强化：无敌 3 秒' },
   },
   {
-    key: 'hotSpring', name: '温泉汤院', icon: '♨️', desc: '地热涌泉，涤荡疲惫（需客栈 5 级）',
+    key: 'hotSpring', name: '温泉汤院', icon: '/images/ui/facility-hotSpring.png', desc: '地热涌泉，涤荡疲惫（需客栈 5 级）',
     baseCost: 5000, costGrow: 1.7, goldPerLevel: 0.3, maxLevel: 30, unlockInnLevel: 5,
     role: 'heal', roleName: '全体', roleColor: '#16777B', targetRoles: 'global',
     nightBonus: { heal: 4 }, nightDesc: '汤泉回春：全体守卫战斗中每秒回复 0.15%×等级 生命',
@@ -526,9 +526,9 @@ export interface PotionDef {
 }
 
 export const EXP_POTIONS: PotionDef[] = [
-  { id: 'small', name: '小瓶经验露', icon: '🧪', exp: 30, currency: 'gold', price: 600, desc: '经验 +30' },
-  { id: 'medium', name: '中瓶经验露', icon: '🍶', exp: 100, currency: 'gold', price: 1900, desc: '经验 +100' },
-  { id: 'large', name: '大瓶经验露', icon: '🏺', exp: 300, currency: 'gems', price: 30, desc: '经验 +300（灵石购买）' },
+  { id: 'small', name: '小瓶经验露', icon: '/images/ui/potion-exp-small.png', exp: 30, currency: 'gold', price: 600, desc: '经验 +30' },
+  { id: 'medium', name: '中瓶经验露', icon: '/images/ui/potion-exp-medium.png', exp: 100, currency: 'gold', price: 1900, desc: '经验 +100' },
+  { id: 'large', name: '大瓶经验露', icon: '/images/ui/potion-exp-large.png', exp: 300, currency: 'gems', price: 30, desc: '经验 +300（灵石购买）' },
 ]
 
 /** 夜战参战经验：每只上阵妖怪获得 */
@@ -812,11 +812,11 @@ export interface SkinDef {
 }
 
 export const SKINS: SkinDef[] = [
-  { id: 'default', name: '青瓦木檐', desc: '经典客栈原貌', icon: '🏮', filter: 'none', unlock: { type: 'default', value: 0 }, unlockDesc: '默认解锁' },
-  { id: 'lantern', name: '朱漆灯笼', desc: '红灯高挂 · 喜气盈门', icon: '🧧', filter: 'saturate(1.35) sepia(0.16) hue-rotate(-12deg) brightness(1.03)', unlock: { type: 'wins', value: 5 }, unlockDesc: '守店成功 5 次解锁' },
-  { id: 'frost', name: '霜雪琉璃', desc: '雪落屋檐 · 银装素裹', icon: '❄️', filter: 'saturate(0.72) hue-rotate(168deg) brightness(1.14) contrast(0.96)', unlock: { type: 'wins', value: 10 }, unlockDesc: '守店成功 10 次解锁' },
-  { id: 'gilt', name: '鎏金岁月', desc: '金漆流彩 · 百年老店', icon: '🏆', filter: 'sepia(0.5) saturate(1.55) hue-rotate(-8deg) brightness(1.08)', unlock: { type: 'tujian', value: 10 }, unlockDesc: '图鉴收集 10 只解锁' },
-  { id: 'bloodmoon', name: '血月妖楼', desc: '赤月高悬 · 妖气缭绕', icon: '🌕', filter: 'saturate(1.32) hue-rotate(-30deg) brightness(0.9) contrast(1.15)', unlock: { type: 'bossWins', value: 2 }, unlockDesc: '妖王夜守店成功 2 次解锁' },
+  { id: 'default', name: '青瓦木檐', desc: '经典客栈原貌', icon: '/images/ui/skin-default.png', filter: 'none', unlock: { type: 'default', value: 0 }, unlockDesc: '默认解锁' },
+  { id: 'lantern', name: '朱漆灯笼', desc: '红灯高挂 · 喜气盈门', icon: '/images/ui/skin-lantern.png', filter: 'saturate(1.35) sepia(0.16) hue-rotate(-12deg) brightness(1.03)', unlock: { type: 'wins', value: 5 }, unlockDesc: '守店成功 5 次解锁' },
+  { id: 'frost', name: '霜雪琉璃', desc: '雪落屋檐 · 银装素裹', icon: '/images/ui/skin-frost.png', filter: 'saturate(0.72) hue-rotate(168deg) brightness(1.14) contrast(0.96)', unlock: { type: 'wins', value: 10 }, unlockDesc: '守店成功 10 次解锁' },
+  { id: 'gilt', name: '鎏金岁月', desc: '金漆流彩 · 百年老店', icon: '/images/ui/skin-gilt.png', filter: 'sepia(0.5) saturate(1.55) hue-rotate(-8deg) brightness(1.08)', unlock: { type: 'tujian', value: 10 }, unlockDesc: '图鉴收集 10 只解锁' },
+  { id: 'bloodmoon', name: '血月妖楼', desc: '赤月高悬 · 妖气缭绕', icon: '/images/ui/skin-bloodmoon.png', filter: 'saturate(1.32) hue-rotate(-30deg) brightness(0.9) contrast(1.15)', unlock: { type: 'bossWins', value: 2 }, unlockDesc: '妖王夜守店成功 2 次解锁' },
 ]
 
 /** 判断皮肤是否已解锁 */
@@ -852,14 +852,14 @@ export interface FestivalDef {
 
 /** 全年节日表（按时间排序；日期为固定公历窗口，营造固定仪式感） */
 export const FESTIVALS: FestivalDef[] = [
-  { id: 'laba', name: '腊八粥香', icon: '🥣', greeting: '过了腊八就是年，客栈熬了一大锅甜粥～', month: 1, start: 5, end: 10, gift: { gold: 400, gems: 2 }, giftDesc: '金币×400 灵石×2', buff: 0.1, color: '#8B5E3C' },
-  { id: 'newyear', name: '新春佳节', icon: '🧨', greeting: '爆竹声中一岁除，山间小妖组团来拜年啦！', month: 2, start: 14, end: 21, gift: { gold: 800, gems: 5 }, giftDesc: '金币×800 灵石×5', buff: 0.2, color: '#C0392B' },
-  { id: 'lantern', name: '上元灯节', icon: '🏮', greeting: '东风夜放花千树，今夜灯笼照亮客栈！', month: 2, start: 22, end: 26, gift: { gold: 600, tickets: 2 }, giftDesc: '金币×600 招募券×2', buff: 0.15, color: '#D35400' },
-  { id: 'huazhao', name: '花朝节', icon: '🌸', greeting: '百花生日是良辰，院里的桃花都开啦～', month: 3, start: 10, end: 14, gift: { gems: 3, tickets: 1 }, giftDesc: '灵石×3 招募券×1', buff: 0.15, color: '#C2185B' },
-  { id: 'dragon', name: '端午安康', icon: '🐉', greeting: '粽叶飘香艾草长，小妖们也排队讨粽子～', month: 6, start: 1, end: 6, gift: { gold: 600, gems: 3 }, giftDesc: '金币×600 灵石×3', buff: 0.15, color: '#2D5A3D' },
-  { id: 'qixi', name: '七夕鹊桥', icon: '🕊️', greeting: '金风玉露一相逢，客栈檐下喜鹊闹哄哄～', month: 8, start: 14, end: 19, gift: { gems: 5, tickets: 2 }, giftDesc: '灵石×5 招募券×2', buff: 0.15, color: '#A0522D' },
-  { id: 'midautumn', name: '中秋团圆', icon: '🥮', greeting: '但愿人长久，千里共婵娟～掌柜的分月饼啦！', month: 9, start: 14, end: 20, gift: { gold: 1000, gems: 4 }, giftDesc: '金币×1000 灵石×4', buff: 0.2, color: '#B9770E' },
-  { id: 'dongzhi', name: '冬至大如年', icon: '❄️', greeting: '天时人事日相催，冬至阳生春又来～', month: 12, start: 20, end: 24, gift: { gold: 600, gems: 3 }, giftDesc: '金币×600 灵石×3', buff: 0.15, color: '#16777B' },
+  { id: 'laba', name: '腊八粥香', icon: '/images/ui/festival-laba.png', greeting: '过了腊八就是年，客栈熬了一大锅甜粥～', month: 1, start: 5, end: 10, gift: { gold: 400, gems: 2 }, giftDesc: '金币×400 灵石×2', buff: 0.1, color: '#8B5E3C' },
+  { id: 'newyear', name: '新春佳节', icon: '/images/ui/festival-newyear.png', greeting: '爆竹声中一岁除，山间小妖组团来拜年啦！', month: 2, start: 14, end: 21, gift: { gold: 800, gems: 5 }, giftDesc: '金币×800 灵石×5', buff: 0.2, color: '#C0392B' },
+  { id: 'lantern', name: '上元灯节', icon: '/images/ui/festival-lantern.png', greeting: '东风夜放花千树，今夜灯笼照亮客栈！', month: 2, start: 22, end: 26, gift: { gold: 600, tickets: 2 }, giftDesc: '金币×600 招募券×2', buff: 0.15, color: '#D35400' },
+  { id: 'huazhao', name: '花朝节', icon: '/images/ui/festival-huazhao.png', greeting: '百花生日是良辰，院里的桃花都开啦～', month: 3, start: 10, end: 14, gift: { gems: 3, tickets: 1 }, giftDesc: '灵石×3 招募券×1', buff: 0.15, color: '#C2185B' },
+  { id: 'dragon', name: '端午安康', icon: '/images/ui/festival-dragon.png', greeting: '粽叶飘香艾草长，小妖们也排队讨粽子～', month: 6, start: 1, end: 6, gift: { gold: 600, gems: 3 }, giftDesc: '金币×600 灵石×3', buff: 0.15, color: '#8B2E24' },
+  { id: 'qixi', name: '七夕鹊桥', icon: '/images/ui/festival-qixi.png', greeting: '金风玉露一相逢，客栈檐下喜鹊闹哄哄～', month: 8, start: 14, end: 19, gift: { gems: 5, tickets: 2 }, giftDesc: '灵石×5 招募券×2', buff: 0.15, color: '#A0522D' },
+  { id: 'midautumn', name: '中秋团圆', icon: '/images/ui/festival-midautumn.png', greeting: '但愿人长久，千里共婵娟～掌柜的分月饼啦！', month: 9, start: 14, end: 20, gift: { gold: 1000, gems: 4 }, giftDesc: '金币×1000 灵石×4', buff: 0.2, color: '#B9770E' },
+  { id: 'dongzhi', name: '冬至大如年', icon: '/images/ui/festival-dongzhi.png', greeting: '天时人事日相催，冬至阳生春又来～', month: 12, start: 20, end: 24, gift: { gold: 600, gems: 3 }, giftDesc: '金币×600 灵石×3', buff: 0.15, color: '#16777B' },
 ]
 
 /** 当前生效的节日（无则 null）；本地时区自然日 */
@@ -888,13 +888,13 @@ export interface ElementDef {
 export const ELEMENT_ORDER: Element[] = ['metal', 'wood', 'water', 'fire', 'earth', 'light', 'dark']
 
 export const ELEMENTS: Record<Element, ElementDef> = {
-  metal: { name: '金', icon: '🪙', color: '#8C6A1D', bg: '#F6EAD0', desc: '金石之锐，克木' },
-  wood: { name: '木', icon: '🌿', color: '#2D7A46', bg: '#E2F0E4', desc: '草木之生，克土' },
-  water: { name: '水', icon: '💧', color: '#16777B', bg: '#DCEFF0', desc: '流水之柔，克火' },
-  fire: { name: '火', icon: '🔥', color: '#C0392B', bg: '#F9E3DD', desc: '烈焰之炎，克金' },
-  earth: { name: '土', icon: '⛰️', color: '#8B5E3C', bg: '#F1E6D8', desc: '厚土之重，克水' },
-  light: { name: '光', icon: '✨', color: '#B8860B', bg: '#FBF3D9', desc: '光明祥瑞，克暗' },
-  dark: { name: '暗', icon: '🌑', color: '#6B4E8E', bg: '#EAE2F3', desc: '幽暗玄冥，克光' },
+  metal: { name: '金', icon: '/images/ui/el-metal.png', color: '#8C6A1D', bg: '#F6EAD0', desc: '金石之锐，克木' },
+  wood: { name: '木', icon: '/images/ui/el-wood.png', color: '#2D7A46', bg: '#E8DFD0', desc: '草木之生，克土' },
+  water: { name: '水', icon: '/images/ui/el-water.png', color: '#16777B', bg: '#DCEFF0', desc: '流水之柔，克火' },
+  fire: { name: '火', icon: '/images/ui/el-fire.png', color: '#C0392B', bg: '#F9E3DD', desc: '烈焰之炎，克金' },
+  earth: { name: '土', icon: '/images/ui/el-earth.png', color: '#8B5E3C', bg: '#F1E6D8', desc: '厚土之重，克水' },
+  light: { name: '光', icon: '/images/ui/el-light.png', color: '#B8860B', bg: '#FBF3D9', desc: '光明祥瑞，克暗' },
+  dark: { name: '暗', icon: '/images/ui/el-dark.png', color: '#6B4E8E', bg: '#EAE2F3', desc: '幽暗玄冥，克光' },
 }
 
 /** 五行相克：金→木→土→水→火→金；光暗互克 */
@@ -1043,11 +1043,11 @@ export interface StaminaTierDef {
 }
 
 export const STAMINA_TIERS: StaminaTierDef[] = [
-  { key: 'full', name: '充沛', icon: '⚡', min: 70, max: 100, color: '#2D7A46', bg: '#E2F0E4', jobEff: 1, atkMult: 1, asMult: 1, battleOk: true, desc: '精神抖擞，全力发挥' },
-  { key: 'normal', name: '正常', icon: '🙂', min: 40, max: 70, color: '#16777B', bg: '#DCEFF0', jobEff: 1, atkMult: 1, asMult: 1, battleOk: true, desc: '状态平稳，正常发挥' },
-  { key: 'tired', name: '疲惫', icon: '😪', min: 15, max: 40, color: '#B9770E', bg: '#F6EAD0', jobEff: 0.6, atkMult: 1, asMult: 0.9, battleOk: true, desc: '打工效率 60% · 战斗攻速 -10%' },
-  { key: 'exhausted', name: '力竭', icon: '🥵', min: 1, max: 15, color: '#C0392B', bg: '#F9E3DD', jobEff: 0.3, atkMult: 0.8, asMult: 0.75, battleOk: true, desc: '打工效率 30% · 攻击 -20% 攻速 -25%' },
-  { key: 'collapse', name: '虚脱', icon: '💀', min: 0, max: 0, color: '#6B4E8E', bg: '#EAE2F3', jobEff: 0, atkMult: 0, asMult: 0, battleOk: false, desc: '体力耗尽，无法打工与上阵' },
+  { key: 'full', name: '充沛', icon: '/images/ui/stamina-full.png', min: 70, max: 100, color: '#2D7A46', bg: '#E8DFD0', jobEff: 1, atkMult: 1, asMult: 1, battleOk: true, desc: '精神抖擞，全力发挥' },
+  { key: 'normal', name: '正常', icon: '/images/ui/stamina-normal.png', min: 40, max: 70, color: '#16777B', bg: '#DCEFF0', jobEff: 1, atkMult: 1, asMult: 1, battleOk: true, desc: '状态平稳，正常发挥' },
+  { key: 'tired', name: '疲惫', icon: '/images/ui/stamina-tired.png', min: 15, max: 40, color: '#B9770E', bg: '#F6EAD0', jobEff: 0.6, atkMult: 1, asMult: 0.9, battleOk: true, desc: '打工效率 60% · 战斗攻速 -10%' },
+  { key: 'exhausted', name: '力竭', icon: '/images/ui/stamina-exhausted.png', min: 1, max: 15, color: '#C0392B', bg: '#F9E3DD', jobEff: 0.3, atkMult: 0.8, asMult: 0.75, battleOk: true, desc: '打工效率 30% · 攻击 -20% 攻速 -25%' },
+  { key: 'collapse', name: '虚脱', icon: '/images/ui/stamina-collapse.png', min: 0, max: 0, color: '#6B4E8E', bg: '#EAE2F3', jobEff: 0, atkMult: 0, asMult: 0, battleOk: false, desc: '体力耗尽，无法打工与上阵' },
 ]
 
 /** 体力值 → 档位定义 */
@@ -1131,9 +1131,9 @@ export interface StaminaPotionDef {
 }
 
 export const STAMINA_POTIONS: StaminaPotionDef[] = [
-  { id: 'small', name: '小瓶气力散', icon: '🫙', value: 30, target: 'single', currency: 'gold', price: 520, desc: '单只妖怪体力 +30' },
-  { id: 'medium', name: '中瓶气力散', icon: '🍯', value: 60, target: 'single', currency: 'gold', price: 1400, desc: '单只妖怪体力 +60' },
-  { id: 'large', name: '大瓶回元丹', icon: '♨️', value: 100, target: 'all', currency: 'gems', price: 35, desc: '全体妖怪体力回满' },
+  { id: 'small', name: '小瓶气力散', icon: '/images/ui/potion-stamina-small.png', value: 30, target: 'single', currency: 'gold', price: 520, desc: '单只妖怪体力 +30' },
+  { id: 'medium', name: '中瓶气力散', icon: '/images/ui/potion-stamina-medium.png', value: 60, target: 'single', currency: 'gold', price: 1400, desc: '单只妖怪体力 +60' },
+  { id: 'large', name: '大瓶回元丹', icon: '/images/ui/potion-stamina-large.png', value: 100, target: 'all', currency: 'gems', price: 35, desc: '全体妖怪体力回满' },
 ]
 
 // ============ 技能升级系统（V1.3：妖丹消耗，技能效果 +15%/级） ============
@@ -1197,13 +1197,13 @@ export interface GatherTaskDef {
 }
 
 export const GATHER_TASKS: GatherTaskDef[] = [
-  { id: 'hunt', name: '后山狩猎', icon: '🏹', material: 'meat', desc: '后山林深兽肥，猎取妖兽肉', baseRate: 9, unlockInnLevel: 1 },
-  { id: 'farm', name: '灵田耕作', icon: '🌾', material: 'rice', desc: '开垦山灵田，播种灵稻', baseRate: 9, unlockInnLevel: 1 },
-  { id: 'lumber', name: '松林伐木', icon: '🪵', material: 'wood', desc: '斧斤入林，伐取松木', baseRate: 6, unlockInnLevel: 1 },
-  { id: 'saltwell', name: '盐井采卤', icon: '🧂', material: 'salt', desc: '汲取地底盐卤，晒制妖盐', baseRate: 7, unlockInnLevel: 2 },
-  { id: 'quarry', name: '青石采场', icon: '🪨', material: 'stone', desc: '凿山开石，采青石', baseRate: 6, unlockInnLevel: 2 },
-  { id: 'brewery', name: '曲坊酿酒', icon: '🍶', material: 'wine', desc: '采曲酿酒，窖藏灵米酒', baseRate: 5, unlockInnLevel: 3 },
-  { id: 'mine', name: '铁脉矿洞', icon: '⛏️', material: 'iron', desc: '深入地脉，掘取铁矿', baseRate: 5, unlockInnLevel: 4 },
+  { id: 'hunt', name: '后山狩猎', icon: '/images/ui/gather-hunt.png', material: 'meat', desc: '后山林深兽肥，猎取妖兽肉', baseRate: 9, unlockInnLevel: 1 },
+  { id: 'farm', name: '灵田耕作', icon: '/images/ui/gather-farm.png', material: 'rice', desc: '开垦山灵田，播种灵稻', baseRate: 9, unlockInnLevel: 1 },
+  { id: 'lumber', name: '松林伐木', icon: '/images/ui/gather-lumber.png', material: 'wood', desc: '斧斤入林，伐取松木', baseRate: 6, unlockInnLevel: 1 },
+  { id: 'saltwell', name: '盐井采卤', icon: '/images/ui/gather-saltwell.png', material: 'salt', desc: '汲取地底盐卤，晒制妖盐', baseRate: 7, unlockInnLevel: 2 },
+  { id: 'quarry', name: '青石采场', icon: '/images/ui/gather-quarry.png', material: 'stone', desc: '凿山开石，采青石', baseRate: 6, unlockInnLevel: 2 },
+  { id: 'brewery', name: '曲坊酿酒', icon: '/images/ui/gather-brewery.png', material: 'wine', desc: '采曲酿酒，窖藏灵米酒', baseRate: 5, unlockInnLevel: 3 },
+  { id: 'mine', name: '铁脉矿洞', icon: '/images/ui/gather-mine.png', material: 'iron', desc: '深入地脉，掘取铁矿', baseRate: 5, unlockInnLevel: 4 },
 ]
 
 export const GATHER_TASKS_MAP: Record<string, GatherTaskDef> = Object.fromEntries(
@@ -1278,31 +1278,31 @@ export interface MaterialDef {
 
 export const MATERIALS: MaterialDef[] = [
   // ---- 经营素材（食材：灶火做饭消耗） ----
-  { id: 'meat', name: '妖兽肉', icon: '🍖', cat: 'food', desc: '客栈招牌菜的主料', sellPrice: 15 },
-  { id: 'rice', name: '灵米', icon: '🌾', cat: 'food', desc: '山灵稻米，粒粒生香', sellPrice: 12 },
-  { id: 'salt', name: '妖盐', icon: '🧂', cat: 'food', desc: '提味增鲜的秘制调料', sellPrice: 14 },
-  { id: 'wine', name: '灵米酒', icon: '🍶', cat: 'food', desc: '迎宾宴必备佳酿', sellPrice: 25 },
+  { id: 'meat', name: '妖兽肉', icon: '/images/ui/mat-meat.png', cat: 'food', desc: '客栈招牌菜的主料', sellPrice: 15 },
+  { id: 'rice', name: '灵米', icon: '/images/ui/mat-rice.png', cat: 'food', desc: '山灵稻米，粒粒生香', sellPrice: 12 },
+  { id: 'salt', name: '妖盐', icon: '/images/ui/mat-salt.png', cat: 'food', desc: '提味增鲜的秘制调料', sellPrice: 14 },
+  { id: 'wine', name: '灵米酒', icon: '/images/ui/mat-wine.png', cat: 'food', desc: '迎宾宴必备佳酿', sellPrice: 25 },
   // ---- 建设素材（设施升级消耗） ----
-  { id: 'wood', name: '松木', icon: '🪵', cat: 'build', desc: '基础建材，升级设施', sellPrice: 20 },
-  { id: 'stone', name: '青石', icon: '🪨', cat: 'build', desc: '基础建材，升级设施', sellPrice: 20 },
-  { id: 'iron', name: '铁矿', icon: '⛏️', cat: 'build', desc: '基础建材，升级设施', sellPrice: 22 },
-  { id: 'spirit-wood', name: '灵木', icon: '🌳', cat: 'build', desc: '高级建材（5 松木合成）', sellPrice: 100 },
-  { id: 'jade', name: '灵玉', icon: '💎', cat: 'build', desc: '高级建材（5 青石合成）', sellPrice: 100 },
-  { id: 'star-iron', name: '星金', icon: '✨', cat: 'build', desc: '高级建材（5 铁矿合成）', sellPrice: 110 },
+  { id: 'wood', name: '松木', icon: '/images/ui/mat-wood.png', cat: 'build', desc: '基础建材，升级设施', sellPrice: 20 },
+  { id: 'stone', name: '青石', icon: '/images/ui/mat-stone.png', cat: 'build', desc: '基础建材，升级设施', sellPrice: 20 },
+  { id: 'iron', name: '铁矿', icon: '/images/ui/mat-iron.png', cat: 'build', desc: '基础建材，升级设施', sellPrice: 22 },
+  { id: 'spirit-wood', name: '灵木', icon: '/images/ui/mat-spirit-wood.png', cat: 'build', desc: '高级建材（5 松木合成）', sellPrice: 100 },
+  { id: 'jade', name: '灵玉', icon: '/images/ui/mat-jade.png', cat: 'build', desc: '高级建材（5 青石合成）', sellPrice: 100 },
+  { id: 'star-iron', name: '星金', icon: '/images/ui/mat-star-iron.png', cat: 'build', desc: '高级建材（5 铁矿合成）', sellPrice: 110 },
   // ---- 养成素材（妖丹 + 七属性石） ----
-  { id: 'pill-normal', name: '妖丹', icon: '💊', cat: 'growth', desc: '小妖内丹，可兑换养成物资', sellPrice: 40 },
-  { id: 'pill-rare', name: '稀有妖丹', icon: '🔴', cat: 'growth', desc: '精怪内丹，妖王夜掉落', sellPrice: 150 },
-  { id: 'stone-metal', name: '金晶石', icon: '🪙', cat: 'growth', desc: '强化金属性克制伤害', sellPrice: 60 },
-  { id: 'stone-wood', name: '木灵石', icon: '🌿', cat: 'growth', desc: '强化木属性克制伤害', sellPrice: 60 },
-  { id: 'stone-water', name: '水魄石', icon: '💧', cat: 'growth', desc: '强化水属性克制伤害', sellPrice: 60 },
-  { id: 'stone-fire', name: '火晶石', icon: '🔥', cat: 'growth', desc: '强化火属性克制伤害', sellPrice: 60 },
-  { id: 'stone-earth', name: '土魂石', icon: '⛰️', cat: 'growth', desc: '强化土属性克制伤害', sellPrice: 60 },
-  { id: 'stone-light', name: '辉光石', icon: '✨', cat: 'growth', desc: '强化光属性克制伤害', sellPrice: 80 },
-  { id: 'stone-dark', name: '幽冥石', icon: '🌑', cat: 'growth', desc: '强化暗属性克制伤害', sellPrice: 80 },
+  { id: 'pill-normal', name: '妖丹', icon: '/images/ui/mat-pill-normal.png', cat: 'growth', desc: '小妖内丹，可兑换养成物资', sellPrice: 40 },
+  { id: 'pill-rare', name: '稀有妖丹', icon: '/images/ui/mat-pill-rare.png', cat: 'growth', desc: '精怪内丹，妖王夜掉落', sellPrice: 150 },
+  { id: 'stone-metal', name: '金晶石', icon: '/images/ui/el-metal.png', cat: 'growth', desc: '强化金属性克制伤害', sellPrice: 60 },
+  { id: 'stone-wood', name: '木灵石', icon: '/images/ui/el-wood.png', cat: 'growth', desc: '强化木属性克制伤害', sellPrice: 60 },
+  { id: 'stone-water', name: '水魄石', icon: '/images/ui/el-water.png', cat: 'growth', desc: '强化水属性克制伤害', sellPrice: 60 },
+  { id: 'stone-fire', name: '火晶石', icon: '/images/ui/el-fire.png', cat: 'growth', desc: '强化火属性克制伤害', sellPrice: 60 },
+  { id: 'stone-earth', name: '土魂石', icon: '/images/ui/el-earth.png', cat: 'growth', desc: '强化土属性克制伤害', sellPrice: 60 },
+  { id: 'stone-light', name: '辉光石', icon: '/images/ui/el-light.png', cat: 'growth', desc: '强化光属性克制伤害', sellPrice: 80 },
+  { id: 'stone-dark', name: '幽冥石', icon: '/images/ui/el-dark.png', cat: 'growth', desc: '强化暗属性克制伤害', sellPrice: 80 },
   // ---- 法宝道具（夜战与经营的限时神器） ----
-  { id: 'boss-lure', name: '妖王诱引香', icon: '🕯️', cat: 'prop', desc: '今日妖王退散后焚香，可再召一场妖王夜', sellPrice: 60 },
-  { id: 'capture-net', name: '缚妖网', icon: '🕸️', cat: 'prop', desc: '夜战中张网，本场收服成功率 +15%', sellPrice: 30 },
-  { id: 'haste-talisman', name: '聚宝符', icon: '🧿', cat: 'prop', desc: '激活后 15 分钟，挂机收益 ×2', sellPrice: 25 },
+  { id: 'boss-lure', name: '妖王诱引香', icon: '/images/ui/prop-boss-lure.png', cat: 'prop', desc: '今日妖王退散后焚香，可再召一场妖王夜', sellPrice: 60 },
+  { id: 'capture-net', name: '缚妖网', icon: '/images/ui/prop-capture-net.png', cat: 'prop', desc: '夜战中张网，本场收服成功率 +15%', sellPrice: 30 },
+  { id: 'haste-talisman', name: '聚宝符', icon: '/images/ui/prop-haste-talisman.png', cat: 'prop', desc: '激活后 15 分钟，挂机收益 ×2', sellPrice: 25 },
 ]
 
 export const MATERIALS_MAP: Record<string, MaterialDef> = Object.fromEntries(
@@ -1322,16 +1322,16 @@ export const GROCERY_GOLD: Array<{ id: string; price: number }> = [
 
 /** 杂货铺：灵石商品（妖丹 + 属性石袋 + 妖王诱引香；V1.3.1 提价并新增诱引香） */
 export const GROCERY_GEM: Array<{ id: string; price: number; name: string; icon: string; desc: string }> = [
-  { id: 'pill-normal', price: 12, name: '妖丹', icon: '💊', desc: '小妖内丹' },
-  { id: 'stone-bag', price: 16, name: '属性石袋', icon: '🎴', desc: '随机开出七属性石×1' },
-  { id: BOSS_LURE.id, price: BOSS_LURE.price, name: BOSS_LURE.name, icon: '🕯️', desc: BOSS_LURE.desc },
+  { id: 'pill-normal', price: 12, name: '妖丹', icon: '/images/ui/mat-pill-normal.png', desc: '小妖内丹' },
+  { id: 'stone-bag', price: 16, name: '属性石袋', icon: '/images/ui/prop-stone-bag.png', desc: '随机开出七属性石×1' },
+  { id: BOSS_LURE.id, price: BOSS_LURE.price, name: BOSS_LURE.name, icon: '/images/ui/prop-boss-lure.png', desc: BOSS_LURE.desc },
 ]
 
 export const MATERIAL_CATS: Array<{ key: MaterialCat; name: string; icon: string; desc: string }> = [
-  { key: 'food', name: '经营食材', icon: '🍖', desc: '灶火做饭，提升挂机收益' },
-  { key: 'build', name: '建设素材', icon: '🪵', desc: '设施升级，客栈焕新' },
-  { key: 'growth', name: '养成素材', icon: '💊', desc: '属性强化，克制加成' },
-  { key: 'prop', name: '法宝道具', icon: '🧿', desc: '夜战经营神器，时机使用' },
+  { key: 'food', name: '经营食材', icon: '/images/ui/cat-food.png', desc: '灶火做饭，提升挂机收益' },
+  { key: 'build', name: '建设素材', icon: '/images/ui/cat-build.png', desc: '设施升级，客栈焕新' },
+  { key: 'growth', name: '养成素材', icon: '/images/ui/cat-growth.png', desc: '属性强化，克制加成' },
+  { key: 'prop', name: '法宝道具', icon: '/images/ui/cat-prop.png', desc: '夜战经营神器，时机使用' },
 ]
 
 /** 素材合成配方（低级 → 高级） */
@@ -1368,19 +1368,19 @@ export interface CookDish {
 
 export const COOK_DISHES: CookDish[] = [
   {
-    id: 'plain', name: '家常便饭', icon: '🍚',
+    id: 'plain', name: '家常便饭', icon: '/images/ui/dish-plain.png',
     cost: { meat: 1, rice: 1 },
     goldMult: 0.2, gemMult: 0, minutes: 30,
     desc: '金币收益 +20%，持续 30 分钟',
   },
   {
-    id: 'signature', name: '招牌妖宴', icon: '🍲',
+    id: 'signature', name: '招牌妖宴', icon: '/images/ui/dish-signature.png',
     cost: { meat: 2, rice: 2, salt: 1 },
     goldMult: 0.35, gemMult: 0.05, minutes: 60,
     desc: '金币 +35% · 灵石 +5%，持续 60 分钟',
   },
   {
-    id: 'banquet', name: '迎宾大宴', icon: '🍶',
+    id: 'banquet', name: '迎宾大宴', icon: '/images/ui/dish-banquet.png',
     cost: { meat: 3, rice: 3, salt: 2, wine: 1 },
     goldMult: 0.6, gemMult: 0.1, minutes: 120,
     desc: '金币 +60% · 灵石 +10%，持续 120 分钟',
@@ -1442,7 +1442,7 @@ export function defaultSave(): GameSave {
     facilities: { kitchen: 1, guestRoom: 1, hall: 1, warehouse: 1, powerPool: 0, smithy: 0, pharmacy: 0, wishAltar: 0, hotSpring: 0 },
     potions: { small: 2, medium: 1, large: 0 },
     staminaPotions: { small: 1, medium: 0, large: 0 },
-    autoRotate: false,
+    autoRotate: true,
     materials: { meat: 5, rice: 5, salt: 3, wine: 1, wood: 30, stone: 30, iron: 20, 'pill-normal': 1 },
     elementBoost: { metal: 0, wood: 0, water: 0, fire: 0, earth: 0, light: 0, dark: 0 },
     cooking: { until: 0, goldMult: 0, gemMult: 0 },
@@ -1461,7 +1461,7 @@ export function defaultSave(): GameSave {
     festivalClaimed: [],
     skin: 'default',
     stats: { totalGold: 0, totalCaptures: 0, wins: 0, fails: 0, adViews: 0, bossWins: 0, winsRegion2: 0, winsRegion3: 0, gatherTotal: 0, createdAt: Date.now(), lastOnline: Date.now() },
-    settings: { sound: true, music: true, sfxVolume: 0.8, bgmVolume: 0.8 },
+    settings: { sound: true, music: true, sfxVolume: 0.8, bgmVolume: 0.8, seenDayGuide: false },
   }
 }
 

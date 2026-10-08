@@ -64,7 +64,10 @@ import {
   today,
 } from './config'
 import { INITIAL_YAOGUAI, RARE_IDS, YAOGUAI_MAP } from './yaoguai'
-import { sfx, setBgmVolume, setSfxVolume } from './audio'
+// ⚠️ 不要在这里 import './audio' —— 那是 Web Audio 实现，会把逻辑层锁死在浏览器。
+// 音频与存储一律走 bridge，由渲染端启动时注入实现（Web 见 adapters-web.ts，
+// 抖音小游戏见未来的 adapters-tt.ts）。本文件因此可以脱离 DOM 独立运行。
+import { audio, getStorage } from './bridge'
 
 // ============ 妖怪客栈 · 全局状态 ============
 
@@ -175,6 +178,8 @@ interface GameStore extends GameSave {
   toggleSetting: (key: 'sound' | 'music') => void
   /** 独立音量调节（sfx / bgm，0-1） */
   setVolume: (key: 'sfx' | 'bgm', v: number) => void
+  /** 标记白天三步引导已看过（完成或跳过） */
+  markDayGuideSeen: () => void
   resetGame: () => void
   markDaily: (event: string) => void
 
@@ -483,7 +488,7 @@ export function sanitizeSave(raw: unknown): GameSave {
     facilities,
     potions,
     staminaPotions,
-    autoRotate: p.autoRotate === true,
+    autoRotate: p.autoRotate !== false,
     materials,
     elementBoost,
     cooking,
@@ -526,6 +531,7 @@ export function sanitizeSave(raw: unknown): GameSave {
       music: rawSettings.music !== false,
       sfxVolume: Math.max(0, Math.min(1, finiteNum(rawSettings.sfxVolume, 0.8))),
       bgmVolume: Math.max(0, Math.min(1, finiteNum(rawSettings.bgmVolume, 0.8))),
+      seenDayGuide: rawSettings.seenDayGuide === true,
     },
   }
 }
@@ -598,8 +604,8 @@ export const useGameStore = create<GameStore>()(
         }
         // 采集队字段迁移（V1.3 老档空采集队起步）
         if (!s.gather) set({ gather: { assignments: {}, acc: {} } })
-        // 自动轮换开关迁移（老档默认关闭）
-        if (s.autoRotate === undefined) set({ autoRotate: false })
+        // 自动轮换开关迁移（V1.4 起默认开启：老档未明确关闭的自动开）
+        if (s.autoRotate === undefined) set({ autoRotate: true })
         // 经验药水库存迁移（老玩家送 2 小瓶+1 中瓶尝鲜）
         if (!s.potions) set({ potions: { small: 2, medium: 1, large: 0 } })
         // 素材/属性石/料理字段迁移（老玩家送迎宾材料包尝鲜）
@@ -661,8 +667,8 @@ export const useGameStore = create<GameStore>()(
           if (ownedAfter !== get().owned) set({ owned: ownedAfter })
         }
         set({ hasHydrated: true, stats: { ...get().stats, lastOnline: Date.now() } })
-        // 同步音效开关
-        sfx.syncSetting()
+        // 同步音效开关（经 bridge 转发，Web → SfxEngine，小游戏 → AudioSource）
+        audio.syncSetting()
       },
 
       tickIncome: (dt) => {
@@ -981,7 +987,7 @@ export const useGameStore = create<GameStore>()(
             },
           }
         })
-        return { ok: true, message: `${potion.icon} 全体妖怪体力 +${potion.value}！` }
+        return { ok: true, message: `${potion.name}：全体妖怪体力 +${potion.value}！` }
       },
 
       recoverStaminaByAd: () => {
@@ -1198,7 +1204,7 @@ export const useGameStore = create<GameStore>()(
             daily: { ...prev.daily, events: { ...prev.daily.events, cook: (prev.daily.events.cook ?? 0) + 1 } },
           }
         })
-        return { ok: true, message: `${dish.icon} ${dish.name}上桌！${dish.desc}` }
+        return { ok: true, message: `${dish.name}上桌！${dish.desc}` }
       },
 
       toggleDeploy: (id) => {
@@ -1488,7 +1494,7 @@ export const useGameStore = create<GameStore>()(
           tickets: s.tickets + (fest.gift.tickets ?? 0),
           festivalClaimed: [...s.festivalClaimed, gid],
         })
-        return { ok: true, message: `${fest.icon} ${fest.name}礼包：${fest.giftDesc}` }
+        return { ok: true, message: `${fest.name}礼包：${fest.giftDesc}` }
       },
 
       setSkin: (id) => {
@@ -1618,7 +1624,7 @@ export const useGameStore = create<GameStore>()(
       toggleSetting: (key) => {
         set((s) => {
           const next = { ...s.settings, [key]: !s.settings[key] }
-          if (key === 'sound') sfx.setEnabled(next.sound)
+          if (key === 'sound') audio.setEnabled(next.sound)
           return { settings: next }
         })
       },
@@ -1632,8 +1638,14 @@ export const useGameStore = create<GameStore>()(
               ? { ...s.settings, sfxVolume: clamped }
               : { ...s.settings, bgmVolume: clamped },
         }))
-        if (key === 'sfx') setSfxVolume(clamped)
-        else setBgmVolume(clamped)
+        if (key === 'sfx') audio.setSfxVolume(clamped)
+        else audio.setBgmVolume(clamped)
+      },
+
+      markDayGuideSeen: () => {
+        set((s) =>
+          s.settings.seenDayGuide ? s : { settings: { ...s.settings, seenDayGuide: true } }
+        )
       },
 
       resetGame: () => {
@@ -1689,14 +1701,9 @@ export const useGameStore = create<GameStore>()(
     }),
     {
       name: 'yaoguai-inn-save-v1',
-      storage: createJSONStorage(() => {
-        if (typeof window !== 'undefined') return window.localStorage
-        return {
-          getItem: () => null,
-          setItem: () => undefined,
-          removeItem: () => undefined,
-        }
-      }),
+      // 存储经 bridge 惰性解析：Web → localStorage，小游戏 → tt.*StorageSync，
+      // 未注入时自动落内存兜底（SSR / 单元测试安全）。
+      storage: createJSONStorage(() => getStorage()),
       partialize: (state) => {
         const { hasHydrated: _h, pendingOffline: _o, lastRotation: _r, ...rest } = state
         void _h
