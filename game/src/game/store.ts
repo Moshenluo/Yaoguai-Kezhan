@@ -2,7 +2,8 @@
 
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import type { Element, GameSave, InnFacilities, OwnedYaoguai, PotionStock, StaminaPotionStock } from './types'
+import type { Element, GameSave, InnFacilities, OwnedYaoguai, PotionStock, ScenePiece, StaminaPotionStock } from './types'
+import { SCENE_COMPS, sceneCap, sceneTotalCap } from './scene-layers'
 import {
   ACHIEVEMENTS,
   AD_STAMINA_RECOVER,
@@ -165,6 +166,14 @@ interface GameStore extends GameSave {
   claimFestivalGift: () => { ok: boolean; message: string }
   /** 切换客栈皮肤 */
   setSkin: (id: string) => { ok: boolean; message: string }
+  /** 装扮模式：保存贴片实例位置/缩放（% 场景坐标，底部中心锚点；s 0.5~2 可选） */
+  setPiecePos: (id: string, x: number, y: number, s?: number) => void
+  /** 装扮模式：贴片水平镜像翻转 */
+  flipPiece: (id: string) => void
+  /** 装扮模式：收回（删除）一个贴片实例 */
+  removePiece: (id: string) => void
+  /** 装扮模式：新摆一个贴片（货单拖出/点选）；设施未建或达上限返回 null */
+  addPiece: (key: string, x: number, y: number) => string | null
   /** 切换今夜驻扎区域（世界地图；区域二/三分店需已开设） */
   setRegion: (region: 1 | 2 | 3) => { ok: boolean; message: string }
   /** 开设水墨幽谷分店（扣金币 → 解锁区域二 + 分店收益/体力加成） */
@@ -461,6 +470,55 @@ export function sanitizeSave(raw: unknown): GameSave {
     if (!gather.assignments[taskId]) delete gather.acc[taskId]
   }
 
+  // 场景贴片实例（多实例）：仅保留合法 key / 数值坐标；老档 scenePos + decoOn 迁移为实例列表
+  const validCompKeys = new Set(SCENE_COMPS.map((c) => c.key))
+  const pieces: ScenePiece[] = []
+  const seenPieceIds = new Set<string>()
+  const pushPiece = (rawId: unknown, key: string, r: Record<string, unknown>) => {
+    const x = finiteNum(r.x, NaN)
+    const y = finiteNum(r.y, NaN)
+    if (!Number.isFinite(x) || !Number.isFinite(y)) return
+    let id = typeof rawId === 'string' && rawId ? rawId : `pc-${key}-${pieces.length}`
+    while (seenPieceIds.has(id)) id = `${id}-${pieces.length}`
+    seenPieceIds.add(id)
+    const piece: ScenePiece = {
+      id,
+      key,
+      x: Math.max(0, Math.min(100, x)),
+      y: Math.max(0, Math.min(100, y)),
+    }
+    const sRaw = finiteNum(r.s, 1)
+    if (Number.isFinite(sRaw) && sRaw !== 1) piece.s = Math.max(0.5, Math.min(2.5, sRaw))
+    if (r.f === true) piece.f = true
+    pieces.push(piece)
+  }
+  if (Array.isArray(p.scenePieces)) {
+    for (const it of p.scenePieces) {
+      if (!it || typeof it !== 'object') continue
+      const r = pickObj(it)
+      const key = typeof r.key === 'string' && validCompKeys.has(r.key) ? r.key : null
+      if (!key) continue
+      pushPiece(r.id, key, r)
+    }
+  } else {
+    // 老档迁移：scenePos 单实例 + decoOn 装饰开关
+    const legacyPos = pickObj(p.scenePos)
+    const legacyDeco = pickObj(p.decoOn)
+    for (const [k, v] of Object.entries(legacyPos)) {
+      if (!validCompKeys.has(k)) continue
+      if (k.startsWith('deco-') && legacyDeco[k] !== true) continue
+      pushPiece(`pc-${k}`, k, pickObj(v))
+    }
+  }
+  // 保底：已建设施若没有任何实例（老档未保存过位置），补一个默认位
+  for (const [k, lv] of Object.entries(facilities)) {
+    if (!validCompKeys.has(k) || !(lv > 0)) continue
+    if (pieces.some((pc) => pc.key === k)) continue
+    const comp = SCENE_COMPS.find((c) => c.key === k)
+    if (!comp) continue
+    pushPiece(`pc-${k}`, k, { x: comp.x, y: comp.y })
+  }
+
   const rawDaily = pickObj(p.daily)
   const rawStats = pickObj(p.stats)
   const rawSettings = pickObj(p.settings)
@@ -513,6 +571,7 @@ export function sanitizeSave(raw: unknown): GameSave {
     },
     festivalClaimed: strArrOr(p.festivalClaimed, []),
     skin: strOr(p.skin, d.skin),
+    scenePieces: pieces,
     stats: {
       totalGold: Math.max(0, finiteNum(rawStats.totalGold, 0)),
       totalCaptures: intAtLeast(rawStats.totalCaptures, 0, 0),
@@ -788,11 +847,28 @@ export const useGameStore = create<GameStore>()(
         set((prev) => {
           const materials = { ...prev.materials }
           for (const [id, n] of Object.entries(matCost)) materials[id] = (materials[id] ?? 0) - n
+          // 设施首次建成（Lv.0 → 1）时自动摆一个默认位贴片实例
+          let scenePieces = prev.scenePieces
+          if (lv + 1 >= 1 && !(scenePieces ?? []).some((pc) => pc.key === key)) {
+            const comp = SCENE_COMPS.find((c) => c.key === key)
+            if (comp) {
+              scenePieces = [
+                ...(scenePieces ?? []),
+                {
+                  id: `pc-${Date.now().toString(36)}-${Math.floor(Math.random() * 1296).toString(36)}`,
+                  key,
+                  x: comp.x,
+                  y: comp.y,
+                },
+              ]
+            }
+          }
           return {
             gold: s.gold - cost,
             materials,
             facilities: { ...s.facilities, [key]: lv + 1 },
             daily: { ...s.daily, events: { ...s.daily.events, upgrade: (s.daily.events.upgrade ?? 0) + 1 } },
+            scenePieces,
           }
         })
       },
@@ -1505,6 +1581,65 @@ export const useGameStore = create<GameStore>()(
         if (s.skin === id) return { ok: false, message: '当前已穿戴该皮肤' }
         set({ skin: id })
         return { ok: true, message: `客栈换上了「${skin.name}」` }
+      },
+
+      setPiecePos: (id, x, y, s) => {
+        const s0 = get()
+        const list = s0.scenePieces ?? []
+        if (!list.some((pc) => pc.id === id)) return
+        const next = list.map((pc) => {
+          if (pc.id !== id) return pc
+          const np: ScenePiece = {
+            ...pc,
+            x: Math.max(0, Math.min(100, x)),
+            y: Math.max(0, Math.min(100, y)),
+          }
+          if (typeof s === 'number') {
+            const sc = Math.max(0.5, Math.min(2.5, s))
+            if (sc !== 1) np.s = sc
+            else delete np.s
+          }
+          return np
+        })
+        set({ scenePieces: next })
+      },
+
+      flipPiece: (id) => {
+        const s0 = get()
+        set({
+          scenePieces: (s0.scenePieces ?? []).map((pc) => {
+            if (pc.id !== id) return pc
+            const np: ScenePiece = { ...pc }
+            if (np.f) delete np.f
+            else np.f = true
+            return np
+          }),
+        })
+      },
+
+      removePiece: (id) => {
+        const s0 = get()
+        set({ scenePieces: (s0.scenePieces ?? []).filter((pc) => pc.id !== id) })
+      },
+
+      addPiece: (key, x, y) => {
+        const s0 = get()
+        const comp = SCENE_COMPS.find((c) => c.key === key)
+        if (!comp) return null
+        const lvl = comp.facility ? (s0.facilities[key as keyof typeof s0.facilities] ?? 0) : 0
+        if (comp.facility && lvl <= 0) return null
+        const list = s0.scenePieces ?? []
+        if (list.filter((pc) => pc.key === key).length >= sceneCap(comp, lvl)) return null
+        // 全院总上限（随客栈等级扩容）
+        if (list.length >= sceneTotalCap(s0.innLevel)) return null
+        const id = `pc-${Date.now().toString(36)}-${Math.floor(Math.random() * 1296).toString(36)}`
+        set({
+          scenePieces: [
+            ...list,
+            { id, key, x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) },
+          ],
+        })
+        return id
       },
 
       setRegion: (region) => {

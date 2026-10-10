@@ -5,7 +5,7 @@ import { BOSS_SKILL_TEXT, type BattleEngine } from '@/game/engine'
 import type { BattleDefender, BattleEnemy, BattleState, FloatText } from '@/game/types'
 import { CAPTURE_HP_THRESHOLD, SLOTS, regionDef, slotUnlockAt } from '@/game/config'
 import { sfx } from '@/game/audio'
-import { HpBar, YaoAvatar, ConfigIcon } from './shared'
+import { HpBar, YaoFigure, ConfigIcon } from './shared'
 import { ElementBadge } from './ElementBadge'
 import { cn } from '@/lib/utils'
 
@@ -347,14 +347,8 @@ function DefenderView({ defender: d, slotY, now, floatTexts, showLabel }: Defend
       <div className="absolute bottom-full left-1/2 mb-1 w-12 -translate-x-1/2">
         <HpBar value={d.hp} max={d.maxHp} height={4} />
       </div>
-      {/* 落地阴影 */}
-      <span
-        aria-hidden
-        className="absolute left-1/2 top-full -translate-x-1/2 rounded-[50%] bg-black/45 blur-[2px]"
-        style={{ width: size * 0.92, height: Math.max(6, size * 0.2), marginTop: -Math.max(4, size * 0.12) }}
-      />
-      <div className={cn('relative rounded-full', casting && 'yg-cast')}>
-        <YaoAvatar id={d.yaoguaiId} size={size} active={!d.dead} className={d.dead ? 'opacity-40' : undefined} />
+      <div className={cn('relative', casting && 'yg-cast')}>
+        <YaoFigure id={d.yaoguaiId} size={size} active={!d.dead} className={d.dead ? 'opacity-40' : undefined} />
         {d.dead && (
           <div className="absolute inset-0 flex items-center justify-center">
             <ConfigIcon icon="/images/ui/stamina-collapse.png" size={22} />

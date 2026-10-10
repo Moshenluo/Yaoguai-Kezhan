@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_SC, Noto_Serif_SC } from "next/font/google";
+import { Ma_Shan_Zheng, Noto_Sans_SC, Noto_Serif_SC, ZCOOL_XiaoWei, Zhi_Mang_Xing } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -14,6 +14,29 @@ const notoSerif = Noto_Serif_SC({
   variable: "--font-serif",
   subsets: ["latin"],
   weight: ["600", "700", "900"],
+  display: "swap",
+});
+
+// 古风展示字体：小薇（古典排版标题）+ 马善政（楷书书法）
+const xiaowei = ZCOOL_XiaoWei({
+  variable: "--font-display-cn",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const mashanzheng = Ma_Shan_Zheng({
+  variable: "--font-brush",
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+// 行楷：志莽行书（飘逸的书法标题体）
+const zhimangxing = Zhi_Mang_Xing({
+  variable: "--font-script",
+  weight: "400",
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -50,7 +73,7 @@ export default function RootLayout({
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <body
-        className={`${notoSans.variable} ${notoSerif.variable} antialiased bg-background text-foreground`}
+        className={`${notoSans.variable} ${notoSerif.variable} ${xiaowei.variable} ${mashanzheng.variable} ${zhimangxing.variable} antialiased bg-background text-foreground`}
       >
         {children}
         <Toaster />

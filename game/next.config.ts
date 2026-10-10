@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
+// STATIC_EXPORT=1 → GitHub Pages 静态导出（API 路由由构建脚本临时移出）
+const isStatic = process.env.STATIC_EXPORT === "1";
+
 const nextConfig: NextConfig = {
-  output: "standalone",
+  output: isStatic ? "export" : "standalone",
+  images: isStatic ? { unoptimized: true } : undefined,
   typescript: {
     ignoreBuildErrors: true,
   },

@@ -265,33 +265,31 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
                     )}
                   </AnimatePresence>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3.5">
                     <div
                       className={cn(
-                        'flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border text-2xl shadow-inner',
+                        'relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border shadow-inner outline outline-1 outline-offset-[-3px]',
                         isBuilt
-                          ? 'border-[#C9A063] bg-gradient-to-b from-[#F7E6C4] to-[#E8C99B]'
-                          : 'border-stone-300 bg-stone-100 opacity-70 grayscale'
+                          ? 'border-[#C9A063] bg-gradient-to-b from-[#F7E6C4] to-[#E8C99B] outline-[#C9A227]/45'
+                          : 'border-stone-300 bg-stone-100 opacity-70 grayscale outline-transparent'
                       )}
                     >
-                      <ConfigIcon icon={cfg.icon} size={30} />
+                      <ConfigIcon icon={cfg.icon} size={52} />
+                      {isBuilt && (
+                        <span className="absolute -bottom-1.5 -right-1.5 flex h-6 min-w-6 items-center justify-center rounded-full border-2 border-[#5C3A24] bg-gradient-to-b from-[#F7DE8B] to-[#D4933D] px-1 text-[10px] font-black leading-none text-[#5C3A24] shadow-md">
+                          {level}
+                        </span>
+                      )}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-[15px] font-bold text-[#4A3728]">{cfg.name}</span>
+                        <span className="font-display text-[17px] text-[#4A3728]">{cfg.name}</span>
                         <RolePill cfg={cfg} />
-                        <motion.span
-                          key={`${cfg.key}-${level}`}
-                          initial={{ scale: 1.7, color: '#E8B84B' }}
-                          animate={{ scale: 1, color: isBuilt ? '#8B5E3C' : '#8A8378' }}
-                          transition={{ duration: 0.45, ease: 'easeOut' }}
-                          className={cn(
-                            'rounded-md px-1.5 py-0.5 text-[11px] font-black',
-                            isBuilt ? 'bg-[#F0E2C4]' : 'bg-stone-200'
-                          )}
-                        >
-                          {isBuilt ? `Lv.${level}` : '未建造'}
-                        </motion.span>
+                        {!isBuilt && (
+                          <span className="rounded-md bg-stone-200 px-1.5 py-0.5 text-[11px] font-black text-[#8A8378]">
+                            未建造
+                          </span>
+                        )}
                       </div>
                       <p className="mt-0.5 truncate text-[11px] text-[#8B7355]">{cfg.desc}</p>
                     </div>

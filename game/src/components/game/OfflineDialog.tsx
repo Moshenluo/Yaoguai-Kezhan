@@ -70,7 +70,7 @@ export function OfflineDialog({
     <Dialog open={open && pending !== null} onOpenChange={handleClose}>
       <DialogContent
         showCloseButton={!adOpen}
-        className="max-w-[340px] rounded-2xl border-[#D4A574] bg-gradient-to-b from-[#FBF5E8] to-[#F3E7CC] p-5"
+        className="max-w-[340px] rounded-2xl border-2 ui-paper p-5"
       >
         <DialogHeader className="items-center space-y-1">
           <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#8B2E24]/10">

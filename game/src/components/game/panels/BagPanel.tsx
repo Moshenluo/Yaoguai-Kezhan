@@ -462,7 +462,7 @@ export function BagPanel({ open, onOpenChange }: BagPanelProps) {
                   <motion.span
                     layoutId="bag-cat-pill"
                     transition={{ type: 'spring', stiffness: 420, damping: 34 }}
-                    className="absolute inset-0 rounded-lg bg-white shadow-sm"
+                    className="absolute inset-0 rounded-lg bg-[#F6ECD5] shadow-sm"
                     aria-hidden
                   />
                 )}

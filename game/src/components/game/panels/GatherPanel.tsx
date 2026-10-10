@@ -398,7 +398,7 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
                               type="button"
                               onClick={() => setExpandedTask(expanded ? null : task.id)}
                               aria-label={`更换「${task.name}」的采集妖怪`}
-                              className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl border-2 border-[#D4A574]/50 bg-[#EFE6D4]/70 p-2 text-left transition-transform active:scale-[0.98]"
+                              className="flex min-w-0 flex-1 items-center gap-2.5 rounded-xl border-2 border-[#5C3A24]/35 bg-[#F6ECD5]/80 p-2 text-left transition-transform active:scale-[0.98]"
                             >
                               <YaoAvatar id={yid} size={40} />
                               <span className="min-w-0 flex-1">

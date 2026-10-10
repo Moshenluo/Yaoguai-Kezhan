@@ -269,7 +269,7 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
             {(['capture', 'battle', 'boss', 'business', 'growth'] as AchievementCategory[]).map((cat) => (
               <div key={cat} className="flex flex-col gap-2">
                 {/* 分类标题 */}
-                <div className="sticky top-0 z-10 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#EFE6D4] via-[#E6DCC8] to-[#EFE6D4] px-2 py-1 text-[11px] font-black tracking-wider text-[#8B2E24]">
+                <div className="sticky top-0 z-10 flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-[#F1E5C9] via-[#E8DAB6] to-[#F1E5C9] px-2 py-1 text-[11px] font-black tracking-wider text-[#8B2E24]">
                   <ConfigIcon icon={CATEGORY_ICON[cat]} size={14} />
                   {ACHIEVEMENT_CATEGORY_LABEL[cat]}成就
                   <span className="text-stone-400">

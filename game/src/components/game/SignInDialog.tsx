@@ -46,7 +46,7 @@ interface ConfettiPiece {
 export function SignInDialog({ open, onOpenChange }: SignInDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[360px] rounded-2xl border-[#D4A574] bg-gradient-to-b from-[#FBF5E8] to-[#F3E7CC] p-5">
+      <DialogContent className="max-w-[360px] rounded-2xl border-2 ui-paper p-5">
         {/* 内容放在子组件：弹窗关闭即卸载，签到成功等本地状态自然复位 */}
         <SignInBody />
       </DialogContent>

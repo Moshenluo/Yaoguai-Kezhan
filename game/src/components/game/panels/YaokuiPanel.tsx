@@ -19,7 +19,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Switch } from '@/components/ui/switch'
-import { ConfigIcon, GemIcon, GradeTag, StarBadge, YaoAvatar } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GradeTag, StarBadge, YaoAvatar, YaoFigure } from '@/components/game/shared'
 import { ElementBadge, ElementChip } from '@/components/game/ElementBadge'
 import { StaminaBar, StaminaTierChip } from '@/components/game/StaminaBadge'
 import { AdDialog } from '@/components/game/AdDialog'
@@ -368,7 +368,7 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
                           <span className="absolute right-1.5 top-1.5 z-10 h-2.5 w-2.5 animate-pulse rounded-full border-2 border-white bg-red-500" />
                         )}
                         <div className="pt-1">
-                          <YaoAvatar id={id} size={58} />
+                          <YaoAvatar id={id} size={64} />
                         </div>
                         {/* 名字 + 属性徽章 */}
                         <span className="flex w-full items-center justify-center gap-1 px-1">
@@ -452,7 +452,7 @@ export function YaokuiPanel({ open, onOpenChange }: YaokuiPanelProps) {
           if (!o) setDetailId(null)
         }}
       >
-        <DialogContent className="max-h-[86vh] max-w-[400px] overflow-y-auto rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
+        <DialogContent className="max-h-[86vh] max-w-[400px] overflow-y-auto rounded-3xl border-2 ui-paper p-5">
           {detailDef && detailOwned && <YaoDetail
             def={detailDef}
             o={detailOwned}
@@ -630,8 +630,11 @@ function YaoDetail({
         </DialogDescription>
       </DialogHeader>
 
-      <div className="flex justify-center">
-        <YaoAvatar id={def.id} size={84} />
+      {/* 星铁式大立绘展示台：整身立绘 + 宣纸展台 + 顶部天光 */}
+      <div className="relative flex items-end justify-center overflow-hidden rounded-2xl border border-[#5C3A24]/30 bg-gradient-to-b from-[#FBF3DE] via-[#F0E2C2] to-[#E3CFA6] py-2">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-white/55 to-transparent" aria-hidden />
+        <div className="pointer-events-none absolute bottom-2 left-1/2 h-3 w-3/5 -translate-x-1/2 rounded-full bg-[#5C3A24]/15 blur-[3px]" aria-hidden />
+        <YaoFigure id={def.id} size={200} />
       </div>
 
       {/* 出处 · 古风引文 */}

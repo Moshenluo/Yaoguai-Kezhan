@@ -110,7 +110,7 @@ export function SettingsPanel({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[85vh] max-w-[360px] overflow-y-auto rounded-2xl border-[#D4A574] bg-gradient-to-b from-[#FBF5E8] to-[#F3E7CC] p-5">
+      <DialogContent className="max-h-[85vh] max-w-[360px] overflow-y-auto rounded-2xl border-2 ui-paper p-5">
         <DialogHeader className="items-center space-y-1">
           <motion.div
             initial={{ rotate: -120, scale: 0.6, opacity: 0 }}
@@ -230,7 +230,7 @@ export function SettingsPanel({
               />
             ))}
           </div>
-        </div>
+          </div>
 
         {/* 统计数据（逐格入场） */}
         <div className="grid grid-cols-3 gap-2">
@@ -272,7 +272,7 @@ export function SettingsPanel({
 
       {/* 二次确认 */}
       <AlertDialog open={confirmReset} onOpenChange={setConfirmReset}>
-        <AlertDialogContent className="max-w-[320px] rounded-2xl border-[#D4A574] bg-[#FBF5E8] p-5">
+        <AlertDialogContent className="max-w-[320px] rounded-2xl border-2 ui-paper p-5">
           <AlertDialogHeader className="text-center">
             <AlertDialogTitle className="text-base font-bold text-[#4A3728]">重置存档？</AlertDialogTitle>
             <AlertDialogDescription className="text-xs leading-relaxed text-[#8B7355]">

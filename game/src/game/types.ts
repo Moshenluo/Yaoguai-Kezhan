@@ -146,6 +146,21 @@ export interface StaminaPotionStock {
   large: number // 大瓶回元丹 全体 +100
 }
 
+/** 场景贴片实例（多实例：同一设施可摆多座、装饰可摆多件；id 为实例唯一标识） */
+export interface ScenePiece {
+  /** 实例唯一 id（存档内稳定） */
+  id: string
+  /** 对应 scene-layers.SCENE_COMPS 的 key */
+  key: string
+  /** 底部中心锚点（% 场景坐标） */
+  x: number
+  y: number
+  /** 缩放倍率 0.5~2.5（缺省 1） */
+  s?: number
+  /** 水平镜像翻转 */
+  f?: boolean
+}
+
 /** 玩家游戏存档 */
 export interface GameSave {
   version: number
@@ -210,6 +225,8 @@ export interface GameSave {
   festivalClaimed: string[]
   /** 当前客栈皮肤 id（见 config.SKINS） */
   skin: string
+  /** 场景贴片实例列表（建筑 + 装饰；同一设施可摆多座，上限见 scene-layers.sceneCap） */
+  scenePieces?: ScenePiece[]
   stats: {
     totalGold: number
     totalCaptures: number

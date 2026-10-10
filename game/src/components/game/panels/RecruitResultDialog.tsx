@@ -50,7 +50,7 @@ export function RecruitResultDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[380px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
+      <DialogContent className="max-w-[380px] rounded-3xl border-2 ui-paper p-5">
         <DialogHeader className="items-center space-y-0.5">
           <DialogTitle className="text-lg font-black tracking-[0.2em] text-[#8B2E24]">
             {isTen ? '十连 · 妖籍入册' : '招募结果'}

@@ -297,14 +297,14 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
     <div className="relative flex h-dvh flex-col items-center justify-between overflow-hidden px-6 py-12">
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: 'url(/images/logo.png)' }}
+        style={{ backgroundImage: 'url(/images/scene/scene-splash.jpg)' }}
         aria-hidden
       />
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(180deg, rgba(10,9,8,0.55) 0%, rgba(14,20,36,0.25) 36%, rgba(10,9,8,0.55) 70%, rgba(8,7,6,0.92) 100%)',
+            'linear-gradient(180deg, rgba(10,9,8,0.32) 0%, rgba(14,20,36,0.14) 32%, rgba(10,9,8,0.32) 62%, rgba(8,7,6,0.88) 100%)',
         }}
         aria-hidden
       />
@@ -334,17 +334,34 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         transition={{ duration: 0.85, ease: 'easeOut' }}
       >
         <motion.div
-          className="ui-wood seal-mark relative rounded-xl px-8 py-4"
-          animate={{ y: [0, -4, 0] }}
-          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 3.6, ease: 'easeInOut' }}
+          className="ui-wood seal-mark relative rounded-xl px-8 py-4 outline outline-1 outline-offset-[-4px] outline-[#C9A227]/55 shadow-[0_10px_28px_rgba(10,8,6,0.6)]"
+          animate={{ y: [0, -4, 0], rotate: [0, -0.6, 0, 0.6, 0] }}
+          transition={{
+            y: { repeat: Number.POSITIVE_INFINITY, duration: 3.6, ease: 'easeInOut' },
+            rotate: { repeat: Number.POSITIVE_INFINITY, duration: 7.2, ease: 'easeInOut' },
+          }}
         >
+          {/* 挂绳：匾随动画轻轻摇摆 */}
+          <span aria-hidden className="absolute -top-[13vh] left-7 h-[13vh] w-[2px] rotate-[7deg] bg-gradient-to-b from-transparent via-[#4A2E1C]/80 to-[#5C3A24]" />
+          <span aria-hidden className="absolute -top-[13vh] right-7 h-[13vh] w-[2px] -rotate-[7deg] bg-gradient-to-b from-transparent via-[#4A2E1C]/80 to-[#5C3A24]" />
+          {/* 四角铜钉 */}
+          {(['left-1.5 top-1.5', 'right-1.5 top-1.5', 'left-1.5 bottom-1.5', 'right-1.5 bottom-1.5'] as const).map((pos) => (
+            <span
+              key={pos}
+              aria-hidden
+              className={`absolute ${pos} h-1.5 w-1.5 rounded-full bg-gradient-to-b from-[#F5D77E] to-[#B8860B] shadow-[0_0_3px_rgba(245,215,126,0.55)]`}
+            />
+          ))}
           <div className="pointer-events-none absolute inset-x-5 top-1 h-px bg-gradient-to-r from-transparent via-[#B83A2E]/55 to-transparent" />
-          <h1 className="font-display text-center text-[2.6rem] font-black leading-none tracking-[0.32em] text-[#E6DCC8] drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]">
+          <h1
+            className="text-center text-[2.8rem] leading-none tracking-[0.18em] text-[#E6DCC8] drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)]"
+            style={{ fontFamily: 'var(--font-script), var(--font-brush), var(--font-display-cn), var(--font-serif), serif' }}
+          >
             妖怪客栈
           </h1>
           <div className="pointer-events-none absolute inset-x-5 bottom-1 h-px bg-gradient-to-r from-transparent via-[#C9A227]/35 to-transparent" />
         </motion.div>
-        <p className="mt-4 text-[11px] font-medium tracking-[0.38em] text-[#B83A2E]">
+        <p className="yao-nametag mt-4 px-3.5 py-1 text-[10px] tracking-[0.38em]" style={{ maxWidth: 'none' }}>
           山海志怪 · 昼营夜守
         </p>
       </motion.div>
@@ -360,9 +377,9 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         <motion.button
           onClick={onStart}
           whileTap={{ scale: 0.97 }}
-          className="ui-wood group relative h-[3.35rem] w-[16.5rem] overflow-hidden rounded-xl text-lg font-bold tracking-[0.2em] text-[#E6DCC8] active:brightness-95"
+          className="ui-wood group relative h-[3.35rem] w-[16.5rem] overflow-hidden rounded-xl outline outline-1 outline-offset-[-4px] outline-[#C9A227]/60 shadow-[0_10px_26px_rgba(10,8,6,0.55)] text-lg font-bold tracking-[0.2em] text-[#E6DCC8] active:brightness-95"
         >
-          <span className="relative z-10 inline-flex items-center gap-2">
+          <span className="font-display relative z-10 inline-flex items-center gap-2 text-xl tracking-[0.2em]">
             <ConfigIcon icon="/images/ui/festival-lantern.png" size={22} />
             推门入店
           </span>

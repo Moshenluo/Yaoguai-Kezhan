@@ -351,7 +351,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
           if (!o) setDetailId(null)
         }}
       >
-        <DialogContent className="max-w-[360px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
+        <DialogContent className="max-w-[360px] rounded-3xl border-2 ui-paper p-5">
           {detailDef && (
             <div className="flex flex-col gap-3">
               <DialogHeader className="items-center space-y-1">
@@ -414,7 +414,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
           if (!o) setLockedId(null)
         }}
       >
-        <DialogContent className="max-w-[340px] rounded-3xl border-2 border-[#D4A574]/80 bg-gradient-to-b from-[#EFE6D4] to-[#F1EADA] p-5">
+        <DialogContent className="max-w-[340px] rounded-3xl border-2 ui-paper p-5">
           {lockedDef && (
             <div className="flex flex-col items-center gap-3">
               <DialogHeader className="items-center">

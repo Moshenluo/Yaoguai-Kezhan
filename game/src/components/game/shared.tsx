@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { GRADE_COLOR, GRADE_LABEL, YAOGUAI_MAP, yaoImg } from '@/game/yaoguai'
 import type { Grade } from '@/game/types'
 import { cn } from '@/lib/utils'
@@ -87,6 +87,52 @@ export function YaoAvatar({
           {def?.name?.[0] ?? '?'}
         </div>
       )}
+    </div>
+  )
+}
+
+/** 整身小立绘「棋子」：主屏游走与夜战守卫共用，与敌人同风格（整身像 + 落地影子） */
+export function YaoFigure({
+  id,
+  size,
+  active = true,
+  className,
+  children,
+}: {
+  id: string
+  size: number
+  active?: boolean
+  className?: string
+  children?: ReactNode
+}) {
+  const def = YAOGUAI_MAP[id]
+  const [failed, setFailed] = useState(false)
+  return (
+    <div className={cn('relative inline-flex flex-col items-center', className)} style={{ height: size }}>
+      {!failed ? (
+        <img
+          src={yaoImg(id)}
+          alt={def?.name ?? id}
+          draggable={false}
+          className={cn('max-w-none drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]', !active && 'opacity-40 grayscale')}
+          style={{ height: size, width: 'auto' }}
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <div
+          className="flex items-center justify-center rounded-full bg-stone-800 font-bold text-stone-200 ring-1 ring-white/20"
+          style={{ width: size, height: size, fontSize: Math.round(size * 0.34) }}
+        >
+          {def?.name?.[0] ?? '?'}
+        </div>
+      )}
+      {/* 落地影子：与敌人单位同款 */}
+      <span
+        aria-hidden
+        className="absolute left-1/2 top-full -translate-x-1/2 rounded-[50%] bg-black/45 blur-[2px]"
+        style={{ width: size * 0.92, height: Math.max(6, size * 0.2), marginTop: -Math.max(4, size * 0.12) }}
+      />
+      {children}
     </div>
   )
 }
