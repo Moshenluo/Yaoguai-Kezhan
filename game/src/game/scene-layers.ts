@@ -50,8 +50,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'guestRoom',
     label: '客房',
-    x: 15,
-    y: 40,
+    x: 18,
+    y: 58,
     facility: true,
     // 产出主力：Lv1/10/20 各解锁一座（最多 3 座）
     pieceCap: [1, 10, 20],
@@ -63,8 +63,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'hall',
     label: '大堂',
-    x: 58,
-    y: 32,
+    x: 52,
+    y: 54,
     facility: true,
     tiers: [
       { src: '/images/scene/compo/hall-1.png', wPct: 24 },
@@ -74,8 +74,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'kitchen',
     label: '后厨',
-    x: 9,
-    y: 70,
+    x: 10,
+    y: 74,
     facility: true,
     // Lv12 解锁第二座
     pieceCap: [1, 12],
@@ -87,8 +87,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'warehouse',
     label: '仓库',
-    x: 25,
-    y: 82,
+    x: 28,
+    y: 84,
     facility: true,
     tiers: [
       { src: '/images/scene/compo/warehouse-1.png', wPct: 18 },
@@ -98,8 +98,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'powerPool',
     label: '妖力池',
-    x: 80,
-    y: 27,
+    x: 86,
+    y: 56,
     facility: true,
     tiers: [
       { src: '/images/scene/compo/powerpool-1.png', wPct: 18 },
@@ -109,8 +109,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'smithy',
     label: '铁匠铺',
-    x: 75,
-    y: 78,
+    x: 72,
+    y: 84,
     facility: true,
     tiers: [
       { src: '/images/scene/compo/smithy-1.png', wPct: 19 },
@@ -120,8 +120,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'pharmacy',
     label: '药房',
-    x: 10,
-    y: 55,
+    x: 36,
+    y: 66,
     facility: true,
     // Lv14 解锁第二座
     pieceCap: [1, 14],
@@ -133,8 +133,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'wishAltar',
     label: '许愿台',
-    x: 84,
-    y: 62,
+    x: 88,
+    y: 70,
     facility: true,
     tiers: [
       { src: '/images/scene/compo/wishaltar-1.png', wPct: 15 },
@@ -144,8 +144,8 @@ export const SCENE_COMPS: SceneComp[] = [
   {
     key: 'hotSpring',
     label: '温泉',
-    x: 14,
-    y: 25,
+    x: 64,
+    y: 72,
     facility: true,
     // 高阶设施：Lv15 才解锁第二座
     pieceCap: [1, 15],

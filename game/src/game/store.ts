@@ -472,20 +472,37 @@ export function sanitizeSave(raw: unknown): GameSave {
 
   // 场景贴片实例（多实例）：仅保留合法 key / 数值坐标；老档 scenePos + decoOn 迁移为实例列表
   const validCompKeys = new Set(SCENE_COMPS.map((c) => c.key))
+  // 历史默认位：默认坐标曾锚在山腰（视觉悬空），仍停在旧默认位的贴片迁移到新地面默认位（手动拖过的不动）
+  const LEGACY_DEFAULTS: Record<string, [number, number]> = {
+    guestRoom: [15, 40],
+    hall: [58, 32],
+    kitchen: [9, 70],
+    warehouse: [25, 82],
+    powerPool: [80, 27],
+    smithy: [75, 78],
+    pharmacy: [10, 55],
+    wishAltar: [84, 62],
+    hotSpring: [14, 25],
+  }
   const pieces: ScenePiece[] = []
   const seenPieceIds = new Set<string>()
   const pushPiece = (rawId: unknown, key: string, r: Record<string, unknown>) => {
     const x = finiteNum(r.x, NaN)
     const y = finiteNum(r.y, NaN)
     if (!Number.isFinite(x) || !Number.isFinite(y)) return
+    const lg = LEGACY_DEFAULTS[key]
+    const stillDefault = lg !== undefined && lg[0] === x && lg[1] === y
+    const comp = stillDefault ? SCENE_COMPS.find((c) => c.key === key) : undefined
+    const px = comp ? comp.x : x
+    const py = comp ? comp.y : y
     let id = typeof rawId === 'string' && rawId ? rawId : `pc-${key}-${pieces.length}`
     while (seenPieceIds.has(id)) id = `${id}-${pieces.length}`
     seenPieceIds.add(id)
     const piece: ScenePiece = {
       id,
       key,
-      x: Math.max(0, Math.min(100, x)),
-      y: Math.max(0, Math.min(100, y)),
+      x: Math.max(0, Math.min(100, px)),
+      y: Math.max(0, Math.min(100, py)),
     }
     const sRaw = finiteNum(r.s, 1)
     if (Number.isFinite(sRaw) && sRaw !== 1) piece.s = Math.max(0.5, Math.min(2.5, sRaw))
