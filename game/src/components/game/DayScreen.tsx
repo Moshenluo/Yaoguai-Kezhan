@@ -41,15 +41,15 @@ type PanelKey = 'yaokui' | 'tujian' | 'task' | 'shop' | 'bag' | 'map' | 'gather'
 
 /** 场景建筑热点（靠边分布，让出院落中景给游走小妖；温泉汤院需客栈 5 级解锁建造） */
 const HOTSPOTS: { key: FacilityKey; icon: string; label: string; className: string }[] = [
-  { key: 'guestRoom', icon: '/images/ui/facility-guestRoom.png', label: '客房', className: 'left-[2%] top-[22%]' },
-  { key: 'kitchen', icon: '/images/ui/facility-kitchen.png', label: '后厨', className: 'left-[1.5%] top-[50%]' },
-  { key: 'hall', icon: '/images/ui/facility-hall.png', label: '大堂', className: 'right-[1.5%] top-[44%]' },
-  { key: 'warehouse', icon: '/images/ui/facility-warehouse.png', label: '仓库', className: 'left-[34%] bottom-[20%]' },
-  { key: 'powerPool', icon: '/images/ui/facility-powerPool.png', label: '妖力池', className: 'right-[2%] top-[20%]' },
-  { key: 'smithy', icon: '/images/ui/facility-smithy.png', label: '铁匠铺', className: 'right-[16%] bottom-[20%]' },
-  { key: 'pharmacy', icon: '/images/ui/facility-pharmacy.png', label: '药房', className: 'left-[15%] top-[36%]' },
-  { key: 'wishAltar', icon: '/images/ui/facility-wishAltar.png', label: '许愿台', className: 'right-[20%] top-[30%]' },
-  { key: 'hotSpring', icon: '/images/ui/facility-hotSpring.png', label: '温泉', className: 'left-[24%] top-[15%]' },
+  { key: 'guestRoom', icon: '/images/ui/facility-guestRoom.png', label: '客房', className: 'left-[13%] top-[27%]' },
+  { key: 'kitchen', icon: '/images/ui/facility-kitchen.png', label: '后厨', className: 'left-[5%] top-[63%]' },
+  { key: 'hall', icon: '/images/ui/facility-hall.png', label: '大堂', className: 'left-[58%] top-[23%]' },
+  { key: 'warehouse', icon: '/images/ui/facility-warehouse.png', label: '仓库', className: 'left-[25%] top-[75%]' },
+  { key: 'powerPool', icon: '/images/ui/facility-powerPool.png', label: '妖力池', className: 'left-[82%] top-[13%]' },
+  { key: 'smithy', icon: '/images/ui/facility-smithy.png', label: '铁匠铺', className: 'left-[73%] top-[69%]' },
+  { key: 'pharmacy', icon: '/images/ui/facility-pharmacy.png', label: '药房', className: 'left-[8%] top-[44%]' },
+  { key: 'wishAltar', icon: '/images/ui/facility-wishAltar.png', label: '许愿台', className: 'left-[82%] top-[46%]' },
+  { key: 'hotSpring', icon: '/images/ui/facility-hotSpring.png', label: '温泉', className: 'left-[10%] top-[15%]' },
 ]
 
 const NAVS: { key: PanelKey; icon: string; label: string }[] = [
@@ -451,7 +451,7 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
 
         {!sceneFailed && (
           <img
-            src="/images/scene/scene-day.png"
+            src="/images/scene/scene-day.jpg"
             alt="客栈白日场景"
             className="absolute inset-0 h-full w-full object-cover transition-[filter] duration-700"
             style={{ filter: skinFilter }}
@@ -730,9 +730,9 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
                 onOpenPanel(n.key)
               }}
               aria-label={n.label}
-              className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#FFE9B8]/12 bg-black/25 transition active:scale-90"
+              className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#6A442C]/60 bg-gradient-to-b from-[#F7F0DF] to-[#E0D0AE] shadow-[inset_0_1px_0_rgba(255,252,244,0.85),0_2px_5px_rgba(20,12,6,0.38)] transition active:scale-90"
             >
-              <ConfigIcon icon={n.icon} size={20} />
+              <ConfigIcon icon={n.icon} size={22} />
               {dot && (
                 <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full border border-[#3a1410] bg-[#D0453B] shadow-sm" />
               )}
@@ -744,9 +744,9 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
           type="button"
           onClick={() => setSettingsOpen(true)}
           aria-label="设置"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#FFE9B8]/12 bg-black/25 transition active:scale-90"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#6A442C]/60 bg-gradient-to-b from-[#F7F0DF] to-[#E0D0AE] shadow-[inset_0_1px_0_rgba(255,252,244,0.85),0_2px_5px_rgba(20,12,6,0.38)] transition active:scale-90"
         >
-          <ConfigIcon icon="/images/ui/settings.png" size={20} />
+          <ConfigIcon icon="/images/ui/settings.png" size={22} />
         </button>
       </motion.header>
 
@@ -1018,8 +1018,8 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
                 aria-label={n.label}
                 className="relative flex min-h-[48px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg transition active:scale-95 active:bg-black/15 hover:bg-black/5"
               >
-                <span className="relative flex h-8 w-8 items-center justify-center">
-                  <ConfigIcon icon={n.icon} size={28} />
+                <span className="ink-chip relative h-8 w-8 items-center justify-center">
+                  <ConfigIcon icon={n.icon} size={24} />
                   {dot && (
                     <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full border border-[#3a1410] bg-[#D0453B] shadow-sm" />
                   )}

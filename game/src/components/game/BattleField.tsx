@@ -201,7 +201,7 @@ function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, on
       {/* 本体 */}
       <div
         className={cn(
-          'relative rounded-full',
+          'relative rounded-[30%]',
           e.elite && !legend && (e.uncapturable ? 'ring-2 ring-stone-400/70' : 'ring-2 ring-amber-300/80'),
           legend && 'ring-2 ring-rose-400/90 shadow-[0_0_16px_rgba(244,63,94,0.5)]',
           legend && !capturable && !selected && 'yg-boss-aura',
@@ -212,14 +212,14 @@ function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, on
           <span
             key={hitTick}
             aria-hidden
-            className="yg-hit-flash pointer-events-none absolute inset-0 rounded-full bg-[#F5EFE3]"
+            className="yg-hit-flash pointer-events-none absolute inset-0 rounded-[30%] bg-[#F5EFE3]"
           />
         )}
         {selected && (
           <div
             aria-hidden
             className={cn(
-              'yg-capture-selected pointer-events-none absolute -inset-1.5 rounded-full border-[3px]',
+              'yg-capture-selected pointer-events-none absolute -inset-1.5 rounded-[30%] border-[3px]',
               e.uncapturable ? 'border-stone-300' : 'border-[#E8B84B]'
             )}
           />
@@ -240,11 +240,9 @@ function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, on
           <img
             src={e.img}
             alt={e.name}
-            width={e.size}
-            height={e.size}
             draggable={false}
-            className="rounded-full"
-            style={skinFilter && skinFilter !== 'none' && !legend ? { filter: skinFilter } : undefined}
+            className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]"
+            style={{ height: e.size, width: 'auto', filter: skinFilter && skinFilter !== 'none' && !legend ? skinFilter : undefined }}
             onError={() => setImgFailed(true)}
           />
         )}
@@ -266,7 +264,7 @@ function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, on
         {e.protectedFlag && (
           <div
             className={cn(
-              'absolute -inset-1 flex items-center justify-center rounded-full border-2',
+              'absolute -inset-1 flex items-center justify-center rounded-[30%] border-2',
               e.uncapturable
                 ? 'border-stone-300/80 bg-stone-300/10'
                 : 'yg-shield-gold border-amber-300/90 bg-amber-200/15'
@@ -449,10 +447,10 @@ export function BattleField({
       {/* 背景（加载失败降级墨色夜空；区域二水墨/区域三火色滤镜） */}
       {!bgFailed ? (
         <img
-          src="/images/scene/scene-night.png"
+          src={reg.scene}
           alt={inkMode ? '水墨幽谷夜色' : fireMode ? '沸火赤川夜色' : '夜色客栈外'}
           draggable={false}
-          className="absolute inset-0 z-0 h-full w-full object-cover object-[center_62%]"
+          className="absolute inset-0 z-0 h-full w-full object-cover"
           style={themed ? { filter: reg.sceneFilter } : undefined}
           onError={() => setBgFailed(true)}
         />
@@ -548,15 +546,15 @@ export function BattleField({
         />
       )}
 
-      {/* 路径柔光：场景已画石板路，只抬亮单位带 */}
+      {/* 路径柔光：抬亮妖道带（战斗图石板路 42%~56%） */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 z-[3]"
         style={{
-          top: '28%',
-          height: '42%',
+          top: '40%',
+          height: '18%',
           background:
-            'radial-gradient(ellipse 88% 70% at 48% 55%, rgba(232,184,75,0.08) 0%, transparent 72%)',
+            'radial-gradient(ellipse 88% 70% at 48% 50%, rgba(232,184,75,0.09) 0%, transparent 72%)',
         }}
       />
 
@@ -610,8 +608,8 @@ export function BattleField({
         )
       })}
 
-      {/* 客栈寿元：场景右侧已有山门，只叠血条，不再用 CSS 小屋 */}
-      <div className="absolute right-[2%] top-[24%] z-[8] w-[26%]">
+      {/* 客栈寿元：战斗图右缘已画山门，血条挂在山门上方（敌人受击点 x=94/lane 44-54 同一区域） */}
+      <div className="absolute right-[2%] top-[30%] z-[8] w-[26%]">
         <div key={state.innHp} className={cn('rounded-xl border border-[#E8B84B]/25 bg-black/45 px-1.5 py-1 backdrop-blur-[2px]', innDamaged && 'yg-shake-a')}>
           <div className="text-center text-[9px] font-bold tracking-wider text-[#FFE9B8]/90">客栈</div>
           <HpBar value={state.innHp} max={state.innMaxHp} height={6} color="bg-[#C0392B]" />

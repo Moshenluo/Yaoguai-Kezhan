@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { AnimatePresence, motion } from 'framer-motion'
 import { BattleEngine, type LineupEntry } from '@/game/engine'
 import type { BattleEnemy, BattleResult } from '@/game/types'
-import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, PITY_ATTEMPTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
+import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, PITY_ATTEMPTS, SLOTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
 import { sfx } from '@/game/audio'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import { useGameStore } from '@/game/store'
@@ -143,7 +143,8 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
 
   // ---- 本地 UI 状态 ----
   const [lineup, setLineup] = useState<LineupSlots>(EMPTY_LINEUP)
-  const [selectedYao, setSelectedYao] = useState<string | null>(null)
+  /** 槽位吸附式布阵：当前打开就地菜单的站位（空位=上阵菜单 / 已占=守卫浮窗），null=关闭 */
+  const [activeSlot, setActiveSlot] = useState<number | null>(null)
   const [exitOpen, setExitOpen] = useState(false)
   const [repairAdOpen, setRepairAdOpen] = useState(false)
   const [captureAdOpen, setCaptureAdOpen] = useState(false)
@@ -473,15 +474,12 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
     notify('客栈修复完毕，血量已回满！')
   }, [engine, notify])
 
-  // ---- 布阵 ----
-  const handlePlace = useCallback(
+  // ---- 布阵（保卫萝卜式槽位吸附：点空位/守卫就地弹菜单，prep 与战斗中通用） ----
+  /** 就地菜单选人上阵：体力/解锁校验；战斗中走 engine.swapSlot 外科替换（保留其余守卫血量） */
+  const handleDeploy = useCallback(
     (slot: number, yaoguaiId: string) => {
       const ownedEntry = useGameStore.getState().owned[yaoguaiId]
       if (!ownedEntry || ownedEntry.count <= 0) return
-      if (slot >= maxSlots) {
-        notify(`站位 ${slot + 1} 尚未解锁`, `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`)
-        return
-      }
       // 虚脱妖怪无法上阵（体力耗尽）
       const tier = staminaTier(ownedEntry.stamina ?? 100)
       if (!tier.battleOk) {
@@ -489,25 +487,30 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
         return
       }
       sfx.play('place')
-      const star = ownedEntry.star
-      const level = ownedEntry.level ?? 1
-      const stamina = ownedEntry.stamina ?? 100
-      const skillLevel = ownedEntry.skillLevel ?? 1
+      const entry: LineupEntry = {
+        yaoguaiId,
+        star: ownedEntry.star,
+        level: ownedEntry.level ?? 1,
+        slot,
+        stamina: ownedEntry.stamina ?? 100,
+        skillLevel: ownedEntry.skillLevel ?? 1,
+      }
+      engine.swapSlot(slot, entry)
       setLineup((prev) => {
         const next = [...prev]
         // 同一妖怪只能占一个坑（换位）
         for (let i = 0; i < next.length; i++) {
           if (next[i]?.yaoguaiId === yaoguaiId) next[i] = null
         }
-        next[slot] = { yaoguaiId, star, level, slot, stamina, skillLevel }
+        next[slot] = entry
         return next
       })
       if (tier.key === 'tired' || tier.key === 'exhausted') {
         notify(`⚠️ ${YAOGUAI_MAP[yaoguaiId]?.name ?? '该妖怪'}体力${tier.name}`, tier.desc)
       }
-      setSelectedYao(null)
+      setActiveSlot(null)
     },
-    [maxSlots, innLevel, notify]
+    [engine, notify]
   )
 
   const handleRemoveSlot = useCallback((slot: number) => {
@@ -520,23 +523,34 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
     })
   }, [])
 
-  // 战场光圈点击：选中卡 → 放置；已占用 → 移除；锁定 → 提示解锁等级；空 → 提示
+  // 就地浮窗撤下（体力不返还：按「每波完成时在场名单」结算，撤下者自然退出后续名单）
+  const handleWithdrawSlot = useCallback(
+    (slot: number) => {
+      sfx.play('click')
+      engine.swapSlot(slot, null)
+      setLineup((prev) => {
+        const next = [...prev]
+        next[slot] = null
+        return next
+      })
+      setActiveSlot(null)
+    },
+    [engine]
+  )
+
+  // 战场光圈点击：打开/关闭就地菜单（空位=上阵菜单；已占=守卫浮窗）；解锁校验
   const handleSelectSlot = useCallback(
     (slot: number) => {
-      if (engine.state.phase !== 'prep') return
+      const ph = engine.state.phase
+      if (ph === 'victory' || ph === 'failed') return
       if (slot >= maxSlots) {
         notify(`站位 ${slot + 1} 尚未解锁`, `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`)
         return
       }
-      if (selectedYao) {
-        handlePlace(slot, selectedYao)
-      } else if (lineup[slot]) {
-        handleRemoveSlot(slot)
-      } else {
-        notify('先点选下方妖怪卡，再点战场光圈上阵')
-      }
+      sfx.play('click')
+      setActiveSlot((prev) => (prev === slot ? null : slot))
     },
-    [engine, selectedYao, lineup, handlePlace, handleRemoveSlot, notify, maxSlots, innLevel]
+    [maxSlots, innLevel, notify]
   )
 
   const ownedIds = useMemo(
@@ -642,6 +656,119 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
               : 'linear-gradient(0deg, rgba(28,25,21,0.72) 0%, transparent 100%)',
           }}
         />
+
+        {/* ======== 槽位吸附式就地菜单（保卫萝卜范式）：点空位弹上阵横排 / 点守卫弹信息+撤下 ======== */}
+        {activeSlot !== null && phase !== 'victory' && phase !== 'failed' && (() => {
+          const sp = SLOTS[activeSlot] ?? SLOTS[0]
+          const defender = state.defenders.find((d) => d.slot === activeSlot) ?? null
+          const entry = lineup[activeSlot] ?? null
+          const menuBelow = sp.y < 50 // 上排站位菜单朝下弹，下排朝上弹，避免顶出画框
+          const candidates = ownedIds
+            .filter((id) => !lineup.some((l) => l?.yaoguaiId === id))
+            .map((id) => ({ id, o: owned[id] }))
+            .filter(({ o }) => o && staminaTier(o.stamina ?? 100).battleOk)
+          return (
+            <>
+              {/* 透明遮罩：点任意处关闭菜单（菜单打开期间接管战场点击） */}
+              <button
+                type="button"
+                aria-label="关闭布阵菜单"
+                className="absolute inset-0 z-[26] cursor-default"
+                onClick={() => setActiveSlot(null)}
+              />
+              <motion.div
+                key={`slot-menu-${activeSlot}`}
+                initial={{ opacity: 0, y: menuBelow ? 10 : -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: menuBelow ? 10 : -10 }}
+                transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+                className="absolute z-[27] w-[64%] max-w-[260px]"
+                style={{
+                  left: `${Math.min(Math.max(sp.x, 24), 66)}%`,
+                  top: `${sp.y}%`,
+                  translate: menuBelow ? '-50% 30px' : '-50% calc(-100% - 30px)',
+                }}
+              >
+                <div className="overflow-hidden rounded-2xl border-2 border-[#5C3A24]/70 shadow-xl shadow-black/50 backdrop-blur-sm">
+                  <div className="ui-wood px-2.5 py-1 text-[10px] font-black tracking-wider text-[#FFE9B8]">
+                    站位 {activeSlot + 1}{entry || defender ? ' · 已上阵' : ' · 空位'}
+                  </div>
+                  {entry || defender ? (
+                    <div className="bg-gradient-to-b from-[#2C241C]/95 to-[#1C1915]/95 px-2.5 py-2">
+                      <div className="flex items-center gap-2">
+                        <YaoAvatar
+                          id={(defender ?? entry)!.yaoguaiId}
+                          size={40}
+                          active={defender ? !defender.dead : true}
+                        />
+                        <div className="min-w-0 flex-1">
+                          <div className="truncate text-[11px] font-black text-[#FFE9B8]">
+                            {(defender ?? entry)!.yaoguaiId && YAOGUAI_MAP[(defender ?? entry)!.yaoguaiId]?.name}
+                            {defender ? ` · ${defender.star}★ Lv.${defender.level}` : ` · ${entry!.star}★ Lv.${entry!.level}`}
+                          </div>
+                          {defender && (
+                            <>
+                              <div className="mt-1">
+                                <HpBar value={defender.hp} max={defender.maxHp} height={5} />
+                              </div>
+                              <div className="mt-0.5 text-[9px] tabular-nums text-[#E6DCC8]/75">
+                                {defender.hp} / {defender.maxHp}
+                                {defender.staminaTier === 'tired' || defender.staminaTier === 'exhausted' ? ' · 体力不支' : ''}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleWithdrawSlot(activeSlot)}
+                        className="mt-2 w-full rounded-lg border border-[#F5A9A0]/40 bg-[#8B2E24]/25 py-1 text-[11px] font-bold text-[#F5A9A0] active:scale-95"
+                      >
+                        撤下{phase === 'prep' ? '（可再点其他空位换位）' : '（不返还本波体力）'}
+                      </button>
+                    </div>
+                  ) : candidates.length === 0 ? (
+                    <div className="bg-gradient-to-b from-[#2C241C]/95 to-[#1C1915]/95 px-2 py-3 text-center text-[11px] text-[#E6DCC8]/70">
+                      无可上阵妖怪（体力虚脱或已全员上阵）
+                    </div>
+                  ) : (
+                    <div className="flex gap-1.5 overflow-x-auto bg-gradient-to-b from-[#2C241C]/95 to-[#1C1915]/95 px-2 py-2">
+                      {candidates.map(({ id, o }) => {
+                        const def = YAOGUAI_MAP[id]
+                        const st = Math.round(o?.stamina ?? 100)
+                        return (
+                          <button
+                            key={id}
+                            type="button"
+                            onClick={() => handleDeploy(activeSlot, id)}
+                            aria-label={`上阵 ${def?.name ?? id}`}
+                            className="flex w-[60px] shrink-0 flex-col items-center rounded-xl border border-[#E8B84B]/35 bg-black/30 px-1 py-1.5 active:scale-95"
+                          >
+                            <YaoAvatar id={id} size={38} />
+                            <span className="mt-1 max-w-full truncate text-[9px] font-bold text-[#FFE9B8]">
+                              {def?.name ?? id}
+                            </span>
+                            <span className="text-[8px] tabular-nums text-[#E6DCC8]/70">
+                              Lv.{o?.level ?? 1} · {o?.star ?? 1}★
+                            </span>
+                            <span
+                              className={cn(
+                                'mt-0.5 rounded-full px-1 text-[8px] font-bold leading-[12px]',
+                                st >= 70 ? 'bg-emerald-500/20 text-emerald-300' : st >= 40 ? 'bg-amber-500/20 text-amber-300' : 'bg-rose-500/20 text-rose-300'
+                              )}
+                            >
+                              {st}%
+                            </span>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </>
+          )
+        })()}
 
         {/* 妖王降临横幅 */}
         <AnimatePresence>
@@ -991,11 +1118,9 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
           <LineupBar
             lineup={lineup}
             ownedIds={ownedIds}
-            onPlace={handlePlace}
+            onPlace={handleDeploy}
             onRemove={handleRemoveSlot}
             countdown={state.prepCountdown}
-            selectedId={selectedYao}
-            onSelectCard={setSelectedYao}
             maxSlots={maxSlots}
             innLevel={innLevel}
           />

@@ -8,9 +8,8 @@ import { SLOTS, lineupSynergy, slotUnlockAt, staminaTier } from '@/game/config'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import { useGameStore } from '@/game/store'
 import { useToast } from '@/hooks/use-toast'
-import { ConfigIcon, StarBadge, YaoAvatar } from './shared'
+import { ConfigIcon, YaoAvatar } from './shared'
 import { ElementBadge } from './ElementBadge'
-import { StaminaTierChip } from './StaminaBadge'
 import { cn } from '@/lib/utils'
 
 /** 体力档位图：使用 config 图标路径（ConfigIcon） */
@@ -36,22 +35,20 @@ function StaminaMark({
 }
 
 // ============ 夜晚塔防 · 布阵栏 ============
-// 点选式布阵：点击卡池妖怪进入「选中」态 → 点击站位槽放置；点击已上阵槽位移除。
-// 站位扩容：前 4 格基础开放，第 5/6 格随客栈等级解锁；底栏单行 6 槽以免挡住战场。
+// 保卫萝卜式槽位吸附：选人入口在战场空位就地菜单，本栏只做摘要（倒计时/站位概览/体力预警/清空自动）。
+// 站位 10 格：前 6 格基础开放，第 7~10 格随客栈等级解锁；底栏单行 10 槽摘要。
 
 export interface LineupBarProps {
-  /** 长度 6（前 4 基础 + 2 扩容），索引即站位 slot */
+  /** 长度 10（前 6 基础 + 4 扩容），索引即站位 slot */
   lineup: Array<LineupEntry | null>
   /** 玩家持有妖怪 id（count>0） */
   ownedIds: string[]
+  /** 自动布阵逐位上阵（走 NightScreen.handleDeploy，与就地菜单同一校验链） */
   onPlace: (slot: number, yaoguaiId: string) => void
   onRemove: (slot: number) => void
   /** 剩余秒数 */
   countdown: number
-  /** 受控选中妖怪（与战场站位格联动），不传则组件内部管理 */
-  selectedId?: string | null
-  onSelectCard?: (id: string | null) => void
-  /** 当前可用站位数（4/5/6，随客栈等级） */
+  /** 当前可用站位数（随客栈等级） */
   maxSlots?: number
   /** 客栈等级（锁定格提示用） */
   innLevel?: number
@@ -84,23 +81,11 @@ export function LineupBar({
   onPlace,
   onRemove,
   countdown,
-  selectedId,
-  onSelectCard,
   maxSlots = SLOTS.length,
   innLevel = 1,
 }: LineupBarProps) {
-  const [innerSelected, setInnerSelected] = useState<string | null>(null)
-  const selected = selectedId !== undefined ? selectedId : innerSelected
   const owned = useGameStore((s) => s.owned)
   const { toast } = useToast()
-
-  const setSelected = useCallback(
-    (id: string | null) => {
-      setInnerSelected(id)
-      onSelectCard?.(id)
-    },
-    [onSelectCard]
-  )
 
   // 倒计时进度条：本组件随 prep 阶段挂载/卸载，首帧倒计时即该阶段上限（首波 8s / 后续 6s），
   // 阶段内倒计时单调递减，用 state 初始值锁定分母即可，无需额外同步
@@ -123,8 +108,6 @@ export function LineupBar({
           ROLE_PRIORITY[a.def.nightRole] - ROLE_PRIORITY[b.def.nightRole] || b.star - a.star
       )
   }, [ownedIds, owned])
-
-  const inLineup = useCallback((id: string) => lineup.some((l) => l?.yaoguaiId === id), [lineup])
 
   // 阵容相生加成（上阵妖怪属性 → lineupSynergy）
   const synergy = useMemo(() => {
@@ -152,39 +135,20 @@ export function LineupBar({
     [pool]
   )
 
+  // 站位槽点击：已占 → 快捷撤下；空 → 提示去战场空位上阵（就地菜单）
   const handleSlotClick = useCallback(
-    (slot: number) => {
+    (slot: number, occupied: boolean) => {
       if (slot >= maxSlots) {
         toast({ title: `站位 ${slot + 1} 尚未解锁`, description: `客栈升至 ${slotUnlockAt(slot)} 级后开放（当前 ${innLevel} 级）`, duration: 2400 })
         return
       }
-      if (!selected) {
-        toast({ title: '先点选下方妖怪卡，再点站位槽部署', duration: 2400 })
+      if (occupied) {
+        onRemove(slot)
         return
       }
-      onPlace(slot, selected)
-      setSelected(null)
+      toast({ title: '点击战场上的发光空位，就地选择妖怪上阵', duration: 2400 })
     },
-    [selected, onPlace, setSelected, toast, maxSlots, innLevel]
-  )
-
-  const handleCardClick = useCallback(
-    (id: string) => {
-      if (inLineup(id)) return // 阵中置灰，需先在站位槽移除
-      const o = owned[id]
-      // 虚脱拦截：体力耗尽不可上阵（夜战措辞，不引导白天操作；<0.01 容差与卡面 💀虚脱 标签保持一致）
-      const st = o?.stamina ?? 100
-      if (st < 0.01 || !staminaTier(st).battleOk) {
-        toast({
-          title: `💀 ${YAOGUAI_MAP[id]?.name ?? '该妖怪'}体力虚脱，无法上阵`,
-          description: '体力耗尽需好好休息，明天恢复后再战',
-          duration: 2400,
-        })
-        return
-      }
-      setSelected(selected === id ? null : id)
-    },
-    [inLineup, owned, selected, setSelected, toast]
+    [maxSlots, innLevel, onRemove, toast]
   )
 
   const handleAuto = useCallback(() => {
@@ -218,8 +182,8 @@ export function LineupBar({
       </div>
       <div className="bg-gradient-to-b from-[#2C241C] to-[#1C1915] px-2.5 pb-1.5 pt-1.5">
 
-      {/* 站位槽：单行 6 格，少挡战场 */}
-      <div className="mb-1.5 grid grid-cols-6 gap-0.5">
+      {/* 站位槽摘要：单行 10 格（点击已占=快捷撤下；空=提示去战场空位上阵） */}
+      <div className="mb-1.5 grid grid-cols-10 gap-0.5">
         {Array.from({ length: SLOTS.length }, (_, slot) => {
           const entry = lineup[slot] ?? null
           const locked = slot >= maxSlots
@@ -243,23 +207,10 @@ export function LineupBar({
                 key={slot}
                 type="button"
                 aria-label={`移除站位 ${slot + 1} 的 ${def?.name ?? ''}`}
-                onClick={() => onRemove(slot)}
+                onClick={() => handleSlotClick(slot, true)}
                 className="relative flex flex-col items-center rounded-lg border border-[#E8B84B]/40 bg-[#E8B84B]/10 py-0.5 active:scale-95"
               >
-                <YaoAvatar id={entry.yaoguaiId} size={30} />
-                <span className="mt-0.5 max-w-full truncate px-0.5 text-[7px] leading-none text-[#E6DCC8]">
-                  {def?.name ?? entry.yaoguaiId}
-                </span>
-                {(() => {
-                  const st = owned[entry.yaoguaiId]?.stamina ?? entry.stamina ?? 100
-                  const tier = staminaTier(st)
-                  if (tier.key === 'full' || tier.key === 'normal') return null
-                  return (
-                    <span className="absolute left-0 top-0 z-10 scale-90">
-                      <StaminaMark icon={tier.icon} title={tier.desc} color={tier.color} />
-                    </span>
-                  )
-                })()}
+                <YaoAvatar id={entry.yaoguaiId} size={22} />
               </button>
             )
           }
@@ -267,17 +218,14 @@ export function LineupBar({
             <button
               key={slot}
               type="button"
-              aria-label={`站位 ${slot + 1} 放置妖怪`}
-              onClick={() => handleSlotClick(slot)}
+              aria-label={`站位 ${slot + 1} 空位，去战场光圈上阵`}
+              onClick={() => handleSlotClick(slot, false)}
               className={cn(
-                'flex flex-col items-center justify-center rounded-lg border border-dashed py-1 active:scale-95',
-                selected
-                  ? 'animate-pulse border-[#E8B84B]/80 bg-[#E8B84B]/12'
-                  : 'border-[#FFE9B8]/20 bg-black/20'
+                'flex items-center justify-center rounded-lg border border-dashed border-[#FFE9B8]/20 bg-black/20 py-1.5 active:scale-95'
               )}
             >
-              <ConfigIcon icon="/images/ui/slot-pad.png" size={16} className="opacity-70" />
-              <span className="mt-0.5 text-[7px] leading-none text-[#E6DCC8]/70">{selected ? '放' : `${slot + 1}`}</span>
+              <ConfigIcon icon="/images/ui/slot-pad.png" size={14} className="opacity-60" />
+              <span className="mt-0.5 text-[7px] leading-none text-[#E6DCC8]/70">{slot + 1}</span>
             </button>
           )
         })}
@@ -350,68 +298,6 @@ export function LineupBar({
           </span>
         </motion.div>
       ) : null}
-
-      {/* 妖怪卡池（横向滚动） */}
-      {pool.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-[#FFE9B8]/20 py-3 text-center text-[11px] text-[#E6DCC8]/55">
-          暂无可上阵妖怪，白天多招募些伙伴吧
-        </div>
-      ) : (
-        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1">
-          {pool.map((p) => {
-            const placed = inLineup(p.id)
-            const isSelected = selected === p.id
-            const tier = staminaTier(p.stamina)
-            // 虚脱判定与拦截/标签同源（<0.01 容差）
-            const collapse = p.stamina < 0.01 || !tier.battleOk
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => handleCardClick(p.id)}
-                aria-label={`选择 ${p.def.name}${collapse ? '（体力虚脱不可上阵）' : ''}`}
-                aria-disabled={collapse || undefined}
-                className={cn(
-                  'relative flex w-16 shrink-0 flex-col items-center rounded-xl border py-1.5 active:scale-95',
-                  placed
-                    ? 'border-[#FFE9B8]/10 bg-black/25 opacity-45'
-                    : 'border-[#FFE9B8]/18 bg-black/30',
-                  isSelected && !placed && !collapse && 'border-[#E8B84B] bg-[#E8B84B]/15 ring-2 ring-[#E8B84B]/60',
-                  collapse && 'grayscale opacity-60'
-                )}
-              >
-                {placed && (
-                  <span className="absolute right-0.5 top-0.5 rounded-full bg-[#1C1915]/90 px-1 text-[8px] text-[#E6DCC8]/70">
-                    阵中
-                  </span>
-                )}
-                {!placed && (
-                  <span className="absolute left-0.5 top-0.5 z-10">
-                    <StaminaTierChip value={p.stamina} compact />
-                  </span>
-                )}
-                {collapse && (
-                  <span className="absolute bottom-0.5 right-0.5 z-10 rounded-full border border-[#6B4E8E]/70 bg-[#EAE2F3] px-1 text-[9px] font-black leading-tight text-[#6B4E8E]">
-                    虚脱
-                  </span>
-                )}
-                <YaoAvatar id={p.id} size={40} active={!collapse} />
-                <span className="mt-0.5 flex w-full items-center justify-center gap-0.5 px-0.5">
-                  <span className="max-w-full truncate text-[10px] text-[#E6DCC8]">{p.def.name}</span>
-                  <ElementBadge element={p.def.element} size="xs" hideNone />
-                </span>
-                <StarBadge star={p.star} />
-                {p.level > 1 && (
-                  <span className="mt-0.5 rounded-full bg-emerald-500/20 px-1 text-[8px] font-bold text-emerald-300">
-                    Lv.{p.level}
-                  </span>
-                )}
-                <span className="mt-0.5 text-[8px] text-[#E6DCC8]/45">{p.def.nightRoleName}</span>
-              </button>
-            )
-          })}
-        </div>
-      )}
 
       {/* 快捷操作 */}
       <div className="mt-1.5 flex items-center gap-2">

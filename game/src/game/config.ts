@@ -50,21 +50,25 @@ export const ENEMY_TYPES = {
   sprite: { name: '精怪', img: '/images/enemy/enemy-3.png', hp: 80, atk: 9, speed: 6, size: 48 },
 } as const
 
-/** 站位格（6 格：前 4 格基础站位，后 2 格随客栈等级解锁，路径百分比坐标） */
+/** 站位格（10 格：沿妖道两侧一圈分布——上排 5 / 下排 5，路百分比坐标；妖道带 42%~56%） */
 export const SLOTS = [
-  { slot: 0, x: 28, y: 58 },
-  { slot: 1, x: 44, y: 66 },
-  { slot: 2, x: 58, y: 54 },
-  { slot: 3, x: 70, y: 62 },
-  { slot: 4, x: 36, y: 52 },
-  { slot: 5, x: 50, y: 70 },
+  { slot: 0, x: 16, y: 38 },
+  { slot: 1, x: 26, y: 61 },
+  { slot: 2, x: 38, y: 37 },
+  { slot: 3, x: 46, y: 63 },
+  { slot: 4, x: 56, y: 36 },
+  { slot: 5, x: 58, y: 61 },
+  { slot: 6, x: 68, y: 37 },
+  { slot: 7, x: 70, y: 62 },
+  { slot: 8, x: 80, y: 40 },
+  { slot: 9, x: 82, y: 62 },
 ]
 
 /** 基础站位数（默认开放） */
-export const BASE_SLOTS = 4
+export const BASE_SLOTS = 6
 
-/** 每个站位格的解锁客栈等级（0 = 默认开放；第5/6格需客栈养成推进，养成↔塔防联动） */
-export const SLOT_UNLOCK_INN_LEVEL: number[] = [0, 0, 0, 0, 8, 15]
+/** 每个站位格的解锁客栈等级（0 = 默认开放；第 7~10 格随客栈养成解锁，养成↔塔防联动） */
+export const SLOT_UNLOCK_INN_LEVEL: number[] = [0, 0, 0, 0, 0, 0, 8, 15, 22, 30]
 
 /** 某站位格解锁所需的客栈等级（0 表示无需解锁） */
 export function slotUnlockAt(slot: number): number {
@@ -161,7 +165,7 @@ export const REGIONS: RegionDef[] = [
     eliteBonus: 0,
     enemyNames: { minion: '小妖', brute: '山怪', sprite: '精怪' },
     themeColor: '#8B2E24',
-    scene: '/images/scene/scene-night.png',
+    scene: '/images/scene/scene-battle.jpg',
   },
   {
     id: 2,
@@ -178,7 +182,7 @@ export const REGIONS: RegionDef[] = [
     eliteBonus: 0.12,
     enemyNames: { minion: '墨妖', brute: '石魈', sprite: '雾灵' },
     themeColor: '#4A4458',
-    scene: '/images/scene/scene-night.png',
+    scene: '/images/scene/scene-battle.jpg',
   },
   {
     id: 3,
@@ -195,7 +199,7 @@ export const REGIONS: RegionDef[] = [
     eliteBonus: 0.25,
     enemyNames: { minion: '火魅', brute: '熔岩怪', sprite: '焰灵' },
     themeColor: '#A8402F',
-    scene: '/images/scene/scene-night.png',
+    scene: '/images/scene/scene-battle.jpg',
   },
 ]
 

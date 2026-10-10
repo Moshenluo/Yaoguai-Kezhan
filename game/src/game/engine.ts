@@ -249,7 +249,43 @@ export class BattleEngine {
     const syn = lineupSynergy(defs)
     this.state.defenders = this.opts.lineup
       .filter((entry) => entry.slot >= 0 && entry.slot < max)
-      .map((entry) => {
+      .map((entry) => this.buildDefender(entry, syn))
+  }
+
+  /**
+   * 槽位吸附式布阵（保卫萝卜范式）：空位就地上阵 / 已占位撤下换人。
+   * prep 阶段全量重建；战斗中外科手术式只动目标槽位（保留其余守卫血量与 uid），
+   * 体力照常按「每波完成时在场名单」结算，无需额外返还逻辑。
+   */
+  swapSlot(slot: number, entry: LineupEntry | null) {
+    const max = this.opts.maxSlots ?? SLOTS.length
+    if (slot < 0 || slot >= max) return
+    if (this.state.phase === 'victory' || this.state.phase === 'failed') return
+    const rest = this.opts.lineup.filter((l) => l.slot !== slot && l.yaoguaiId !== entry?.yaoguaiId)
+    this.opts.lineup = entry ? [...rest, { ...entry, slot }] : rest
+    if (this.state.phase === 'prep') {
+      this.refreshDefenders()
+      this.emit()
+      return
+    }
+    const idx = this.state.defenders.findIndex((d) => d.slot === slot)
+    if (!entry) {
+      if (idx >= 0) this.state.defenders.splice(idx, 1)
+      this.emit()
+      return
+    }
+    // 战斗中上阵：按当前阵容重算相生加成，只构建目标槽位这一只
+    const defs = this.opts.lineup
+      .map((l) => YAOGUAI_MAP[l.yaoguaiId])
+      .filter((d): d is NonNullable<typeof d> => !!d)
+    const nd = this.buildDefender({ ...entry, slot }, lineupSynergy(defs))
+    if (idx >= 0) this.state.defenders[idx] = nd
+    else this.state.defenders.push(nd)
+    this.emit()
+  }
+
+  /** 构建单只战斗守卫（refreshDefenders 全量重建与战斗中换人共用） */
+  private buildDefender(entry: LineupEntry, syn: { atkPct: number; hpPct: number }): BattleDefender {
       const def = YAOGUAI_MAP[entry.yaoguaiId]
       const mult = starBattleMultiplier(entry.star)
       const slotPos = SLOTS[entry.slot] ?? SLOTS[0]
@@ -304,7 +340,6 @@ export class BattleEngine {
         hasteMult: 1,
         staminaTier: stTier.key === 'collapse' ? 'exhausted' : stTier.key,
       }
-    })
   }
 
   // ---------- 主循环 ----------
@@ -393,7 +428,7 @@ export class BattleEngine {
     })
 
     let delay = 0
-    const lanes = [52, 58, 64, 55, 61, 67, 54, 63]
+    const lanes = [44, 49, 53, 46, 51, 54, 47, 52]
     let li = 0
     const types: Array<'minion' | 'brute' | 'sprite'> = []
     for (let i = 0; i < wave.minions; i++) types.push('minion')
@@ -481,7 +516,7 @@ export class BattleEngine {
       dead: false,
       protectedFlag: false,
       captureFailCount: 0,
-      lane: 58,
+      lane: 50,
       spawnDelay: delay,
     }
   }
@@ -521,7 +556,7 @@ export class BattleEngine {
       dead: false,
       protectedFlag: false,
       captureFailCount: 0,
-      lane: 58,
+      lane: 50,
       spawnDelay: delay,
     }
     // 登记妖王技能计时（入场后 12-15 秒首次施放）
