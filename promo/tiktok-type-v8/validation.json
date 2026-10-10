@@ -1,0 +1,64 @@
+{
+  "browser_controls": {
+    "before": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "audio": 4
+    },
+    "playing": true,
+    "after": {
+      "paused": true,
+      "seek": 22.6,
+      "muted": true
+    },
+    "errors": []
+  },
+  "integration": {
+    "offline": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "canvasReadable": true,
+      "audioDuration": 27,
+      "played": true,
+      "seekAndMute": true,
+      "replayed": true,
+      "httpRequests": 0
+    },
+    "video": {
+      "duration": 27,
+      "width": 1080,
+      "height": 1920,
+      "start": 13.005332,
+      "after": 13.473355
+    },
+    "errors": []
+  },
+  "media": {
+    "audio_packet_payload_matches_excerpt": true,
+    "audio_packet_md5": "MD5=d07d424c68a9d5c54404a1a9761d9854",
+    "audio_start_seconds": 0.0,
+    "video_start_seconds": 0.0,
+    "audio_duration_seconds": 27.0,
+    "video_duration_seconds": 27.0,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "frames": 1620,
+    "color_primaries": "bt709",
+    "video_codec": "h264",
+    "audio_codec": "aac"
+  },
+  "full_ffmpeg_decode": "passed with -xerror",
+  "lyrics": "55 characters exactly match the user-approved selection",
+  "font_coverage": "all lyric glyphs covered by all three bundled fonts",
+  "visual_review": "16 scene stills, 390px phone preview, final encoded frame",
+  "limitations": "Syllable timing is ASR-estimated. Offline HTML was tested with an offline Chromium context and embedded assets; direct file:// navigation is blocked in this cloud browser."
+}

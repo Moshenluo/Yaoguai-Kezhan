@@ -1,0 +1,68 @@
+{
+  "project": "妖怪客栈 · 等你当家｜文字 PV V8",
+  "duration_seconds": 27,
+  "canvas": [
+    1080,
+    1920
+  ],
+  "fps": 60,
+  "music": {
+    "credit": "末深落",
+    "title": "妖怪客栈等你当家",
+    "source": "User uploaded MP3",
+    "source_filename": "末深落 - 妖怪客栈等你当家.mp3",
+    "source_sha256": "cbb817a96a557ed2cabccc976cbde3cdb7b6d51e5fee56d535ab1c8c75b3aff0",
+    "source_metadata_note": "The supplied file contains an AI-generation label. No external music was added.",
+    "source_cut_seconds": [
+      13.7,
+      40.7
+    ],
+    "speed": 1,
+    "fade_in_seconds": 0.018,
+    "fade_out_seconds": 0.7,
+    "excerpt_sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48",
+    "full_source_distributed": false
+  },
+  "lyrics": {
+    "authority": "Exact verse and chorus specified by the user",
+    "characters": 55,
+    "text": [
+      "叮叮当",
+      "算盘响",
+      "山海伙伴",
+      "来帮忙",
+      "你当掌柜",
+      "我来跑堂",
+      "小小客栈",
+      "大有名堂",
+      "来来来",
+      "坐坐坐",
+      "一桌烟火",
+      "热热闹闹",
+      "开张",
+      "开张",
+      "妖怪客栈",
+      "等你当家"
+    ]
+  },
+  "timing": {
+    "method": "Local sherpa-onnx Paraformer Chinese recognition, chunked; user text replaces homophone transcription errors. No external ASR upload.",
+    "precision_note": "Estimated syllable onsets, with animation anticipation of 75 ms. Not phoneme-level forced alignment.",
+    "clock": "audio.currentTime in HTML; deterministic n/fps time when exporting"
+  },
+  "visuals": {
+    "method": "Original deterministic Canvas typography and geometric animation",
+    "fonts": [
+      "Noto Sans CJK SC Bold",
+      "Noto Serif CJK SC Bold",
+      "Ma Shan Zheng Regular"
+    ],
+    "licenses": [
+      "source/assets/FONT-LICENSE.txt",
+      "source/assets/MaShanZheng-OFL.txt"
+    ],
+    "font_subsets": true,
+    "external_images_used": false
+  },
+  "audio_delivery": "The AAC excerpt is copied into the MP4 without an additional audio encode."
+}
