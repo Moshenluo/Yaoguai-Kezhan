@@ -1,0 +1,118 @@
+{
+  "repository": "Moshenluo/Yaoguai-Kezhan",
+  "branch": "feature/kyl-import-game",
+  "commit": "e9ae4ff31fdec9480a75635970e5aab77b2621b5",
+  "original_assets": [
+    {
+      "asset": "shengsheng.png",
+      "source": "game/public/images/yaoguai/shengsheng.png",
+      "sha256": "3607d037c911b3cbf596feafa19deca514aef35fded72d8cc0ff4977888e7b63"
+    },
+    {
+      "asset": "lili.png",
+      "source": "game/public/images/yaoguai/lili.png",
+      "sha256": "dff20193e098bf1f60499f7dc96ea65990241d0207457bfb5fff1497168e748b"
+    },
+    {
+      "asset": "lushu.png",
+      "source": "game/public/images/yaoguai/lushu.png",
+      "sha256": "e9bad45d181ff8c8f7ce9a49a5457e5ea577ff57ce8bccc06bdf566ab16287e3"
+    },
+    {
+      "asset": "xuangui.png",
+      "source": "game/public/images/yaoguai/xuangui.png",
+      "sha256": "b73d131f88793e17a4dd4ce64a7c34ed30f93e207e6c3a6c56392adc933f92ad"
+    },
+    {
+      "asset": "qiuyu.png",
+      "source": "game/public/images/yaoguai/qiuyu.png",
+      "sha256": "1ec8c264d2c5c6fa9010526f739d24da2250a1c962f0fa485adbf30f9add5408"
+    },
+    {
+      "asset": "lei.png",
+      "source": "game/public/images/yaoguai/lei.png",
+      "sha256": "48b102079a23b52378e6e2e41f14de65aa475965777a5dabaf007815b190a1b0"
+    },
+    {
+      "asset": "enemy-1.png",
+      "source": "game/public/images/enemy/enemy-1.png",
+      "sha256": "acad07d94a232d4f76c310730c1fbde4a5ddf55445fef5ff68a73f14c5140279"
+    },
+    {
+      "asset": "enemy-2.png",
+      "source": "game/public/images/enemy/enemy-2.png",
+      "sha256": "b4cf06803a5598d6fcb63eb145a3dbfc931598bfa76b80c4947f7aa73288ab61"
+    },
+    {
+      "asset": "enemy-3.png",
+      "source": "game/public/images/enemy/enemy-3.png",
+      "sha256": "87a7900745bba2243b665b6442002837389c91a19579675e566f308a344ac89c"
+    },
+    {
+      "asset": "ui-ticket.png",
+      "source": "game/public/images/ui/ticket.png",
+      "sha256": "ddd7616b2f9be3887e3e10a04351dc536521dfc04de7cec3a9f5c6630b448be2"
+    },
+    {
+      "asset": "ui-dish-signature.png",
+      "source": "game/public/images/ui/dish-signature.png",
+      "sha256": "6fad4651157fd6b606ff50cb82647fbd8b59fcb5437136809c11f1b1abc0f3f5"
+    },
+    {
+      "asset": "ui-mat-stone.png",
+      "source": "game/public/images/ui/mat-stone.png",
+      "sha256": "9e9c0947b40d05f2a1f7dc1714b338ae4fd4788a347cd2de3cf27031ca98b5a5"
+    }
+  ],
+  "pose_derivatives": [
+    {
+      "asset": "poses-shengsheng.png",
+      "source": "shengsheng.png",
+      "method": "Native ImageGen reference edit, transparent two-pose atlas; original retained",
+      "sha256": "c5b7823a9e2e7641ccf3237484c819cdba0f320ddad31968757c095655cd4501"
+    },
+    {
+      "asset": "poses-lili.png",
+      "source": "lili.png",
+      "method": "Native ImageGen reference edit, transparent two-pose atlas; original retained",
+      "sha256": "e664114e5e989bc66738ee5ccecb22aa7dd4466f1bc49b9a8114e160b9ef39fe"
+    },
+    {
+      "asset": "poses-lushu.png",
+      "source": "lushu.png",
+      "method": "Native ImageGen reference edit, transparent two-pose atlas; original retained",
+      "sha256": "0dc7940e5cb7c7eac7e8a364fd83f90be30fee4cceeb6d32255bdd6daed84231"
+    },
+    {
+      "asset": "poses-xuangui.png",
+      "source": "xuangui.png",
+      "method": "Native ImageGen reference edit, transparent two-pose atlas; original retained",
+      "sha256": "20e3771e930036e03727b45dd382d710d3ade2856b00c335e13979eb1f20321f"
+    },
+    {
+      "asset": "poses-shengsheng-service.png",
+      "source": [
+        "shengsheng.png",
+        "poses-shengsheng.png",
+        "ui-dish-signature.png"
+      ],
+      "method": "Native ImageGen reference edit, true-alpha carrying/serving atlas, split at x=887; original files retained",
+      "sha256": "cf31be66c308caf06b46669408a87d56c5d675ad987250f198338e04fd76a6c6"
+    }
+  ],
+  "environment_derivatives": [
+    {
+      "asset": "courtyard-day.png",
+      "source": "game/public/images/scene/scene-day.jpg",
+      "method": "Native ImageGen reference edit: intimate eye-height courtyard",
+      "sha256": "87176821c34e0bb2b775322fc158fa726e9ff6cdb959944caba538a66cc3a6ef"
+    },
+    {
+      "asset": "courtyard-night.png",
+      "source": "courtyard-day.png",
+      "method": "Native ImageGen lighting-only reference edit, matched camera and architecture",
+      "sha256": "60cebee92afe56d268583eb6503c97b9ed55944e37e7342a63fede1c0ad829ec"
+    }
+  ],
+  "compositing": "Source bytes preserved. Runtime alpha bounds, texture grading, short pose crossfades, lower-limb deformation, shared camera, depth scaling, cast/contact shadows and foreground occlusion. AI derivative artwork is promotional art, not official in-game animation."
+}

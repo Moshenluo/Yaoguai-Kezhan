@@ -1,0 +1,56 @@
+{
+  "title": "妖怪客栈 · 灯火同归篇 V7",
+  "duration_seconds": 30,
+  "width": 1080,
+  "height": 1920,
+  "fps": 30,
+  "frames": 900,
+  "audio": "original synthesized SFX only, no music",
+  "source_commit": "e9ae4ff31fdec9480a75635970e5aab77b2621b5",
+  "chapters": [
+    {
+      "at": 0,
+      "action": "来客入院，狌狌迎客"
+    },
+    {
+      "at": 3.25,
+      "action": "取汤、端汤、移步桌边"
+    },
+    {
+      "at": 5.52,
+      "action": "俯身放碗，餐桌遮挡"
+    },
+    {
+      "at": 7.85,
+      "action": "狸力接过伙计牌，走向后厨"
+    },
+    {
+      "at": 10.8,
+      "action": "原位转夜，灯光亮起"
+    },
+    {
+      "at": 14.1,
+      "action": "伙伴就位，来敌从两侧接近"
+    },
+    {
+      "at": 18.72,
+      "action": "狸力冲击"
+    },
+    {
+      "at": 19.75,
+      "action": "狌狌投石"
+    },
+    {
+      "at": 21.7,
+      "action": "旋龟挡住攻击，鹿蜀治疗"
+    },
+    {
+      "at": 23.35,
+      "action": "击退来敌"
+    },
+    {
+      "at": 25.4,
+      "action": "收工归位，片名落版"
+    }
+  ]
+}

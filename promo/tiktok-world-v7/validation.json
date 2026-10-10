@@ -1,0 +1,29 @@
+{
+  "video": "H.264, 1080x1920, 900 frames, 30fps, 30s, yuv420p limited-range BT.709",
+  "audio": "AAC stereo 48kHz, 30s; peak -13.8dBFS",
+  "full_decode": "900 frames decoded, exit 0",
+  "source_assets": "12 originals match source SHA-256",
+  "browser": {
+    "offline": {
+      "fonts": [
+        true,
+        true
+      ],
+      "overflow": false,
+      "assets": 19,
+      "canvasReadable": true,
+      "played": true,
+      "httpRequests": 0,
+      "maxCameraWorldStep": 7.933566109961587
+    },
+    "video": {
+      "duration": 30,
+      "width": 1080,
+      "height": 1920,
+      "start": 6.281473,
+      "after": 6.750068
+    },
+    "errors": []
+  },
+  "file_sha256": "2e35163e0b101ad01cd74efb6aa544089498089798f70465a4aae7cfbcc0240f"
+}
