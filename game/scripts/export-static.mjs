@@ -35,8 +35,16 @@ try {
   })
   const outSrc = path.join(tmp, 'out')
   const outDst = path.join(here, 'out')
+  // out/ 是 Pages 部署仓库（含 .git）：重建产物前把 .git 挪出去，拷完再放回
+  const gitDir = path.join(outDst, '.git')
+  const gitKeep = path.join(here, '.out-pages-git')
+  const hadGit = fs.existsSync(gitDir)
+  if (hadGit) { fs.rmSync(gitKeep, { recursive: true, force: true }); fs.renameSync(gitDir, gitKeep) }
   fs.rmSync(outDst, { recursive: true, force: true })
   fs.cpSync(outSrc, outDst, { recursive: true })
+  if (hadGit) fs.renameSync(gitKeep, gitDir)
+  // GitHub Pages 的 Jekyll 会忽略 _next/（下划线开头目录），必须带 .nojekyll
+  fs.writeFileSync(path.join(outDst, '.nojekyll'), '')
   console.log('[export-static] done →', outDst)
 } finally {
   fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 3 })
