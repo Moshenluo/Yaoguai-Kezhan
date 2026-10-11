@@ -831,6 +831,12 @@ export const SKINS: SkinDef[] = [
       hall: { 1: { src: '/images/scene/compo/hall-2-hui.png', wPct: 27 } },
       guestRoom: { 1: { src: '/images/scene/compo/guest-room-2-hui.png', wPct: 22 } },
       kitchen: { 1: { src: '/images/scene/compo/kitchen-2-hui.png', wPct: 21 } },
+      warehouse: { 1: { src: '/images/scene/compo/warehouse-2-hui.png', wPct: 20 } },
+      powerPool: { 1: { src: '/images/scene/compo/powerpool-2-hui.png', wPct: 23 } },
+      smithy: { 1: { src: '/images/scene/compo/smithy-2-hui.png', wPct: 21 } },
+      pharmacy: { 1: { src: '/images/scene/compo/pharmacy-2-hui.png', wPct: 18 } },
+      wishAltar: { 1: { src: '/images/scene/compo/wishaltar-2-hui.png', wPct: 16 } },
+      hotSpring: { 1: { src: '/images/scene/compo/hotspring-2-hui.png', wPct: 24 } },
     },
   },
 ]

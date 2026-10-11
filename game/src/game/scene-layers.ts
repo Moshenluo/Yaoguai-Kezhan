@@ -168,6 +168,18 @@ export const SCENE_COMPS: SceneComp[] = [
       { src: '/images/scene/compo/deco-lantern-2.png', wPct: 9 },
     ],
   },
+  {
+    key: 'deco-screen',
+    label: '徽派影壁',
+    x: 46,
+    y: 62,
+    facility: false,
+    recipe: { gold: 200, desc: '粉墙砌壁' },
+    tiers: [
+      { src: '/images/scene/compo/deco-screen-1.png', wPct: 12 },
+      { src: '/images/scene/compo/deco-screen-2.png', wPct: 12 },
+    ],
+  },
 ]
 
 /** 设施等级 → 皮肤档位（0=无建筑；1~2 简陋；3+ 精致） */
