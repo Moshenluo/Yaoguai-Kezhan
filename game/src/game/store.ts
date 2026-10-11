@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import type { Element, GameSave, InnFacilities, OwnedYaoguai, PotionStock, ScenePiece, StaminaPotionStock } from './types'
 import { SCENE_COMPS, sceneCap, sceneTotalCap } from './scene-layers'
+import { preloadSkinPieces } from './preload'
 import {
   ACHIEVEMENTS,
   AD_STAMINA_RECOVER,
@@ -1599,6 +1600,8 @@ export const useGameStore = create<GameStore>()(
         if (!skinUnlocked(s, id)) return { ok: false, message: '该皮肤尚未解锁' }
         if (s.skin === id) return { ok: false, message: '当前已穿戴该皮肤' }
         set({ skin: id })
+        // 提前把新皮肤贴片拉进缓存，避免换肤瞬间贴片白块弹出
+        preloadSkinPieces(id)
         return { ok: true, message: `客栈换上了「${skin.name}」` }
       },
 

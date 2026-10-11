@@ -8,6 +8,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useGameStore } from '@/game/store'
+import { onBootProgress, preloadBoot, preloadExtras, preloadNightAssets, preloadSkinPieces } from '@/game/preload'
+import { SCENE_COMPS } from '@/game/scene-layers'
 import type { BattleResult } from '@/game/types'
 import type { BgmTrackName } from '@/game/audio'
 import { saveCloud, trackEvent } from '@/game/cloud'
@@ -40,6 +42,10 @@ export default function Home() {
   const [lastNightStage, setLastNightStage] = useState<NightStage>('night')
 
   const hasHydrated = useGameStore((s) => s.hasHydrated)
+  // persist 在 Web 端同步水合：首帧客户端可能已带存档而服务端没有 → hydration mismatch。
+  // 用 mounted 门闸保证 SSR 与客户端首帧都渲染 SplashLoading，水合后再切真实画面。
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
   const level = useGameStore((s) => s.level)
   // 世界地图：当前驻扎区域与该区域关卡进度（区域二用 region2Level，区域三用 region3Level）
   const region = useGameStore((s) => s.region)
@@ -57,6 +63,30 @@ export default function Home() {
       useGameStore.getState().tickIncome(1)
     }, 1000)
     return () => clearInterval(t)
+  }, [stage, hasHydrated])
+
+  // ---------- 图片预加载 ----------
+  // 水合完成立刻开跑 boot 批（开屏进度条驱动）：底图 + 按设施等级/已摆装饰
+  // 精确计算的可见贴片 + 常驻 UI 图；进入白天后空闲补齐夜战素材与低频图。
+  useEffect(() => {
+    if (!hasHydrated) return
+    const st = useGameStore.getState()
+    const decoKeys = new Set(SCENE_COMPS.filter((c) => !c.facility).map((c) => c.key))
+    const placedDeco = (st.scenePieces ?? []).map((p) => p.key).filter((key) => decoKeys.has(key))
+    preloadBoot(st.skin, st.facilities, placedDeco)
+  }, [hasHydrated])
+
+  useEffect(() => {
+    if (stage !== 'day' || !hasHydrated) return
+    const skin = useGameStore.getState().skin
+    const t0 = setTimeout(() => preloadSkinPieces(skin), 1500)
+    const t1 = setTimeout(() => preloadNightAssets(), 4000)
+    const t2 = setTimeout(() => preloadExtras(), 12000)
+    return () => {
+      clearTimeout(t0)
+      clearTimeout(t1)
+      clearTimeout(t2)
+    }
   }, [stage, hasHydrated])
 
   // ---------- 云存档（定期 + 切后台） ----------
@@ -82,6 +112,7 @@ export default function Home() {
 
   // ---------- 昼夜切换（仪式感动画，普通夜/妖王夜共用） ----------
   const startNight = useCallback((target: NightStage) => {
+    preloadNightAssets() // 幂等：无论空闲预载是否已跑，点入夜都确保夜战素材就绪
     setPanel(null)
     setTransition('to-night')
     setLastNightStage(target)
@@ -186,7 +217,7 @@ export default function Home() {
     <main className="game-shell game-shell-bg relative h-dvh w-full overflow-hidden">
       {/* 桌面端舞台居中 */}
       <div className="game-stage paper-grain relative mx-auto flex h-dvh w-full max-w-[480px] flex-col overflow-hidden">
-        {!hasHydrated ? (
+        {!mounted || !hasHydrated ? (
           <SplashLoading />
         ) : stage === 'splash' ? (
           <SplashScreen onStart={startGame} />
@@ -292,7 +323,20 @@ function SplashLoading() {
   )
 }
 
+/** boot 批预载进度：ratio 0~1；ready = 全部就绪或 8 秒兜底超时（断网也不卡门） */
+function useBootReady(): { ratio: number; ready: boolean } {
+  const [ratio, setRatio] = useState(0)
+  const [timeoutHit, setTimeoutHit] = useState(false)
+  useEffect(() => onBootProgress(setRatio), [])
+  useEffect(() => {
+    const t = window.setTimeout(() => setTimeoutHit(true), 8000)
+    return () => window.clearTimeout(t)
+  }, [])
+  return { ratio, ready: ratio >= 1 || timeoutHit }
+}
+
 function SplashScreen({ onStart }: { onStart: () => void }) {
+  const { ratio, ready } = useBootReady()
   return (
     <div className="relative flex h-dvh flex-col items-center justify-between overflow-hidden px-6 py-12">
       <div
@@ -375,14 +419,26 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         transition={{ delay: 0.35, duration: 0.7 }}
       >
         <motion.button
-          onClick={onStart}
-          whileTap={{ scale: 0.97 }}
+          onClick={ready ? onStart : undefined}
+          whileTap={ready ? { scale: 0.97 } : undefined}
           className="ui-wood group relative h-[3.35rem] w-[16.5rem] overflow-hidden rounded-xl outline outline-1 outline-offset-[-4px] outline-[#C9A227]/60 shadow-[0_10px_26px_rgba(10,8,6,0.55)] text-lg font-bold tracking-[0.2em] text-[#E6DCC8] active:brightness-95"
         >
           <span className="font-display relative z-10 inline-flex items-center gap-2 text-xl tracking-[0.2em]">
             <ConfigIcon icon="/images/ui/festival-lantern.png" size={22} />
-            推门入店
+            {ready ? '推门入店' : `筹备中 ${Math.round(ratio * 100)}%`}
           </span>
+          {/* 筹备期进度条：随 boot 批真实推进 */}
+          {!ready && (
+            <span
+              className="absolute inset-x-6 bottom-2.5 h-1 overflow-hidden rounded-full bg-black/35"
+              aria-hidden
+            >
+              <span
+                className="block h-full rounded-full bg-gradient-to-r from-[#8B2E24] to-[#C9A227] transition-[width] duration-300"
+                style={{ width: `${Math.max(6, Math.round(ratio * 100))}%` }}
+              />
+            </span>
+          )}
           <span className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#8B2E24]/35 to-transparent opacity-70 transition group-hover:opacity-100" />
         </motion.button>
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[10px] text-[#B5A48C]/80">

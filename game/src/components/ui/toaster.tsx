@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useToast } from "@/hooks/use-toast"
 import {
   Toast,
@@ -12,6 +13,12 @@ import {
 
 export function Toaster() {
   const { toasts } = useToast()
+
+  // Radix ToastViewport 在 SSR 与客户端会产出不一致的属性（dir/aria 等），
+  // 触发 hydration mismatch 报错。Toasts 只在交互后出现，挂载后再渲染即可。
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  if (!mounted) return null
 
   return (
     <ToastProvider>
