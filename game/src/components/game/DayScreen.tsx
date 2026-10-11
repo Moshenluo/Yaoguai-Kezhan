@@ -16,6 +16,7 @@ import {
   region2Unlockable,
   region3Unlockable,
   regionDef,
+  skinUnlocked,
 } from '@/game/config'
 import { achievementProgress } from '@/game/store'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
@@ -927,6 +928,40 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
                 <span className="day-seal text-sm leading-none text-[#B83A2E]">造</span>
                 <span className="text-[8px] font-bold leading-none text-[#C9A96B]">打造间</span>
               </button>
+            </div>
+            {/* 皮肤：点击即换（原设置面板入口已移除，换肤统一收进装修） */}
+            <p className="mb-0.5 mt-1 px-1 text-[8px] font-bold text-[#8B6B47]">皮肤（点击即换 · 达成条件解锁更多）</p>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {SKINS.map((sk) => {
+                const unlocked = skinUnlocked(useGameStore.getState(), sk.id)
+                const isCur = skinId === sk.id
+                return (
+                  <button
+                    key={sk.id}
+                    type="button"
+                    onClick={() => {
+                      sfx.play('click')
+                      const res = useGameStore.getState().setSkin(sk.id)
+                      toast({ title: res.message })
+                    }}
+                    aria-label={`客栈皮肤：${sk.name}${isCur ? '，穿戴中' : unlocked ? '，点击穿戴' : '，未解锁'}`}
+                    className={cn(
+                      'flex w-12 shrink-0 flex-col items-center gap-0.5 rounded-lg border px-1 py-1 transition active:scale-95',
+                      isCur ? 'border-[#E8B84B] bg-black/40' : unlocked ? 'border-[#8B6B47]/60 bg-black/30' : 'border-[#8B6B47]/30 bg-black/20 opacity-50'
+                    )}
+                  >
+                    <img src={sk.icon} alt="" className="h-9 w-9 select-none object-contain" draggable={false} />
+                    <span className="max-w-full truncate text-[8px] font-bold leading-none text-[#E6DCC8]">{sk.name}</span>
+                    {isCur ? (
+                      <span className="text-[7px] font-black leading-none text-[#E8B84B]">穿戴中</span>
+                    ) : unlocked ? (
+                      <span className="text-[7px] font-black leading-none text-[#C9A96B]">穿戴</span>
+                    ) : (
+                      <span className="text-[7px] font-bold leading-none text-[#8B6B47]">🔒 {sk.unlockDesc.replace(/守店成功|妖王夜守店成功|图鉴收集/, '').trim()}</span>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </div>
         )}
