@@ -209,7 +209,8 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
 
   // 皮肤
   const skinId = useGameStore((s) => s.skin)
-  const skinFilter = SKINS.find((k) => k.id === skinId)?.filter ?? 'none'
+  const skinDef = SKINS.find((k) => k.id === skinId)
+  const skinFilter = skinDef?.filter ?? 'none'
 
   // 签到：今日可领状态
   const signInReady = useGameStore((s) => signInAvailable(s))
@@ -665,7 +666,8 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
 
         {/* 设施/装饰贴片实例：底部中心锚点，Lv.3+ 换精致档；装扮模式可拖拽/缩放/翻转/收回 */}
         {scenePieces.map(({ id, comp, pos, f, tier, ghost, lv }, idx) => {
-          const t = comp.tiers[tier as 0 | 1]
+          const ovr = skinDef?.sceneOverrides?.[comp.key]
+          const t = ovr?.[tier as 0 | 1] ?? comp.tiers[tier as 0 | 1]
           const scale = pos.s ?? 1
           const label = comp.label
           const selected = dressing && selId === id

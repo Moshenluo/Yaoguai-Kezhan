@@ -1,3 +1,4 @@
+import type { SceneComp, SceneCompTier } from './scene-layers'
 import type { Element, GameSave, InnFacilities, NightRole } from './types'
 
 // ============ 妖怪客栈 · 数值配置 ============
@@ -813,6 +814,8 @@ export interface SkinDef {
   /** 解锁条件 */
   unlock: { type: 'default' | 'wins' | 'bossWins' | 'tujian'; value: number }
   unlockDesc: string
+  /** 按场景组件 key 覆盖贴片档位图（0=简陋档 1=精致档，缺省回落默认图） */
+  sceneOverrides?: Record<string, { 0?: SceneCompTier; 1?: SceneCompTier }>
 }
 
 export const SKINS: SkinDef[] = [
@@ -821,6 +824,15 @@ export const SKINS: SkinDef[] = [
   { id: 'frost', name: '霜雪琉璃', desc: '雪落屋檐 · 银装素裹', icon: '/images/ui/skin-frost.png', filter: 'saturate(0.72) hue-rotate(168deg) brightness(1.14) contrast(0.96)', unlock: { type: 'wins', value: 10 }, unlockDesc: '守店成功 10 次解锁' },
   { id: 'gilt', name: '鎏金岁月', desc: '金漆流彩 · 百年老店', icon: '/images/ui/skin-gilt.png', filter: 'sepia(0.5) saturate(1.55) hue-rotate(-8deg) brightness(1.08)', unlock: { type: 'tujian', value: 10 }, unlockDesc: '图鉴收集 10 只解锁' },
   { id: 'bloodmoon', name: '血月妖楼', desc: '赤月高悬 · 妖气缭绕', icon: '/images/ui/skin-bloodmoon.png', filter: 'saturate(1.32) hue-rotate(-30deg) brightness(0.9) contrast(1.15)', unlock: { type: 'bossWins', value: 2 }, unlockDesc: '妖王夜守店成功 2 次解锁' },
+  {
+    id: 'hui', name: '徽派水墨', desc: '白墙黛瓦 · 马头墙影', icon: '/images/scene/compo/hall-2-hui.png', filter: 'none',
+    unlock: { type: 'wins', value: 15 }, unlockDesc: '守店成功 15 次解锁',
+    sceneOverrides: {
+      hall: { 1: { src: '/images/scene/compo/hall-2-hui.png', wPct: 27 } },
+      guestRoom: { 1: { src: '/images/scene/compo/guest-room-2-hui.png', wPct: 22 } },
+      kitchen: { 1: { src: '/images/scene/compo/kitchen-2-hui.png', wPct: 21 } },
+    },
+  },
 ]
 
 /** 判断皮肤是否已解锁 */

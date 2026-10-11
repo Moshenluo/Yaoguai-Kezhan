@@ -363,7 +363,7 @@ function SkinCard({
               wide ? 'drop-shadow-[0_0_6px_rgba(255,180,140,0.55)]' : ''
             )}
           >
-            <ConfigIcon icon={wide ? skin.icon : '/images/ui/skin-default.png'} size={wide ? 36 : 18} />
+            <ConfigIcon icon={skin.icon} size={wide ? 36 : 18} />
           </span>
         </div>
 
