@@ -1,0 +1,18 @@
+// Check the actual offline player and browser playback of the encoded deliverable.
+const fs=require('node:fs'),path=require('node:path'),{serve}=require('./render.cjs');
+let pw;try{pw=require(process.env.PLAYWRIGHT_MODULE||'playwright')}catch{pw=require('/workspace/Yaoguai-Kezhan/node_modules/playwright')}
+const root=__dirname,errors=[];
+async function main(){const browser=await pw.chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/usr/bin/chromium',headless:true});let server;try{
+ const ctx=await browser.newContext({offline:true,viewport:{width:390,height:900}}),page=await ctx.newPage(),requests=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/^https?:/.test(r.url()))requests.push(r.url())});
+ await page.setContent(fs.readFileSync(path.join(root,'preview-standalone.html'),'utf8'),{waitUntil:'load'});await page.evaluate(()=>window.ready);await page.waitForFunction(()=>document.querySelector('audio').readyState>=2);
+ const offline=await page.evaluate(()=>({fonts:['PVHeavy','PVSong','PVBrush'].map(f=>document.fonts.check('100px '+f)),overflow:document.documentElement.scrollWidth>innerWidth,canvasReadable:document.querySelector('canvas').toDataURL().length>10000,audioDuration:document.querySelector('audio').duration}));
+ await page.click('#play');await page.waitForTimeout(400);offline.played=await page.evaluate(()=>Number(document.querySelector('#seek').value)>.1);await page.click('#play');
+ await page.locator('#seek').fill('25.8');await page.locator('#seek').dispatchEvent('input');await page.click('#sound');offline.seekAndMute=await page.evaluate(()=>Math.abs(document.querySelector('audio').currentTime-25.8)<.05&&document.querySelector('audio').muted);
+ await page.click('#play');await page.waitForFunction(()=>document.querySelector('#play').textContent==='重播');await page.click('#play');await page.waitForTimeout(250);offline.replayed=await page.evaluate(()=>document.querySelector('audio').currentTime>.05&&document.querySelector('audio').currentTime<1);
+ offline.httpRequests=requests.length;if(errors.length||requests.length||offline.overflow||!offline.fonts.every(Boolean)||!offline.played||!offline.canvasReadable||!offline.seekAndMute||!offline.replayed)throw Error('Standalone check failed');await ctx.close();
+ if(process.argv.includes('--offline-only')){fs.writeFileSync(path.join(root,'output/offline-check.json'),JSON.stringify({offline,errors},null,2));console.log(JSON.stringify({offline,errors}));return}
+ server=serve();await new Promise(r=>server.listen(0,'127.0.0.1',r));const vp=await browser.newPage();await vp.goto(`http://127.0.0.1:${server.address().port}`);await vp.evaluate(()=>{document.body.innerHTML='<video controls muted width="390" src="/output/yaoguai-type-v10.mp4"></video>'});await vp.waitForFunction(()=>document.querySelector('video').readyState>=2);
+ const video=await vp.evaluate(async()=>{const v=document.querySelector('video');v.currentTime=13;await new Promise(r=>v.addEventListener('seeked',r,{once:true}));await v.play();return {duration:v.duration,width:v.videoWidth,height:v.videoHeight,start:v.currentTime}});await vp.waitForTimeout(500);video.after=await vp.evaluate(()=>document.querySelector('video').currentTime);if(Math.abs(video.duration-27)>.05||video.width!==1080||video.height!==1920||video.after<=video.start+.2)throw Error('Encoded video playback failed');
+ fs.writeFileSync(path.join(root,'output/integration-check.json'),JSON.stringify({offline,video,errors},null,2));console.log(JSON.stringify({offline,video,errors}));
+ }finally{if(server)server.close();await browser.close()}}
+main().catch(e=>{console.error(e);process.exit(1)});

@@ -1,0 +1,96 @@
+{
+  "browser_controls": {
+    "before": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "audio": 4
+    },
+    "playing": true,
+    "after": {
+      "paused": true,
+      "seek": 22.6,
+      "muted": true
+    },
+    "errors": []
+  },
+  "integration": {
+    "offline": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "canvasReadable": true,
+      "audioDuration": 27,
+      "played": true,
+      "seekAndMute": true,
+      "replayed": true,
+      "httpRequests": 0
+    },
+    "video": {
+      "duration": 27,
+      "width": 1080,
+      "height": 1920,
+      "start": 13.000784,
+      "after": 13.465185
+    },
+    "errors": []
+  },
+  "media": {
+    "duration_seconds": 27,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "frames": 1620,
+    "color_space": "bt709",
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "audio_sample_rate": 48000,
+    "audio_channels": 2,
+    "video_start_seconds": 0,
+    "audio_start_seconds": 0,
+    "audio_packet_payload_matches_excerpt": true,
+    "audio_packet_md5": "MD5=d07d424c68a9d5c54404a1a9761d9854",
+    "faststart": true,
+    "full_decode": "passed with -xerror",
+    "file_bytes": 8459250,
+    "file_sha256": "0bfcd0ce7333803b0e3913fb9c94546b079db46b4007719b3da0407b41cf7c95"
+  },
+  "content": {
+    "lyrics_match_user_selection": true,
+    "lyric_characters": 55,
+    "all_three_font_subsets_cover_lyrics": true,
+    "source_time_offsets_verified": true,
+    "score_and_embedded_timeline_identical": true,
+    "audio_unchanged_from_v9": true,
+    "audio_sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+  },
+  "visual_loop": {
+    "comparison_scope": "Deterministic Canvas render, before lossy video encoding",
+    "exact": true,
+    "changedPixels": 0,
+    "totalPixels": 2073600,
+    "changedChannels": 0,
+    "maxChannelDelta": 0,
+    "meanChannelDelta": 0,
+    "audio_seamless": false
+  },
+  "visual_review": {
+    "reviewed": "16 production stills, 30 targeted opening/chorus/handoff/loop captures, phone safe-area guides, encoded finale and loop-end frames",
+    "corrections_verified": [
+      "Abacus contracts before the next lyric enters",
+      "First 来 makes room before subsequent glyphs enter",
+      "Print cards continue into opening doors across the scene boundary",
+      "Final iris transition preserves glyph proportions",
+      "Brand title and CTA remain readable before visual return"
+    ],
+    "browser_errors": [],
+    "remaining_blockers": []
+  },
+  "limitations": "Syllable onsets remain ASR-estimated. Offline HTML verified in a no-network Chromium context with embedded assets; direct file:// navigation is blocked in this cloud browser. Visual looping does not change the original audio fade-out."
+}
