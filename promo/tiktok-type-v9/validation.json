@@ -1,0 +1,93 @@
+{
+  "browser_controls": {
+    "before": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "audio": 4
+    },
+    "playing": true,
+    "after": {
+      "paused": true,
+      "seek": 22.6,
+      "muted": true
+    },
+    "errors": []
+  },
+  "integration": {
+    "offline": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "canvasReadable": true,
+      "audioDuration": 27,
+      "played": true,
+      "seekAndMute": true,
+      "replayed": true,
+      "httpRequests": 0
+    },
+    "video": {
+      "duration": 27,
+      "width": 1080,
+      "height": 1920,
+      "start": 13.000801,
+      "after": 13.46814
+    },
+    "errors": []
+  },
+  "media": {
+    "duration_seconds": 27,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "frames": 1620,
+    "color_space": "bt709",
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "audio_sample_rate": 48000,
+    "audio_channels": 2,
+    "video_start_seconds": 0,
+    "audio_start_seconds": 0,
+    "audio_packet_payload_matches_excerpt": true,
+    "audio_packet_md5": "MD5=d07d424c68a9d5c54404a1a9761d9854",
+    "faststart": true,
+    "full_decode": "passed with -xerror",
+    "file_bytes": 7771105,
+    "file_sha256": "e43d3b41facc1046ac645afdad5f0ac7ec4e4cd8ef4524c9cc874e8515b25df3"
+  },
+  "content": {
+    "lyrics_match_user_selection": true,
+    "lyric_characters": 55,
+    "all_three_font_subsets_cover_lyrics": true,
+    "source_time_offsets_verified": true,
+    "audio_unchanged_from_v8": true,
+    "audio_sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+  },
+  "capture_equivalence": {
+    "shape": [
+      1920,
+      1080,
+      3
+    ],
+    "max_channel_difference": 0,
+    "mean_channel_difference": 0.0
+  },
+  "visual_review": {
+    "reviewed": "16 production stills, 64 scene/phrase/boundary captures, 9 targeted correction frames, phone preview, encoded finale",
+    "corrections_verified": [
+      "Optical spacing between brush role glyphs and following words",
+      "Second 来 enters after the first has made room",
+      "No solid eraser rectangles over paper texture",
+      "响 ripple begins on the actual cue",
+      "Shared paper and rails across 来→坐→一桌"
+    ],
+    "remaining_blockers": []
+  },
+  "limitations": "Syllable onsets remain ASR-estimated. Offline HTML verified in a no-network Chromium context with embedded assets; direct file:// navigation is blocked in this cloud browser."
+}
