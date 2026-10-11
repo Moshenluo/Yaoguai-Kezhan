@@ -19,7 +19,7 @@ import {
 } from '@/game/config'
 import { achievementProgress } from '@/game/store'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
-import { SCENE_COMPS, nextPieceGate, sceneCap, sceneTierIndex, sceneTotalCap } from '@/game/scene-layers'
+import { SCENE_COMPS, DECO_PIECE_CAP, nextPieceGate, sceneCap, sceneTierIndex, sceneTotalCap } from '@/game/scene-layers'
 import type { GameSave } from '@/game/types'
 import { AnimNumber, ConfigIcon, GoldIcon, GemIcon, TicketIcon, YaoFigure } from './shared'
 import { FacilityPanel } from './panels/FacilityPanel'
@@ -147,6 +147,7 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
   const flipPiece = useGameStore((s) => s.flipPiece)
   const removePiece = useGameStore((s) => s.removePiece)
   const addPiece = useGameStore((s) => s.addPiece)
+  const craftDeco = useGameStore((s) => s.craftDeco)
   const owned = useGameStore((s) => s.owned)
   const pendingOffline = useGameStore((s) => s.pendingOffline)
   // 聚宝符（V1.1 道具）：生效中显示限时收益徽章；速率需随激活/过期重算
@@ -297,6 +298,7 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
   const [terrainFailed, setTerrainFailed] = useState(false)
   // ---------- 装扮模式：拖拽摆放 / 缩放 / 翻转 / 货单安放（多实例） ----------
   const [dressing, setDressing] = useState(false)
+  const [craftOpen, setCraftOpen] = useState(false)
   const [dragPos, setDragPos] = useState<Record<string, { x: number; y: number; s?: number }>>({})
   const [selId, setSelId] = useState<string | null>(null)
   const dragRef = useRef<string | null>(null) // 贴片实例 id 或 `new:<compKey>`（货单拖出）
@@ -641,7 +643,7 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
 
         {!sceneFailed && !terrainFailed && (
           <img
-            src="/images/scene/terrain-empty.png"
+            src="/images/scene/terrain-empty.jpg"
             alt="客栈山间空地"
             className="absolute inset-0 h-full w-full object-cover transition-[filter] duration-700"
             style={{ filter: skinFilter }}
@@ -817,8 +819,8 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
           </div>
         )}
 
-        {/* 装扮模式：营造货单（建筑 / 装饰 分区，拖到庭院安放） */}
-        {dressing && (
+        {/* 装扮模式：营造货单（建筑 / 装饰 分区，拖到庭院安放；打造间打开时让位） */}
+        {dressing && !craftOpen && (
           <div className="absolute inset-x-2 bottom-[4.9rem] z-40 max-h-[46%] overflow-y-auto rounded-xl border border-[#E8B84B]/60 bg-[#2A1F14]/92 p-2 shadow-xl [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <p className="mb-1 flex items-center justify-between px-1 text-[9px] font-bold tracking-wide text-[#C9A96B]">
               <span>营造货单 · 拖到庭院安放 · 点贴片可缩放/翻转/收回</span>
@@ -909,13 +911,16 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
                   </div>
                 )
               })}
-              {/* 打造间（预留）：装饰物购买 / 打造入口，暂未开放 */}
+              {/* 打造间：装饰物打造入口（按 recipe 消耗金币，成功即安放一件） */}
               <button
                 type="button"
-                onClick={() =>
-                  toast({ title: '打造间 · 即将开放', description: '装饰物购买与打造功能筹备中，敬请期待' })
-                }
-                className="flex w-12 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border border-dashed border-[#8B6B47]/50 bg-black/15 px-1 py-1"
+                onClick={() => {
+                  sfx.play('click')
+                  setCraftOpen(true)
+                  setSelId(null)
+                }}
+                aria-label="打开打造间"
+                className="flex w-12 shrink-0 flex-col items-center justify-center gap-0.5 rounded-lg border border-dashed border-[#8B6B47]/50 bg-black/15 px-1 py-1 transition active:scale-95 hover:bg-black/25"
               >
                 <span className="day-seal text-sm leading-none text-[#B83A2E]">造</span>
                 <span className="text-[8px] font-bold leading-none text-[#C9A96B]">打造间</span>
@@ -923,6 +928,76 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
             </div>
           </div>
         )}
+
+        {/* 打造间弹层：装饰打造（数据来自 SCENE_COMPS recipe） */}
+        <AnimatePresence>
+          {dressing && craftOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="absolute inset-x-2 bottom-[4.9rem] z-50 rounded-xl border border-[#E8B84B]/60 bg-[#2A1F14]/95 p-2 shadow-2xl"
+              role="dialog"
+              aria-label="打造间"
+            >
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className="font-display text-[11px] font-black tracking-widest text-[#FFE9B8]">打造间</span>
+                <span className="flex items-center gap-1 text-[9px] font-bold text-[#C9A96B]">
+                  手头 <GoldIcon size={12} /> {gold}
+                </span>
+              </div>
+              {SCENE_COMPS.filter((c) => !c.facility && c.recipe).map((c) => {
+                const cost = c.recipe?.gold ?? c.recipe?.shopGold ?? 0
+                const n = (scenePiecesRaw ?? []).filter((p) => p.key === c.key).length
+                const full = n >= DECO_PIECE_CAP
+                const poor = gold < cost
+                const can = !full && !poor
+                return (
+                  <div key={c.key} className="flex items-center gap-2 rounded-lg bg-black/25 px-2 py-1.5">
+                    <img src={c.tiers[0].src} alt="" className="h-10 w-10 select-none object-contain" draggable={false} />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-black leading-tight text-[#FFE9B8]">{c.label}</p>
+                      <p className="truncate text-[8px] leading-tight text-[#C9A96B]">
+                        {c.recipe?.desc ?? '手工打造'} · 已摆 {n}/{DECO_PIECE_CAP}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={!can}
+                      onClick={() => {
+                        const r = craftDeco(c.key)
+                        sfx.play(r.ok ? 'place' : 'failed')
+                        toast({ title: r.ok ? '打造成功' : '暂时不行', description: r.message })
+                        if (r.ok) setCraftOpen(false)
+                      }}
+                      className={cn(
+                        'flex shrink-0 items-center gap-1 rounded-lg px-2 py-1 text-[9px] font-black transition',
+                        can
+                          ? 'bg-[#E8B84B]/90 text-[#2A1F14] active:scale-95 hover:bg-[#E8B84B]'
+                          : 'cursor-not-allowed bg-black/40 text-[#8B6B47]'
+                      )}
+                      aria-label={`打造${c.label}（${cost}金）`}
+                    >
+                      <GoldIcon size={11} />
+                      {cost}
+                    </button>
+                  </div>
+                )
+              })}
+              <button
+                type="button"
+                onClick={() => {
+                  sfx.play('click')
+                  setCraftOpen(false)
+                }}
+                className="mt-1.5 w-full rounded-lg bg-black/30 py-1 text-[9px] font-bold text-[#C9A96B] transition active:scale-95 hover:bg-black/40"
+              >
+                关闭
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {sceneFailed && (
           <>

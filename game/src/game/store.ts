@@ -174,6 +174,8 @@ interface GameStore extends GameSave {
   removePiece: (id: string) => void
   /** 装扮模式：新摆一个贴片（货单拖出/点选）；设施未建或达上限返回 null */
   addPiece: (key: string, x: number, y: number) => string | null
+  /** 打造间：按配方消耗金币打造装饰件，成功即自动安放一件（受摆放上限约束） */
+  craftDeco: (key: string) => { ok: boolean; message: string }
   /** 切换今夜驻扎区域（世界地图；区域二/三分店需已开设） */
   setRegion: (region: 1 | 2 | 3) => { ok: boolean; message: string }
   /** 开设水墨幽谷分店（扣金币 → 解锁区域二 + 分店收益/体力加成） */
@@ -1657,6 +1659,18 @@ export const useGameStore = create<GameStore>()(
           ],
         })
         return id
+      },
+
+      craftDeco: (key) => {
+        const comp = SCENE_COMPS.find((c) => c.key === key && !c.facility && c.recipe)
+        if (!comp?.recipe) return { ok: false, message: '暂无打造配方' }
+        const cost = comp.recipe.gold ?? comp.recipe.shopGold ?? 0
+        const s0 = get()
+        if (s0.gold < cost) return { ok: false, message: `金币不足，还差 ${cost - s0.gold}` }
+        if (get().addPiece(key, comp.x, comp.y) === null)
+          return { ok: false, message: '庭院已达摆放上限，先收回几件再打造' }
+        set({ gold: Math.max(0, Math.floor(get().gold - cost)) })
+        return { ok: true, message: `「${comp.label}」打造完成，已安放在庭院（-${cost} 金）` }
       },
 
       setRegion: (region) => {
