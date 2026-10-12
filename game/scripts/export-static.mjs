@@ -45,7 +45,31 @@ try {
   if (hadGit) fs.renameSync(gitKeep, gitDir)
   // GitHub Pages 的 Jekyll 会忽略 _next/（下划线开头目录），必须带 .nojekyll
   fs.writeFileSync(path.join(outDst, '.nojekyll'), '')
-  console.log('[export-static] done →', outDst)
+  // 子路径适配：Pages 项目页部署在 /yaoguaikezhan/ 下，
+  // basePath 只覆盖 _next 资产，代码里硬编码的 /images/... 公共资源需手动加前缀
+  const IMG_REWRITES = [
+    ['"/images/', '"/yaoguaikezhan/images/'],
+    ["'/images/", "'/yaoguaikezhan/images/"],
+    ['(/images/', '(/yaoguaikezhan/images/'],
+    ['=/images/', '=/yaoguaikezhan/images/'],
+  ]
+  const REWRITE_EXTS = new Set(['.html', '.js', '.css', '.txt', '.xml', '.json', '.webmanifest', '.map'])
+  let rewrote = 0
+  const walkRewrite = (dir) => {
+    for (const name of fs.readdirSync(dir)) {
+      const p = path.join(dir, name)
+      const st = fs.statSync(p)
+      if (st.isDirectory()) walkRewrite(p)
+      else if (REWRITE_EXTS.has(path.extname(name))) {
+        let text = fs.readFileSync(p, 'utf8')
+        const before = text
+        for (const [from, to] of IMG_REWRITES) text = text.split(from).join(to)
+        if (text !== before) { fs.writeFileSync(p, text); rewrote++ }
+      }
+    }
+  }
+  walkRewrite(outDst)
+  console.log('[export-static] done →', outDst, `(basePath rewrite: ${rewrote} files)`)
 } finally {
   fs.rmSync(tmp, { recursive: true, force: true, maxRetries: 3 })
 }
