@@ -769,6 +769,7 @@ export type AdScene =
   | 'tujian-hint' // 图鉴线索
   | 'recruit-refresh' // 招募池刷新
   | 'stamina-recover' // 体力恢复（全体 +50%）
+  | 'buff-reroll' // 备战增益换一批
 
 export const AD_SCENES: Record<AdScene, { title: string; desc: string; duration: number }> = {
   'idle-speed': { title: '挂机加速', desc: '立即获得 2 小时挂机收益', duration: 5 },
@@ -780,7 +781,90 @@ export const AD_SCENES: Record<AdScene, { title: string; desc: string; duration:
   'tujian-hint': { title: '图鉴线索', desc: '解锁一只未收集妖怪的线索', duration: 5 },
   'recruit-refresh': { title: '招募池刷新', desc: '刷新招募池提升稀有概率', duration: 5 },
   'stamina-recover': { title: '体力恢复', desc: '全体妖怪体力立即恢复 50%', duration: 5 },
+  'buff-reroll': { title: '增益换一批', desc: '重新抽取今晚的备战增益', duration: 5 },
 }
+
+// ============ 夜战备战增益（肉鸽三选一） ============
+
+export interface NightBuffEffect {
+  /** 守卫攻击力 ×N */
+  atkMul?: number
+  /** 守卫攻速 ×N */
+  atkSpeedMul?: number
+  /** 技能冷却速度 ×N（>1 更快） */
+  cdSpeedMul?: number
+  /** 击杀金币 ×N */
+  goldMul?: number
+  /** 客栈耐久上限 ×N（含当前耐久等比提升） */
+  innHpMul?: number
+  /** 守卫每 3 秒回复 N 比例生命 */
+  regenPct?: number
+  /** 击杀素材额外掉落概率 */
+  dropBonus?: number
+}
+
+export interface NightBuff {
+  id: string
+  name: string
+  desc: string
+  /** 1=普通 2=稀有 3=史诗（影响抽取权重与边框配色） */
+  rarity: 1 | 2 | 3
+  icon: string
+  effect: NightBuffEffect
+}
+
+export const NIGHT_BUFFS: NightBuff[] = [
+  { id: 'stove', name: '灶火正旺', desc: '守卫攻击力 +15%', rarity: 1, icon: '/images/ui/facility-kitchen.png', effect: { atkMul: 1.15 } },
+  { id: 'blade', name: '利刃出鞘', desc: '守卫攻速 +20%', rarity: 1, icon: '/images/ui/facility-smithy.png', effect: { atkSpeedMul: 1.2 } },
+  { id: 'abacus', name: '账房算盘', desc: '击杀金币 +30%', rarity: 1, icon: '/images/ui/gold.png', effect: { goldMul: 1.3 } },
+  { id: 'spring', name: '汤泉药气', desc: '守卫每 3 秒回复 2% 生命', rarity: 1, icon: '/images/ui/facility-hotSpring.png', effect: { regenPct: 0.02 } },
+  { id: 'overload', name: '妖力过载', desc: '技能冷却加快 25%', rarity: 2, icon: '/images/ui/facility-powerPool.png', effect: { cdSpeedMul: 1.333 } },
+  { id: 'fullhouse', name: '高朋满座', desc: '客栈耐久上限 +25%', rarity: 2, icon: '/images/ui/facility-guestRoom.png', effect: { innHpMul: 1.25 } },
+  { id: 'huntbag', name: '猎妖行囊', desc: '击杀素材额外掉落概率 +10%', rarity: 2, icon: '/images/ui/nav-bag.png', effect: { dropBonus: 0.1 } },
+  { id: 'resonance', name: '山海共鸣', desc: '攻击 +30% 且攻速 +30%', rarity: 3, icon: '/images/ui/ui-sun.png', effect: { atkMul: 1.3, atkSpeedMul: 1.3 } },
+  { id: 'treasure', name: '招财进宝', desc: '击杀金币翻倍', rarity: 3, icon: '/images/ui/gem.png', effect: { goldMul: 2 } },
+  { id: 'diamond', name: '金刚不坏', desc: '客栈耐久上限 +60%', rarity: 3, icon: '/images/ui/stat-hp.png', effect: { innHpMul: 1.6 } },
+]
+
+/** 按稀有度加权抽取 n 个不重复增益（1→5 / 2→3 / 3→2） */
+export function pickNightBuffs(n = 3): NightBuff[] {
+  const weight = (r: 1 | 2 | 3) => (r === 1 ? 5 : r === 2 ? 3 : 2)
+  const pool = [...NIGHT_BUFFS]
+  const out: NightBuff[] = []
+  while (out.length < n && pool.length > 0) {
+    let total = 0
+    for (const b of pool) total += weight(b.rarity)
+    let roll = Math.random() * total
+    let idx = 0
+    for (let i = 0; i < pool.length; i++) {
+      roll -= weight(pool[i].rarity)
+      if (roll <= 0) { idx = i; break }
+    }
+    out.push(pool.splice(idx, 1)[0])
+  }
+  return out
+}
+
+// ============ 七日目标（每日事件计数驱动的周链） ============
+
+export interface WeekGoal {
+  name: string
+  desc: string
+  /** 对应 save.daily.events 的计数键 */
+  key: 'night' | 'upgrade' | 'capture' | 'recruit' | 'ad' | 'gather' | 'cook'
+  target: number
+  reward: { gold?: number; gems?: number; tickets?: number }
+}
+
+export const WEEK_GOALS: WeekGoal[] = [
+  { name: '第1日 · 开门红', desc: '完成 1 场夜战守店', key: 'night', target: 1, reward: { gold: 300 } },
+  { name: '第2日 · 百废俱兴', desc: '升级或建造设施 2 次', key: 'upgrade', target: 2, reward: { gold: 500 } },
+  { name: '第3日 · 缉妖有功', desc: '收服 1 只妖怪', key: 'capture', target: 1, reward: { gems: 20 } },
+  { name: '第4日 · 广结善缘', desc: '观看 2 次广告', key: 'ad', target: 2, reward: { gold: 800 } },
+  { name: '第5日 · 进山采撷', desc: '外出采集 2 次', key: 'gather', target: 2, reward: { gems: 30 } },
+  { name: '第6日 · 小宴宾朋', desc: '烹饪 2 道菜肴', key: 'cook', target: 2, reward: { gold: 1200 } },
+  { name: '第7日 · 七日大集', desc: '完成 3 场夜战守店', key: 'night', target: 3, reward: { gems: 60, tickets: 2 } },
+]
 
 // ============ 七日签到 ============
 

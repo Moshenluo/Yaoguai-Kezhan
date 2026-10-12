@@ -7,6 +7,7 @@ import type {
   InnFacilities,
   SkillEffect,
 } from './types'
+import type { NightBuffEffect } from './config'
 import {
   AD_CAPTURE_BONUS,
   BOSS_NIGHT,
@@ -142,6 +143,8 @@ export class BattleEngine {
   private innShieldUsed = false
   /** 温泉汤院·汤泉回春：全体每秒回复计时器 */
   private springTimer = 0
+  /** 夜战备战增益（肉鸽三选一，进入战斗前由 NightScreen 选择后注入） */
+  private nightBuff: NightBuffEffect = {}
 
   state: BattleState
 
@@ -172,6 +175,20 @@ export class BattleEngine {
       this.state.fogYaoguai = pickFogYaoguaiId(this.opts.region ?? 1)
     }
     this.refreshDefenders()
+  }
+
+  /** 注入备战增益（客栈耐久乘区按比例放大当前耐久）；重复注入覆盖 */
+  applyBuff(effect: NightBuffEffect) {
+    if (effect.innHpMul && effect.innHpMul !== 1) {
+      const prevMax = this.state.innMaxHp
+      this.state.innMaxHp = Math.round(this.state.innMaxHp * effect.innHpMul)
+      this.state.innHp = Math.min(
+        this.state.innMaxHp,
+        this.state.innHp + (this.state.innMaxHp - prevMax)
+      )
+    }
+    this.nightBuff = { ...this.nightBuff, ...effect }
+    this.emit()
   }
 
   // ---------- 外部商店接口 ----------
@@ -798,15 +815,16 @@ export class BattleEngine {
     for (const d of this.state.defenders) {
       if (d.dead) continue
       const buffed = d.buffAtkUntil > now
-      const atk = buffed ? d.atk * 1.25 : d.atk
+      const atk = (buffed ? d.atk * 1.25 : d.atk) * (this.nightBuff.atkMul ?? 1)
 
-      // 客房 Lv.3 舒适休憩：每 3 秒回复 2%（Lv.5 3%）最大生命
-      if (guestRoomAbility) {
+      // 客房 Lv.3 舒适休憩 / 备战增益·汤泉药气：每 3 秒回复最大生命
+      const regenPct =
+        (guestRoomAbility ? (guestRoomEnhanced ? 0.03 : 0.02) : 0) + (this.nightBuff.regenPct ?? 0)
+      if (regenPct > 0) {
         d.regenTimer += dt
         if (d.regenTimer >= 3) {
           d.regenTimer = 0
-          const pct = guestRoomEnhanced ? 0.03 : 0.02
-          const heal = Math.round(d.maxHp * pct)
+          const heal = Math.round(d.maxHp * regenPct)
           if (d.hp < d.maxHp && heal > 0) {
             d.hp = Math.min(d.maxHp, d.hp + heal)
             this.float(d.x, 14, `+${heal}`, 'heal')
@@ -817,7 +835,7 @@ export class BattleEngine {
       // 技能冷却
       d.skillTimer += dt
       const target = this.targetFor(d)
-      if (d.skillTimer >= d.skillCd && target) {
+      if (d.skillTimer >= d.skillCd / (this.nightBuff.cdSpeedMul ?? 1) && target) {
         d.skillTimer = 0
         this.castSkill(d, target, atk)
         continue
@@ -833,7 +851,8 @@ export class BattleEngine {
           1 /
           (d.attackSpeed *
             (speedBuffed ? (powerPoolEnhanced ? 1.45 : 1.3) : 1) *
-            (hasted ? d.hasteMult : 1))
+            (hasted ? d.hasteMult : 1) *
+            (this.nightBuff.atkSpeedMul ?? 1))
         if (d.attackTimer >= interval) {
           d.attackTimer = 0
           const crit = Math.random() < d.critRate
@@ -1162,7 +1181,7 @@ export class BattleEngine {
       e.hp = 0
       e.dead = true
       this.state.killCount += 1
-      const gold = this.goldForKill(e)
+      const gold = Math.round(this.goldForKill(e) * (this.nightBuff.goldMul ?? 1))
       this.state.waveGold += gold
       this.float(e.x, e.lane, `+${gold}金`, 'gold')
       // 击杀素材掉落：精英妖丹 + 野妖随机建材
@@ -1177,6 +1196,11 @@ export class BattleEngine {
         else if (roll < 0.15) this.addMaterial('stone', 1)
         else if (roll < 0.2) this.addMaterial('iron', 1)
         else if (roll < 0.23) this.addMaterial(['meat', 'rice', 'salt'][Math.floor(Math.random() * 3)], 1)
+        // 备战增益·猎妖行囊：额外素材掉落概率
+        if (Math.random() < (this.nightBuff.dropBonus ?? 0)) {
+          this.addMaterial(['wood', 'stone', 'iron', 'meat', 'rice', 'salt'][Math.floor(Math.random() * 6)], 1)
+          this.float(e.x, e.lane - 1, '行囊拾取', 'gold')
+        }
       }
       // 妖力池 Lv.3 妖力涌动：击杀者 5 秒攻速 +30%（Lv.5 45%）
       if (attacker && facilityAbilityActive(this.opts.facilities, 'powerPool')) {

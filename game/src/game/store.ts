@@ -64,6 +64,7 @@ import {
   stoneIdFor,
   stoneUpCost,
   today,
+  WEEK_GOALS,
 } from './config'
 import { INITIAL_YAOGUAI, RARE_IDS, YAOGUAI_MAP } from './yaoguai'
 // ⚠️ 不要在这里 import './audio' —— 那是 Web Audio 实现，会把逻辑层锁死在浏览器。
@@ -184,6 +185,8 @@ interface GameStore extends GameSave {
   /** 开设沸火赤川分店（扣金币 → 解锁区域三 + 分店收益/体力加成） */
   openRegion3: () => { ok: boolean; message: string }
   claimTask: (id: string) => { ok: boolean; message: string }
+  /** 领取七日目标第 idx 日（0-6）奖励：仅当天可领，需当日事件进度达标 */
+  claimWeekGoal: (idx: number) => { ok: boolean; message: string }
   claimTujianReward: (count: number) => { ok: boolean; message: string }
   claimAchievement: (id: string) => { ok: boolean; message: string }
   watchAd: () => void
@@ -697,11 +700,20 @@ export const useGameStore = create<GameStore>()(
         if (!s.cooking) set({ cooking: { until: 0, goldMult: 0, gemMult: 0 } })
         // 聚宝符增益字段迁移（V1.1 老档默认未激活）
         if (!s.haste) set({ haste: { until: 0 } })
+        // 七日目标迁移 + 懒周期（超 7 日自动重开新一轮）
+        if (!s.weekGoal || weekGoalInfo(s).reset) {
+          set({ weekGoal: { start: today(), claimed: Array(7).fill(false) } })
+        }
         // 日期切换重置每日状态
         if (s.daily.date !== today()) {
           set({
             daily: { date: today(), freeRecruitUsed: false, tasksClaimed: [], adsWatched: 0, nightDone: false, bossNightDone: false, events: {} },
           })
+          // 七日目标懒周期：跨日后若已超 7 日则重开新一轮
+          const cur = get()
+          if (weekGoalInfo(cur).reset) {
+            set({ weekGoal: { start: today(), claimed: Array(7).fill(false) } })
+          }
         }
         // 离线收益结算
         const away = Math.max(0, (Date.now() - s.stats.lastOnline) / 1000)
@@ -1748,6 +1760,26 @@ export const useGameStore = create<GameStore>()(
         return { ok: true, message: '领取成功！' }
       },
 
+      claimWeekGoal: (idx) => {
+        const s = get()
+        const goal = WEEK_GOALS[idx]
+        if (!goal) return { ok: false, message: '目标不存在' }
+        const info = weekGoalInfo(s)
+        if (idx !== info.dayIdx) return { ok: false, message: '仅可领取当天的目标' }
+        if (info.claimed[idx]) return { ok: false, message: '已领取' }
+        if ((s.daily.events[goal.key] ?? 0) < goal.target) return { ok: false, message: '目标未完成' }
+        set({
+          gold: Math.floor(s.gold + (goal.reward.gold ?? 0)),
+          gems: s.gems + (goal.reward.gems ?? 0),
+          tickets: s.tickets + (goal.reward.tickets ?? 0),
+          weekGoal: {
+            start: info.cycleStart,
+            claimed: info.claimed.map((c, i) => (i === idx ? true : c)),
+          },
+        })
+        return { ok: true, message: '七日目标奖励已领取！' }
+      },
+
       claimTujianReward: (count) => {
         const s = get()
         const rewardKey = `tujian-${count}`
@@ -1912,6 +1944,27 @@ export function taskProgress(save: GameSave, taskId: string): number {
   if (taskId === 'starup') return save.daily.events.starup ?? 0
   if (taskId === 'ad') return save.daily.events.ad ?? 0
   return 0
+}
+
+/** 七日目标：按 daily.date 与周期起点的天数差推导当前天（0-6）；超 7 日视为应重开 */
+export function weekGoalInfo(save: GameSave): {
+  dayIdx: number
+  reset: boolean
+  claimed: boolean[]
+  cycleStart: string
+} {
+  const start = save.weekGoal?.start || save.daily.date
+  const diffDays = Math.max(
+    0,
+    Math.floor((new Date(save.daily.date).getTime() - new Date(start).getTime()) / 86400000)
+  )
+  const reset = !save.weekGoal || diffDays >= 7
+  return {
+    dayIdx: reset ? 0 : Math.min(6, diffDays),
+    reset,
+    claimed: reset ? Array(7).fill(false) : save.weekGoal?.claimed ?? Array(7).fill(false),
+    cycleStart: reset ? save.daily.date : start,
+  }
 }
 
 /** 成就进度（捕捉/战斗/妖王/经营/养成五线） */

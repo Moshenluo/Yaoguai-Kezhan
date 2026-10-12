@@ -11,9 +11,9 @@ import {
 } from '@/components/ui/drawer'
 import { Progress } from '@/components/ui/progress'
 import { ConfigIcon, GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
-import { achievementProgress, taskProgress, useGameStore } from '@/game/store'
+import { achievementProgress, taskProgress, weekGoalInfo, useGameStore } from '@/game/store'
 import { sfx } from '@/game/audio'
-import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORY_LABEL, DAILY_TASKS } from '@/game/config'
+import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORY_LABEL, DAILY_TASKS, WEEK_GOALS } from '@/game/config'
 import type { AchievementCategory } from '@/game/config'
 import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
@@ -64,6 +64,12 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
 
   const handleClaim = (id: string) => {
     const res = useGameStore.getState().claimTask(id)
+    if (res.ok) sfx.play('claim')
+    notify(res.message)
+  }
+
+  const handleClaimWeek = (idx: number) => {
+    const res = useGameStore.getState().claimWeekGoal(idx)
     if (res.ok) sfx.play('claim')
     notify(res.message)
   }
@@ -256,6 +262,91 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
                 </motion.div>
               )
             })}
+
+            {/* 七日目标：第 1~7 天递进奖励链（超 7 日自动重开新一轮） */}
+            {(() => {
+              const wg = weekGoalInfo(save)
+              const curGoal = WEEK_GOALS[wg.dayIdx]
+              const curClaimed = wg.claimed[wg.dayIdx]
+              const curProgress = curGoal ? save.daily.events[curGoal.key] ?? 0 : 0
+              const curDone = curGoal ? curProgress >= curGoal.target : false
+              const curClaimable = curDone && !curClaimed
+              const curPct = curGoal ? Math.min(100, (curProgress / curGoal.target) * 100) : 0
+              return (
+                <div className="rounded-2xl border border-[#C77DFF]/40 bg-gradient-to-b from-[#3A2440]/10 to-transparent p-2">
+                  <div className="flex items-center justify-between px-1">
+                    <span className="flex items-center gap-1 text-sm font-black text-stone-800">
+                      <span className="text-[#8B3FA8]">🗓</span> 七日目标
+                    </span>
+                    <span className="text-[10px] text-stone-500">第 {wg.dayIdx + 1} / 7 天 · 超期自动重开</span>
+                  </div>
+                  <div className="mt-1.5 flex gap-1">
+                    {WEEK_GOALS.map((g, i) => {
+                      const st = wg.claimed[i]
+                        ? 'claimed'
+                        : i === wg.dayIdx
+                          ? 'current'
+                          : i > wg.dayIdx
+                            ? 'locked'
+                            : 'past'
+                      return (
+                        <div
+                          key={i}
+                          className={cn(
+                            'flex h-7 flex-1 items-center justify-center rounded-lg border text-[10px] font-black',
+                            st === 'claimed' && 'border-emerald-400/60 bg-emerald-100/70 text-emerald-700',
+                            st === 'current' && 'border-[#D4933D] bg-gradient-to-b from-[#FFE9B8] to-[#E8B84B]/40 text-[#8B2E24] shadow-[0_0_6px_rgba(232,184,75,0.7)]',
+                            st === 'locked' && 'border-stone-200 bg-white/40 text-stone-300',
+                            st === 'past' && 'border-stone-300/60 bg-stone-100/70 text-stone-400'
+                          )}
+                        >
+                          {st === 'claimed' ? '✓' : i + 1}
+                        </div>
+                      )
+                    })}
+                  </div>
+                  {curGoal && (
+                    <div className="mt-2 flex items-center gap-2 rounded-xl border border-[#D4A574]/50 bg-white/80 p-2">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-black text-stone-800">{curGoal.name}</p>
+                        <p className="truncate text-[10px] text-stone-500">
+                          {curGoal.desc}（{Math.min(curProgress, curGoal.target)}/{curGoal.target}）
+                        </p>
+                        <Progress
+                          value={curPct}
+                          className={cn('mt-1 h-1.5 bg-stone-200', curClaimed ? '[&>div]:bg-emerald-500' : '[&>div]:bg-[#8B3FA8]')}
+                        />
+                        <div className="mt-1 flex items-center gap-1.5 text-[10px] font-black text-stone-600">
+                          {curGoal.reward.gold ? <span className="flex items-center gap-0.5"><GoldIcon size={12} />{curGoal.reward.gold}</span> : null}
+                          {curGoal.reward.gems ? <span className="flex items-center gap-0.5"><GemIcon size={12} />{curGoal.reward.gems}</span> : null}
+                          {curGoal.reward.tickets ? <span className="flex items-center gap-0.5"><TicketIcon size={12} />{curGoal.reward.tickets}</span> : null}
+                        </div>
+                      </div>
+                      {curClaimed ? (
+                        <span className="flex h-10 shrink-0 items-center rounded-xl bg-stone-100 px-3 text-xs font-black text-stone-400">✓ 已领</span>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled={!curClaimable}
+                          onClick={() => handleClaimWeek(wg.dayIdx)}
+                          className={cn(
+                            'relative flex h-10 shrink-0 items-center rounded-xl px-4 text-xs font-black transition-transform active:scale-95',
+                            curClaimable
+                              ? 'animate-pulse bg-gradient-to-r from-[#8B3FA8] to-[#C77DFF] text-white shadow-md shadow-purple-500/30'
+                              : 'cursor-not-allowed bg-stone-200 text-stone-400'
+                          )}
+                        >
+                          领取
+                          {curClaimable && (
+                            <span className="absolute -right-1 -top-1 h-2.5 w-2.5 animate-pulse rounded-full border-2 border-white bg-red-500" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
 
             <p className="px-2 pb-1 text-center text-[10px] text-stone-400">
               任务进度随玩法自动累计，奖励记得当日领取，过期清零哦

@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { AnimatePresence, motion } from 'framer-motion'
 import { BattleEngine, type LineupEntry } from '@/game/engine'
 import type { BattleEnemy, BattleResult } from '@/game/types'
-import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, PITY_ATTEMPTS, SLOTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
+import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, PITY_ATTEMPTS, SLOTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, pickNightBuffs, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
+import type { NightBuff } from '@/game/config'
 import { sfx } from '@/game/audio'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import { useGameStore } from '@/game/store'
@@ -158,6 +159,13 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   const [regionBannerVisible, setRegionBannerVisible] = useState(!bossNight && region !== 1)
   const pausedByDialogRef = useRef(false)
 
+  // ---- 备战增益三选一（肉鸽钩子）：prep 阶段弹出，选一注入引擎；广告可换一批一次 ----
+  const [buffOffer, setBuffOffer] = useState<NightBuff[] | null>(() => pickNightBuffs(3))
+  const [buffChosen, setBuffChosen] = useState(false)
+  const [buffRerollOpen, setBuffRerollOpen] = useState(false)
+  const buffRerollUsedRef = useRef(false)
+  const buffOpen = !buffChosen && buffOffer !== null && state.phase === 'prep'
+
   // ---- toast（带自动消失；项目 Toaster 移除延迟极长，需显式 duration） ----
   const { toast } = useToast()
   const notify = useCallback(
@@ -166,6 +174,21 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
     },
     [toast]
   )
+
+  const handlePickBuff = useCallback(
+    (b: NightBuff) => {
+      engine.applyBuff(b.effect)
+      sfx.play('claim')
+      notify(`✦ 增益生效：${b.name}`, b.desc)
+      setBuffChosen(true)
+    },
+    [engine, notify]
+  )
+  const handleBuffRerollReward = useCallback(() => {
+    buffRerollUsedRef.current = true
+    setBuffOffer(pickNightBuffs(3))
+    notify('已换一批增益', '重新挑选今晚的备战增益')
+  }, [notify])
 
   // ---- 引擎生命周期 ----
   useEffect(() => {
@@ -343,6 +366,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   useEffect(() => lockPause(repairAdOpen), [repairAdOpen, lockPause])
   useEffect(() => lockPause(captureAdOpen), [captureAdOpen, lockPause])
   useEffect(() => lockPause(captureSuccessId !== null), [captureSuccessId, lockPause])
+  useEffect(() => lockPause(buffOpen || buffRerollOpen), [buffOpen, buffRerollOpen, lockPause])
 
   // ---- 捕捉目标（多个可捕捉精英时点击战场切换） ----
   const capturables = useMemo(
@@ -1237,6 +1261,88 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
         onOpenChange={setCaptureAdOpen}
         onReward={handleCaptureAdReward}
       />
+      <AdDialog
+        scene="buff-reroll"
+        open={buffRerollOpen}
+        onOpenChange={setBuffRerollOpen}
+        onReward={handleBuffRerollReward}
+      />
+
+      {/* 备战增益三选一（肉鸽）：prep 阶段弹出，选一或跳过 */}
+      <AnimatePresence>
+        {buffOpen && (
+          <motion.div
+            key="buff-offer"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="w-full max-w-[420px] rounded-2xl border-2 border-[#E8B84B]/40 bg-[#2A211A] p-4 shadow-2xl"
+              initial={{ scale: 0.85, y: 24 }}
+              animate={{ scale: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 24 }}
+            >
+              <p className="text-center text-lg font-bold text-[#E8B84B]">🌙 备战增益</p>
+              <p className="mt-1 text-center text-xs text-[#C9B08A]">入夜前，选一项今晚的守护加持（三选一）</p>
+              <div className="mt-3 space-y-2">
+                {buffOffer!.map((b, i) => {
+                  const rarityStyle =
+                    b.rarity === 3
+                      ? 'border-[#C77DFF]/60 bg-[#3A2440]/70 text-[#E9C6FF]'
+                      : b.rarity === 2
+                        ? 'border-[#6FB7FF]/50 bg-[#20303F]/70 text-[#BFE0FF]'
+                        : 'border-[#8FA37A]/40 bg-[#26301F]/60 text-[#D6E2C0]'
+                  return (
+                    <motion.button
+                      key={b.id}
+                      type="button"
+                      className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition active:scale-[0.97] ${rarityStyle}`}
+                      initial={{ opacity: 0, x: -14 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.08 * i }}
+                      onClick={() => handlePickBuff(b)}
+                    >
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-black/35 text-xl">
+                        <img src={b.icon} alt="" className="h-7 w-7 object-contain" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-sm font-bold">
+                          {b.name}
+                          {b.rarity === 3 && <em className="ml-1 text-[10px] not-italic text-[#C77DFF]">史诗</em>}
+                          {b.rarity === 2 && <em className="ml-1 text-[10px] not-italic text-[#6FB7FF]">稀有</em>}
+                        </span>
+                        <span className="block truncate text-xs opacity-80">{b.desc}</span>
+                      </span>
+                    </motion.button>
+                  )
+                })}
+              </div>
+              <div className="mt-3 flex items-center justify-between">
+                <button
+                  type="button"
+                  className="rounded-lg px-2 py-1.5 text-xs text-[#C9B08A]/70 underline-offset-2 hover:underline"
+                  onClick={() => setBuffChosen(true)}
+                >
+                  不选，直接开战
+                </button>
+                {!buffRerollUsedRef.current ? (
+                  <button
+                    type="button"
+                    className="flex items-center gap-1 rounded-lg border border-[#FFE9B8]/25 bg-black/30 px-3 py-1.5 text-xs text-[#FFE9B8] transition active:scale-95"
+                    onClick={() => setBuffRerollOpen(true)}
+                  >
+                    ▶ 换一批（看广告）
+                  </button>
+                ) : (
+                  <span className="text-xs text-[#C9B08A]/40">今日换批已用</span>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {captureSuccessId != null && (
         <CaptureSuccessDialog
           key={captureSuccessId}

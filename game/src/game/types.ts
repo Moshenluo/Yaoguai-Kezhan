@@ -225,6 +225,8 @@ export interface GameSave {
   festivalClaimed: string[]
   /** 当前客栈皮肤 id（见 config.SKINS） */
   skin: string
+  /** 七日目标：start=周期首日日期；claimed=第 1~7 日领取标记（懒周期：超 7 日自动重开） */
+  weekGoal?: { start: string; claimed: boolean[] }
   /** 场景贴片实例列表（建筑 + 装饰；同一设施可摆多座，上限见 scene-layers.sceneCap） */
   scenePieces?: ScenePiece[]
   stats: {
