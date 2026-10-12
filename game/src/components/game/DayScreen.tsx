@@ -770,7 +770,9 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.5, ease: 'easeOut' }}
                   className="w-full"
-                  style={{ filter: 'drop-shadow(0 6px 8px rgba(60,40,20,0.35))' }}
+                  style={{
+                    filter: `${skinFilter === 'none' ? '' : `${skinFilter} `}drop-shadow(0 6px 8px rgba(60,40,20,0.35))`,
+                  }}
                   draggable={false}
                 />
               </span>

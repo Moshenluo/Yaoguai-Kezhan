@@ -155,9 +155,33 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
     prevOpen.current = true
     if (!focusKey) return
     setHighlight(focusKey)
+    // 用 rAF 收敛式滚动代替 scrollIntoView：抽屉入场动画（transform）会干扰
+    // scrollIntoView 的几何计算，导致聚焦卡片被顶出视口（手机端只露出 3/4）。
+    // 逐帧重算目标位置直到动画停稳、目标值不再变化。
+    const scrollCardIntoView = (card: HTMLDivElement) => {
+      const vp = card.closest('[data-radix-scroll-area-viewport]') as HTMLElement | null
+      if (!vp) return
+      let last = Number.NaN
+      const tick = () => {
+        const target = Math.max(
+          0,
+          card.getBoundingClientRect().top -
+            vp.getBoundingClientRect().top +
+            vp.scrollTop -
+            (vp.clientHeight - card.offsetHeight) / 2
+        )
+        if (Number.isNaN(last) || Math.abs(target - last) > 1) {
+          last = target
+          vp.scrollTo({ top: target })
+          requestAnimationFrame(tick)
+        }
+      }
+      requestAnimationFrame(tick)
+    }
     const timer = setTimeout(() => {
-      cardRefs.current[focusKey]?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-    }, firstOpen ? 380 : 60)
+      const card = cardRefs.current[focusKey]
+      if (card) scrollCardIntoView(card)
+    }, firstOpen ? 500 : 60)
     const clear = setTimeout(() => setHighlight(null), 2800)
     return () => {
       clearTimeout(timer)
