@@ -1,0 +1,53 @@
+{
+  "title": "妖怪客栈 · 山海伙伴 SVG 角色试绘 01",
+  "source_repository": "https://github.com/Moshenluo/Yaoguai-Kezhan",
+  "source_ref": "main",
+  "source_commit": "79908426b6586f6fd9a86da571e02884c6f837d4",
+  "references": [
+    {
+      "character": "jiuweihu",
+      "repository_path": "game/public/images/yaoguai/jiuweihu.png",
+      "packaged_path": "reference/game/public/images/yaoguai/jiuweihu.png",
+      "sha256": "d1e6f04aed344d0b6c0f7963fd77e0b4496dafea59dcdb207756e7f43f3f6464",
+      "original_bytes_unchanged": true
+    },
+    {
+      "character": "shengsheng",
+      "repository_path": "game/public/images/yaoguai/shengsheng.png",
+      "packaged_path": "reference/game/public/images/yaoguai/shengsheng.png",
+      "sha256": "3607d037c911b3cbf596feafa19deca514aef35fded72d8cc0ff4977888e7b63",
+      "original_bytes_unchanged": true
+    },
+    {
+      "character": "qiuyu",
+      "repository_path": "game/public/images/yaoguai/qiuyu.png",
+      "packaged_path": "reference/game/public/images/yaoguai/qiuyu.png",
+      "sha256": "1ec8c264d2c5c6fa9010526f739d24da2250a1c962f0fa485adbf30f9add5408",
+      "original_bytes_unchanged": true
+    },
+    {
+      "character": "taotie",
+      "repository_path": "game/public/images/yaoguai/taotie.png",
+      "packaged_path": "reference/game/public/images/yaoguai/taotie.png",
+      "sha256": "a3c961073d2fe790ab7156756f277cb6d2032bf41394059973e1b56363024285",
+      "original_bytes_unchanged": true
+    }
+  ],
+  "method": "基于参考原画人工编写 Bézier 路径和几何形，保留角色识别点，重新设计表情、肢体和道具差分；非自动描摹。",
+  "svg_format": {
+    "viewBox": "0 0 640 640",
+    "background": "transparent",
+    "files": 12,
+    "embedded_raster": false,
+    "external_resources": false,
+    "editable_semantic_groups": true
+  },
+  "delivery_scope": "角色试绘与离线微动作展示，尚未接入 PV；每份 SVG 为独立静态姿态。",
+  "font": {
+    "family": "Noto Serif CJK SC Regular",
+    "format": "OTF subset",
+    "source": "https://github.com/notofonts/noto-cjk",
+    "license": "assets/FONT-LICENSE.txt",
+    "use": "仅 HTML 预览文字，SVG 角色不依赖字体"
+  }
+}

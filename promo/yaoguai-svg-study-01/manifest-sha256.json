@@ -1,0 +1,229 @@
+{
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 72,
+      "sha256": "3ea3fca5fa4d18ef0d7f89169cec593ae685bc29256055e85b717649a4454e18"
+    },
+    {
+      "path": "README.md",
+      "bytes": 2228,
+      "sha256": "c97084aace20455169a0ff06421a3b4c82770606da56d7267863d4e530324acf"
+    },
+    {
+      "path": "assets/FONT-LICENSE.txt",
+      "bytes": 14712,
+      "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b"
+    },
+    {
+      "path": "assets/preview-font.otf",
+      "bytes": 184496,
+      "sha256": "249125e67a3cb79e6b5dd69cc763033056288294af2a4682883b7b02d8f0391d"
+    },
+    {
+      "path": "character-sheet.jpg",
+      "bytes": 563701,
+      "sha256": "315950ce792f34347c60b8e13cbca8b396a9d3f15e6c8cdde463f9a609605a99"
+    },
+    {
+      "path": "character-sheet.png",
+      "bytes": 1010689,
+      "sha256": "d1f05a1b261da28024d22dc51626d04a975c4265292c82be8911b63e006d818c"
+    },
+    {
+      "path": "characters.json",
+      "bytes": 2870,
+      "sha256": "43199f545ee589bf713f2e96e3e69c059958200367226812c0f2fcacc4c7c166"
+    },
+    {
+      "path": "png/jiuweihu-01.png",
+      "bytes": 197138,
+      "sha256": "2d5b771ab468d07604467834fcd53a5d75a9b4383d624f99a7073a33a0a05f4f"
+    },
+    {
+      "path": "png/jiuweihu-02.png",
+      "bytes": 199307,
+      "sha256": "5c91a6ad761934f69bd8761ff39dbfe41894b8871b44c02109c7167a0bb51d95"
+    },
+    {
+      "path": "png/jiuweihu-03.png",
+      "bytes": 203087,
+      "sha256": "c1eb29c690b0e84861014afae1c5f836149d580a618bd804f4e1f1f5cdee6b6b"
+    },
+    {
+      "path": "png/qiuyu-01-sleepy.png",
+      "bytes": 94233,
+      "sha256": "74d4b38bc7c00f7daf6f8e9fbc0d25c04cb6319fbe1e7e9039c42631329bc608"
+    },
+    {
+      "path": "png/qiuyu-02-tea.png",
+      "bytes": 98762,
+      "sha256": "c5f5f939a590fa117b6e4fb320d9b7ac2527a190bba738874afe34c4d27de307"
+    },
+    {
+      "path": "png/qiuyu-03-delivery.png",
+      "bytes": 99190,
+      "sha256": "9430ae8f45615c0fbfbb5c7bf7d3d369bb232e5f51873131940ded727ee904bd"
+    },
+    {
+      "path": "png/shengsheng-01.png",
+      "bytes": 125658,
+      "sha256": "b7b787c6e7ab41efa9ce68d58fd9e9427f337f64cf40ee1f23b9cec976730746"
+    },
+    {
+      "path": "png/shengsheng-02.png",
+      "bytes": 131609,
+      "sha256": "14b700ce410800d09c495d7a5f52709268290941a1ac9800ef044d9fa1cf05d2"
+    },
+    {
+      "path": "png/shengsheng-03.png",
+      "bytes": 113951,
+      "sha256": "c5a3490ed388ac1458bb06505e80960ee157d2dba2b693575bb05398347060eb"
+    },
+    {
+      "path": "png/taotie-01.png",
+      "bytes": 185954,
+      "sha256": "4dd24f777ad2955ed15559348db0c3202b83de1a7c963c269152764405ff9a18"
+    },
+    {
+      "path": "png/taotie-02.png",
+      "bytes": 181352,
+      "sha256": "2ccdd53e38813cc78abf883bb9a93599863a01846d7fa5f582b864d88a678076"
+    },
+    {
+      "path": "png/taotie-03.png",
+      "bytes": 196533,
+      "sha256": "351ed5adfe70b3d69667a1c93ca7fc8008d353eb73a6b7720e5cf217087d5540"
+    },
+    {
+      "path": "poster.html",
+      "bytes": 2630935,
+      "sha256": "2ddbe7d1c04ab447e2d010a00f1e67e1a30658640b51e9aa610dd2454936ccc7"
+    },
+    {
+      "path": "preview-standalone.html",
+      "bytes": 2655100,
+      "sha256": "4ac8776a817e79b5de1849bee9fe8d6e7726012b8b69dbc518b5f5b7b2953d00"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 2210,
+      "sha256": "c3ce595e93379ba5ea165e518eeaaa7ca9001e5c40c6661ff42ee71697fde3f3"
+    },
+    {
+      "path": "reference/game/public/images/yaoguai/jiuweihu.png",
+      "bytes": 444741,
+      "sha256": "d1e6f04aed344d0b6c0f7963fd77e0b4496dafea59dcdb207756e7f43f3f6464"
+    },
+    {
+      "path": "reference/game/public/images/yaoguai/qiuyu.png",
+      "bytes": 313269,
+      "sha256": "1ec8c264d2c5c6fa9010526f739d24da2250a1c962f0fa485adbf30f9add5408"
+    },
+    {
+      "path": "reference/game/public/images/yaoguai/shengsheng.png",
+      "bytes": 363962,
+      "sha256": "3607d037c911b3cbf596feafa19deca514aef35fded72d8cc0ff4977888e7b63"
+    },
+    {
+      "path": "reference/game/public/images/yaoguai/taotie.png",
+      "bytes": 512553,
+      "sha256": "a3c961073d2fe790ab7156756f277cb6d2032bf41394059973e1b56363024285"
+    },
+    {
+      "path": "svg/jiuweihu-01.svg",
+      "bytes": 14246,
+      "sha256": "44030b79c1370f7be8209b95db657c4c521a87cd299f5d0967b7081ae90747ab"
+    },
+    {
+      "path": "svg/jiuweihu-02.svg",
+      "bytes": 14423,
+      "sha256": "c0ba0f97cb1a5e1a370c08f43121d033b26842b210d06263848386e7fb3f730f"
+    },
+    {
+      "path": "svg/jiuweihu-03.svg",
+      "bytes": 19434,
+      "sha256": "802b85ffdf7e3bc85a1b76dac502b01d0416a3f302de1fb823fdfb4e6c7c5640"
+    },
+    {
+      "path": "svg/qiuyu-01-sleepy.svg",
+      "bytes": 18173,
+      "sha256": "567231ed0d22f5e9fe2e164774b91f4de57a443347e806738d055ca6060df6f2"
+    },
+    {
+      "path": "svg/qiuyu-02-tea.svg",
+      "bytes": 19958,
+      "sha256": "36a9f539d1df51a615d9c81d4020c4b6efbaef47a7ce104f79d15663bcc681e0"
+    },
+    {
+      "path": "svg/qiuyu-03-delivery.svg",
+      "bytes": 20448,
+      "sha256": "4fce1581b0b0a545fe23a6b87c98a0c7770d4d52548afe70ea0d2c8d74de92c8"
+    },
+    {
+      "path": "svg/shengsheng-01.svg",
+      "bytes": 11046,
+      "sha256": "3d628cdf7befa2fde164f83ea6613218441ed8604478718162373f6f331408c6"
+    },
+    {
+      "path": "svg/shengsheng-02.svg",
+      "bytes": 10226,
+      "sha256": "2a5906eda3b1354fe33d972670ba41d815367d9efa0ae0c33539630346fc18c0"
+    },
+    {
+      "path": "svg/shengsheng-03.svg",
+      "bytes": 9784,
+      "sha256": "062f020ba2e005162ec53559e598b6930ea7f33edff1965023af45b7962b5b91"
+    },
+    {
+      "path": "svg/taotie-01.svg",
+      "bytes": 21365,
+      "sha256": "eb92c9b076ebb5d67ec21f5461eef0c06506d0414f005765adc92c2a10e2f4d7"
+    },
+    {
+      "path": "svg/taotie-02.svg",
+      "bytes": 21279,
+      "sha256": "2e0e46dd01ba29a060cda84759b1b86ff891c58700801b01312b5342ac58b668"
+    },
+    {
+      "path": "svg/taotie-03.svg",
+      "bytes": 21498,
+      "sha256": "141548c1f12aca3d689a66d110e28e21081d2869f5dd91fedcd9e77f6ce330b7"
+    },
+    {
+      "path": "tools/build_preview.py",
+      "bytes": 18335,
+      "sha256": "5baf07419cec99eb74342b54aa084edffa71a701f23cd9a02c05593e2f2d17b3"
+    },
+    {
+      "path": "tools/jiuweihu.py",
+      "bytes": 17587,
+      "sha256": "daf1348a2acc564b8e71f4a513fa6c1ada4cded0c6c480d2a1a6bc859442eea9"
+    },
+    {
+      "path": "tools/qiuyu.py",
+      "bytes": 13647,
+      "sha256": "cc3072d0cae343d58527d7be86b7de1257b50525c41c4e79bc1b5a0b7ec103d6"
+    },
+    {
+      "path": "tools/render_verify.cjs",
+      "bytes": 4923,
+      "sha256": "1c48b26407b73322b9d6664cf40b2ac8c463414950c872049d699ddb21851382"
+    },
+    {
+      "path": "tools/shengsheng.py",
+      "bytes": 14142,
+      "sha256": "0a8945ccbe0cb3b7e6256b5c066ddb09d63a116deacb4121d63d792629f39eb4"
+    },
+    {
+      "path": "tools/taotie.py",
+      "bytes": 17817,
+      "sha256": "7fc2bd202e755d83157338329180c7dd3824bb1c0a51976d436ca3b0362c035b"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 7278,
+      "sha256": "00b1b4d3450462e42931acf46cfc6ea19234e654124b9dd640ab895cebe6e37b"
+    }
+  ]
+}

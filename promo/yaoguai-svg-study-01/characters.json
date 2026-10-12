@@ -1,0 +1,81 @@
+{
+  "source_commit": "79908426b6586f6fd9a86da571e02884c6f837d4",
+  "characters": [
+    {
+      "id": "jiuweihu",
+      "name": "九尾狐",
+      "reading": "jiǔ wěi hú",
+      "role": "账房先生",
+      "anchor": "九条珊瑚色长尾 · 额间朱纹 · 玉坠流苏",
+      "note": "保留原画的九尾、耳缘与颈饰，用流畅曲线组织尾扇。算盘姿态呼应游戏中的账房身份。",
+      "poses": [
+        "安静相迎",
+        "眨眼招手",
+        "抱起算盘"
+      ],
+      "files": [
+        "svg/jiuweihu-01.svg",
+        "svg/jiuweihu-02.svg",
+        "svg/jiuweihu-03.svg"
+      ],
+      "source_url": "https://github.com/Moshenluo/Yaoguai-Kezhan/blob/79908426b6586f6fd9a86da571e02884c6f837d4/game/public/images/yaoguai/jiuweihu.png"
+    },
+    {
+      "id": "shengsheng",
+      "name": "狌狌",
+      "reading": "xīng xīng",
+      "role": "前台接待",
+      "anchor": "蓬松白耳 · 桃心脸颊 · 弯曲长尾",
+      "note": "把原画的大白耳与暖棕毛色留作第一识别点，用手臂、视线与腰身表现迎客动作。",
+      "poses": [
+        "站好迎客",
+        "挥手招呼",
+        "躬身行礼"
+      ],
+      "files": [
+        "svg/shengsheng-01.svg",
+        "svg/shengsheng-02.svg",
+        "svg/shengsheng-03.svg"
+      ],
+      "source_url": "https://github.com/Moshenluo/Yaoguai-Kezhan/blob/79908426b6586f6fd9a86da571e02884c6f837d4/game/public/images/yaoguai/shengsheng.png"
+    },
+    {
+      "id": "qiuyu",
+      "name": "犰狳",
+      "reading": "qiú yú",
+      "role": "跑堂送餐",
+      "anchor": "长兔耳 · 金色鸟喙 · 青绿鳞甲与蛇尾",
+      "note": "保留鸟喙与鳞甲，避免简化成普通兔子。从犯困到送茶、快跑，耳朵与四肢同步改变。",
+      "poses": [
+        "困困待命",
+        "端茶送客",
+        "快步跑堂"
+      ],
+      "files": [
+        "svg/qiuyu-01-sleepy.svg",
+        "svg/qiuyu-02-tea.svg",
+        "svg/qiuyu-03-delivery.svg"
+      ],
+      "source_url": "https://github.com/Moshenluo/Yaoguai-Kezhan/blob/79908426b6586f6fd9a86da571e02884c6f837d4/game/public/images/yaoguai/qiuyu.png"
+    },
+    {
+      "id": "taotie",
+      "name": "饕餮",
+      "reading": "tāo tiè",
+      "role": "吞金神兽",
+      "anchor": "卷曲羊角 · 朱金纹样 · 抱碗的圆身形",
+      "note": "沿用原画的弯角、身纹与食碗，把贪吃感画成亲切的表情。献碗与鼓腮是为宣传演出设计的动作。",
+      "poses": [
+        "抱碗满足",
+        "请你尝尝",
+        "鼓腮偷吃"
+      ],
+      "files": [
+        "svg/taotie-01.svg",
+        "svg/taotie-02.svg",
+        "svg/taotie-03.svg"
+      ],
+      "source_url": "https://github.com/Moshenluo/Yaoguai-Kezhan/blob/79908426b6586f6fd9a86da571e02884c6f837d4/game/public/images/yaoguai/taotie.png"
+    }
+  ]
+}

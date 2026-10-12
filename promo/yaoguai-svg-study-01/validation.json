@@ -1,0 +1,301 @@
+{
+  "asset_checks": {
+    "svg_files": 12,
+    "assets": [
+      {
+        "file": "svg/jiuweihu-01.svg",
+        "bytes": 14246,
+        "sha256": "44030b79c1370f7be8209b95db657c4c521a87cd299f5d0967b7081ae90747ab",
+        "groups": 20,
+        "visible_alpha_bounds": [
+          42,
+          46,
+          579,
+          549
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 9
+      },
+      {
+        "file": "svg/jiuweihu-02.svg",
+        "bytes": 14423,
+        "sha256": "c0ba0f97cb1a5e1a370c08f43121d033b26842b210d06263848386e7fb3f730f",
+        "groups": 20,
+        "visible_alpha_bounds": [
+          43,
+          37,
+          582,
+          549
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 9
+      },
+      {
+        "file": "svg/jiuweihu-03.svg",
+        "bytes": 19434,
+        "sha256": "802b85ffdf7e3bc85a1b76dac502b01d0416a3f302de1fb823fdfb4e6c7c5640",
+        "groups": 22,
+        "visible_alpha_bounds": [
+          46,
+          58,
+          579,
+          549
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 9
+      },
+      {
+        "file": "svg/qiuyu-01-sleepy.svg",
+        "bytes": 18173,
+        "sha256": "567231ed0d22f5e9fe2e164774b91f4de57a443347e806738d055ca6060df6f2",
+        "groups": 28,
+        "visible_alpha_bounds": [
+          161,
+          45,
+          575,
+          570
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/qiuyu-02-tea.svg",
+        "bytes": 19958,
+        "sha256": "36a9f539d1df51a615d9c81d4020c4b6efbaef47a7ce104f79d15663bcc681e0",
+        "groups": 31,
+        "visible_alpha_bounds": [
+          112,
+          28,
+          575,
+          570
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/qiuyu-03-delivery.svg",
+        "bytes": 20448,
+        "sha256": "4fce1581b0b0a545fe23a6b87c98a0c7770d4d52548afe70ea0d2c8d74de92c8",
+        "groups": 33,
+        "visible_alpha_bounds": [
+          85,
+          49,
+          589,
+          568
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/shengsheng-01.svg",
+        "bytes": 11046,
+        "sha256": "3d628cdf7befa2fde164f83ea6613218441ed8604478718162373f6f331408c6",
+        "groups": 15,
+        "visible_alpha_bounds": [
+          113,
+          63,
+          527,
+          560
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/shengsheng-02.svg",
+        "bytes": 10226,
+        "sha256": "2a5906eda3b1354fe33d972670ba41d815367d9efa0ae0c33539630346fc18c0",
+        "groups": 13,
+        "visible_alpha_bounds": [
+          104,
+          77,
+          578,
+          559
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/shengsheng-03.svg",
+        "bytes": 9784,
+        "sha256": "062f020ba2e005162ec53559e598b6930ea7f33edff1965023af45b7962b5b91",
+        "groups": 13,
+        "visible_alpha_bounds": [
+          105,
+          127,
+          524,
+          559
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/taotie-01.svg",
+        "bytes": 21365,
+        "sha256": "eb92c9b076ebb5d67ec21f5461eef0c06506d0414f005765adc92c2a10e2f4d7",
+        "groups": 23,
+        "visible_alpha_bounds": [
+          31,
+          65,
+          534,
+          564
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/taotie-02.svg",
+        "bytes": 21279,
+        "sha256": "2e0e46dd01ba29a060cda84759b1b86ff891c58700801b01312b5342ac58b668",
+        "groups": 23,
+        "visible_alpha_bounds": [
+          31,
+          78,
+          526,
+          564
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      },
+      {
+        "file": "svg/taotie-03.svg",
+        "bytes": 21498,
+        "sha256": "141548c1f12aca3d689a66d110e28e21081d2869f5dd91fedcd9e77f6ce330b7",
+        "groups": 24,
+        "visible_alpha_bounds": [
+          35,
+          56,
+          562,
+          564
+        ],
+        "transparent_corners": true,
+        "paths_only_no_embedded_raster": true,
+        "unique_ids": true,
+        "tail_groups": 1
+      }
+    ]
+  },
+  "browser_checks": {
+    "svg_count": 12,
+    "poses_checked": [
+      {
+        "character": 0,
+        "pose": 0,
+        "name": "九尾狐"
+      },
+      {
+        "character": 0,
+        "pose": 1,
+        "name": "九尾狐"
+      },
+      {
+        "character": 0,
+        "pose": 2,
+        "name": "九尾狐"
+      },
+      {
+        "character": 1,
+        "pose": 0,
+        "name": "狌狌"
+      },
+      {
+        "character": 1,
+        "pose": 1,
+        "name": "狌狌"
+      },
+      {
+        "character": 1,
+        "pose": 2,
+        "name": "狌狌"
+      },
+      {
+        "character": 2,
+        "pose": 0,
+        "name": "犰狳"
+      },
+      {
+        "character": 2,
+        "pose": 1,
+        "name": "犰狳"
+      },
+      {
+        "character": 2,
+        "pose": 2,
+        "name": "犰狳"
+      },
+      {
+        "character": 3,
+        "pose": 0,
+        "name": "饕餮"
+      },
+      {
+        "character": 3,
+        "pose": 1,
+        "name": "饕餮"
+      },
+      {
+        "character": 3,
+        "pose": 2,
+        "name": "饕餮"
+      }
+    ],
+    "desktop_viewport": [
+      1280,
+      960
+    ],
+    "mobile_viewport": [
+      390,
+      844
+    ],
+    "mobile_overflow": false,
+    "offline_network_requests": 0,
+    "browser_errors": [],
+    "inline_ids_unique": true,
+    "pose_switching": true,
+    "line_mode": true,
+    "background_switching": true,
+    "group_animation": true,
+    "reduced_motion_respected": true,
+    "download": {
+      "filename": "taotie-03.svg",
+      "valid_svg": true
+    },
+    "raster_exports": "640x640 transparent PNG"
+  },
+  "source_regeneration": {
+    "result": "pass",
+    "scope": "12 SVG + offline preview HTML + poster HTML + characters.json",
+    "identical_hashes_after_regeneration": true
+  },
+  "visual_review": {
+    "result": "pass",
+    "reviewed": [
+      "character-sheet.jpg",
+      "gallery-desktop.png"
+    ],
+    "identity_anchors_present": true,
+    "expression_and_pose_differences_present": true,
+    "visible_clipping_or_broken_shapes": false
+  }
+}
