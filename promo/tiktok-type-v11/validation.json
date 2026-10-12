@@ -1,0 +1,140 @@
+{
+  "browser_controls": {
+    "before": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "audio": 4
+    },
+    "playing": true,
+    "after": {
+      "paused": true,
+      "seek": 22.6,
+      "muted": true
+    },
+    "errors": []
+  },
+  "integration": {
+    "offline": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "canvasReadable": true,
+      "audioDuration": 27,
+      "played": true,
+      "seekAndMute": true,
+      "replayed": true,
+      "httpRequests": 0
+    },
+    "video": {
+      "duration": 27,
+      "width": 1080,
+      "height": 1920,
+      "start": 13.00017,
+      "after": 13.461883
+    },
+    "errors": []
+  },
+  "media": {
+    "duration_seconds": 27,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "frames": 1620,
+    "color_space": "bt709",
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "audio_sample_rate": 48000,
+    "audio_channels": 2,
+    "video_start_seconds": 0,
+    "audio_start_seconds": 0,
+    "audio_packet_payload_matches_excerpt": true,
+    "audio_packet_md5": "MD5=d07d424c68a9d5c54404a1a9761d9854",
+    "faststart": true,
+    "full_decode": "passed with -xerror",
+    "file_bytes": 8527197,
+    "file_sha256": "972949a1921ea776c07f94975deadc06761a65fc5d85845542a77d695a3c6d72"
+  },
+  "content": {
+    "lyrics_match_user_selection": true,
+    "lyric_characters": 55,
+    "all_three_font_subsets_cover_lyrics": true,
+    "caption": "经营客栈 · 招募妖怪 · 夜晚守家",
+    "caption_font_covers_all_characters": true,
+    "font_extension_preserves_all_old_decomposed_outlines_and_advances": true,
+    "timing_unchanged_from_v10": true,
+    "source_time_offsets_verified": true,
+    "score_and_embedded_timeline_identical": true,
+    "audio_unchanged_from_v10": true,
+    "audio_sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+  },
+  "visual_loop": {
+    "comparison_scope": "Deterministic Canvas render, before lossy video encoding",
+    "exact": true,
+    "changedPixels": 0,
+    "totalPixels": 2073600,
+    "changedChannels": 0,
+    "maxChannelDelta": 0,
+    "meanChannelDelta": 0,
+    "audio_seamless": false
+  },
+  "visual_review": {
+    "result": "pass",
+    "scope": "Independent deterministic Canvas frame review; no audio-listening claim.",
+    "frame_count": 42,
+    "contact_sheets": [
+      "opening",
+      "chorus",
+      "doors-first",
+      "doors-second",
+      "finale",
+      "loop"
+    ],
+    "findings": [
+      "Opening brand and all three gameplay phrases are legible inside the planned phone safe core.",
+      "First compact shop sign expands into second larger doors; no observed glyph overlap or cut-text defect in settled frames.",
+      "Final brand and CTA remain stable from 25.05 through 26.65 sample times, seal does not obscure title.",
+      "Frame 0 and frame 27 are pixel-identical; 2,073,600 pixels compared.",
+      "No visible hard cut at reviewed scene/code boundaries. Small raster/texture differences have mean RGB delta below 0.018 on a 0–255 scale across the whole frame.",
+      "No browser page errors."
+    ],
+    "limitations": [
+      "Static and temporal boundary sampling supplements, but does not replace, final encoded playback verification.",
+      "Safe-core guide is an editorial layout aid; actual app overlays vary by device and placement."
+    ],
+    "reviewed_film_sha256": "d530eb0e4964d8799508d41eb4e540b0955194b87412f178bf4e11b2c782ec93",
+    "revision_recheck": {
+      "result": "pass",
+      "scope": [
+        "20.85–20.90 sign/glyph margin",
+        "26.76 loop CTA clearance",
+        "exact first/last frame",
+        "final hold unchanged"
+      ],
+      "findings": [
+        "Second 开 enlargement now retains visible paper margin at 20.85 and 20.90.",
+        "At 26.76 the next opening brand is suppressed while previous CTA is being cleared; 26.88 cleanly reveals the new opening.",
+        "First/last exactLoop remains true, changedPixels 0.",
+        "25.05–26.65 stable final brand hold is unchanged."
+      ]
+    }
+  },
+  "encoded_review": {
+    "reviewed_frames_seconds": [
+      0,
+      20.65,
+      21.55,
+      25.7,
+      26.9667
+    ],
+    "finding": "Opening caption, sign-to-door size progression, final brand and return to opening remain readable after H264 encoding.",
+    "remaining_blockers": []
+  },
+  "limitations": "Syllable onsets remain ASR-estimated. Offline HTML verified in a no-network Chromium context with embedded assets; direct file:// navigation is blocked in this cloud browser. Visual looping does not change the original audio fade-out."
+}

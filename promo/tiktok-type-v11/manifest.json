@@ -1,0 +1,134 @@
+{
+  "title": "妖怪客栈 · 等你当家｜文字 PV V11",
+  "duration_seconds": 27,
+  "width": 1080,
+  "height": 1920,
+  "fps": 60,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 4478,
+      "sha256": "81c16146f0a7d3966fee21c333185bd077ba40f1cb5b0cf6bfc02f6a0dff75ab"
+    },
+    {
+      "path": "cover.jpg",
+      "bytes": 538117,
+      "sha256": "9f5d771f48c60151dc7c98613171addd712fb78899d97af9ab01306cc9d73321"
+    },
+    {
+      "path": "font-check.json",
+      "bytes": 2234,
+      "sha256": "ea8d6a480c2f836e44a87d08a955fb0fec8cded81beb9b375989440072b163d6"
+    },
+    {
+      "path": "music-excerpt.m4a",
+      "bytes": 878825,
+      "sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+    },
+    {
+      "path": "preview-standalone.html",
+      "bytes": 1351793,
+      "sha256": "0db94c152b99110fba5591e1964520b724d76186f8556d9d8fb367b956dbb754"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 3365,
+      "sha256": "e4bc428b285a0184d95b162ebb4c2d6e6a9f86d45fa6a7d5082308b37a071205"
+    },
+    {
+      "path": "source/assets/FONT-LICENSE.txt",
+      "bytes": 14712,
+      "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b"
+    },
+    {
+      "path": "source/assets/MaShanZheng-OFL.txt",
+      "bytes": 4396,
+      "sha256": "54107539e415cc21d97752b7b1738c3d152451863f65e2c4e51556d3ceab1ab9"
+    },
+    {
+      "path": "source/assets/brush.ttf",
+      "bytes": 45764,
+      "sha256": "f5b47d54ac1d64e6d3a033be8efa8230c79b298fbe9e8a796b024ad229ed37f4"
+    },
+    {
+      "path": "source/assets/heavy.otf",
+      "bytes": 27936,
+      "sha256": "d527a9a52245ce3bb75f5666a359c6e41af576b78045cb316e15aef1bc84d833"
+    },
+    {
+      "path": "source/assets/music.m4a",
+      "bytes": 878825,
+      "sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+    },
+    {
+      "path": "source/assets/serif.otf",
+      "bytes": 40188,
+      "sha256": "4f95cfa5a3eb1daa274b518556e84a0b930a8d52ad77548f7632c0bd07ef5044"
+    },
+    {
+      "path": "source/build_preview.py",
+      "bytes": 741,
+      "sha256": "81957735f2d56aef3cf4d029d89e475f68d7ebb455868bdc6b2313e57894e094"
+    },
+    {
+      "path": "source/film.js",
+      "bytes": 19178,
+      "sha256": "d530eb0e4964d8799508d41eb4e540b0955194b87412f178bf4e11b2c782ec93"
+    },
+    {
+      "path": "source/font-text.txt",
+      "bytes": 284,
+      "sha256": "d7fdf5b1843c3d1005492090baba31689cee3355fe8f19e03c552c7b873d3456"
+    },
+    {
+      "path": "source/index.html",
+      "bytes": 1850,
+      "sha256": "b277a8a5f7ee1c97c34618c9a8921699ac7328d245eb57165c2c18cadc2b3273"
+    },
+    {
+      "path": "source/package.json",
+      "bytes": 392,
+      "sha256": "da0382d81f6931f41beff505f137133bbe88e798b139f02fd4f891123de92cbb"
+    },
+    {
+      "path": "source/render.cjs",
+      "bytes": 5385,
+      "sha256": "86f1a9cb39fd4683b12f9817a98582698aef6a3b8ef64f039896f4771567ef35"
+    },
+    {
+      "path": "source/score.json",
+      "bytes": 14009,
+      "sha256": "606b1f9e8c93ae7fefd7f516b07f74f019ae8b0a9d87fa195208bf51287654e2"
+    },
+    {
+      "path": "source/timeline.js",
+      "bytes": 7152,
+      "sha256": "387e861ecaac17edb50b067021fd3d6d1ea628760e8dfb14f7830118834178f2"
+    },
+    {
+      "path": "source/validate_media.py",
+      "bytes": 2355,
+      "sha256": "b52a4fe9dd2dc9ef09a481ba24ae7610d863ace153e7ada932da92968ab7199a"
+    },
+    {
+      "path": "source/verify.cjs",
+      "bytes": 3662,
+      "sha256": "ecbff010e16ab823ea901a76e34d072fa20ce432af8c392ef26aac2ae88eb807"
+    },
+    {
+      "path": "storyboard.jpg",
+      "bytes": 388416,
+      "sha256": "544f3eccd60e4958f209cc64460885388d6c597b59a504fb522e763217dc0ea6"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 4655,
+      "sha256": "af0fcec573777c58a52c91d2fb4cf0ff34471edaa800ef77a1e993970804d384"
+    },
+    {
+      "path": "yaoguai-type-v11.mp4",
+      "bytes": 8527197,
+      "sha256": "972949a1921ea776c07f94975deadc06761a65fc5d85845542a77d695a3c6d72"
+    }
+  ]
+}

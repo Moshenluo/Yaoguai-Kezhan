@@ -1,0 +1,15 @@
+{
+  "name": "yaoguai-type-pv-v10",
+  "private": true,
+  "version": "1.0.0",
+  "description": "27-second typography PV synced to a user-selected music excerpt",
+  "scripts": {
+    "stills": "node render.cjs --stills",
+    "preview:build": "python3 build_preview.py",
+    "render": "node render.cjs",
+    "verify": "node verify.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}
