@@ -1,5 +1,5 @@
 import type { SceneComp, SceneCompTier } from './scene-layers'
-import type { Element, GameSave, InnFacilities, NightRole } from './types'
+import type { Element, GameSave, InnFacilities, NightBuffEffect, NightEvent, NightRole } from './types'
 
 // ============ 妖怪客栈 · 数值配置 ============
 
@@ -786,22 +786,7 @@ export const AD_SCENES: Record<AdScene, { title: string; desc: string; duration:
 
 // ============ 夜战备战增益（肉鸽三选一） ============
 
-export interface NightBuffEffect {
-  /** 守卫攻击力 ×N */
-  atkMul?: number
-  /** 守卫攻速 ×N */
-  atkSpeedMul?: number
-  /** 技能冷却速度 ×N（>1 更快） */
-  cdSpeedMul?: number
-  /** 击杀金币 ×N */
-  goldMul?: number
-  /** 客栈耐久上限 ×N（含当前耐久等比提升） */
-  innHpMul?: number
-  /** 守卫每 3 秒回复 N 比例生命 */
-  regenPct?: number
-  /** 击杀素材额外掉落概率 */
-  dropBonus?: number
-}
+export type { NightBuffEffect } from './types'
 
 export interface NightBuff {
   id: string
@@ -841,6 +826,46 @@ export function pickNightBuffs(n = 3): NightBuff[] {
       if (roll <= 0) { idx = i; break }
     }
     out.push(pool.splice(idx, 1)[0])
+  }
+  return out
+}
+
+// ============ 夜战波间事件（肉鸽第二层：清波后三选一） ============
+
+/** deal 事件花费系数：随夜战难度等级上涨（金币沉淀出口） */
+const DEAL_COST_PER_LEVEL = 60
+
+export const NIGHT_EVENTS: NightEvent[] = [
+  // ---- 山灵馈赠（buff）：随机一枚备战增益 ----
+  { id: 'gift', name: '山灵馈赠', desc: '山中精怪感念守店之义，赠你一枚随机增益', icon: '/images/ui/ui-star.png', kind: 'buff' },
+  // ---- 夜市交易（deal）：本场金币换稀有增益 ----
+  { id: 'market', name: '妖市夜集', desc: '行商打着灯笼过境：用本场金币换一枚增益', icon: '/images/ui/gold.png', kind: 'deal' },
+  // ---- 歇脚（rest）----
+  { id: 'spring', name: '福泉涌出', desc: '客栈修复 15% 耐久，全体守卫回复 30% 生命', icon: '/images/ui/stat-hp.png', kind: 'rest', innHpPct: 0.15, healPct: 0.3 },
+  { id: 'hearth', name: '灶神歇脚', desc: '后厨灶火不熄：客栈修复 25% 耐久', icon: '/images/ui/facility-kitchen.png', kind: 'rest', innHpPct: 0.25 },
+  // ---- 宿业（curse）：受损换强增益 ----
+  { id: 'raid', name: '宵小袭仓', desc: '仓库被偷，客栈受损 10%——但众妖同仇敌忾，攻击 +30%', icon: '/images/ui/facility-warehouse.png', kind: 'curse', innHpPct: -0.1, compensation: { atkMul: 1.3 } },
+  { id: 'nightmare', name: '梦魇缠身', desc: '众妖夜不能寐，客栈受损 8%——换来技能冷却加快 35%', icon: '/images/ui/facility-guestRoom.png', kind: 'curse', innHpPct: -0.08, compensation: { cdSpeedMul: 1.35 } },
+  { id: 'tax', name: '山神收租', desc: '缴纳两成本场金币——但山神庇佑，客栈耐久上限 +30%', icon: '/images/ui/festival-lantern.png', kind: 'curse', innHpPct: 0, compensation: { innHpMul: 1.3 } },
+]
+
+/** 波间事件三选一：第 1 张必为随机增益，其余从 deal/curse/rest 池不重复补位 */
+export function pickNightEvents(level: number, n = 3): NightEvent[] {
+  const dealCost = Math.round(DEAL_COST_PER_LEVEL * (1 + (level - 1) * 0.35))
+  const gift = pickNightBuffs(1)[0]
+  const out: NightEvent[] = [
+    { id: `gift-${gift.id}`, name: gift.name, desc: gift.desc, icon: gift.icon, kind: 'buff', effect: gift.effect },
+  ]
+  const others = NIGHT_EVENTS.filter((e) => e.kind !== 'buff')
+  while (out.length < n) {
+    const e = others[Math.floor(Math.random() * others.length)]
+    if (out.some((o) => o.id === e.id)) continue
+    if (e.kind === 'deal') {
+      const b = pickNightBuffs(1)[0]
+      out.push({ ...e, cost: dealCost, effect: b.effect, desc: `花金币换「${b.name}」：${b.desc}` })
+    } else {
+      out.push({ ...e })
+    }
   }
   return out
 }

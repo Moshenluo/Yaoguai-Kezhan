@@ -360,14 +360,55 @@ export interface FloatText {
 
 export type BattlePhase =
   | 'prep' // 波次间隔（布阵倒计时）
+  | 'interlude' // 波间抉择（肉鸽三选一事件，暂停等待玩家）
   | 'fighting' // 战斗中
   | 'victory' // 通关
   | 'failed' // 失败
+
+/** 夜战备战增益效果（engine.applyBuff 注入；开局三选一与波间事件共用） */
+export interface NightBuffEffect {
+  /** 守卫攻击力 ×N */
+  atkMul?: number
+  /** 守卫攻速 ×N */
+  atkSpeedMul?: number
+  /** 技能冷却速度 ×N（>1 更快） */
+  cdSpeedMul?: number
+  /** 击杀金币 ×N */
+  goldMul?: number
+  /** 客栈耐久上限 ×N（含当前耐久等比提升） */
+  innHpMul?: number
+  /** 守卫每 3 秒回复 N 比例生命 */
+  regenPct?: number
+  /** 击杀素材额外掉落概率 */
+  dropBonus?: number
+}
+
+/** 夜战波间事件（肉鸽钩子第二层：清波后三选一） */
+export type NightEventKind = 'buff' | 'deal' | 'curse' | 'rest'
+export interface NightEvent {
+  id: string
+  name: string
+  desc: string
+  icon: string
+  kind: NightEventKind
+  /** deal：花费（本场 waveGold） */
+  cost?: number
+  /** buff/deal：注入的增益效果 */
+  effect?: NightBuffEffect
+  /** rest/curse：客栈耐久变化比例（+修复 / -受损） */
+  innHpPct?: number
+  /** rest：全体守卫回血比例 */
+  healPct?: number
+  /** curse：受损换取的补偿增益 */
+  compensation?: NightBuffEffect
+}
 
 export interface BattleState {
   phase: BattlePhase
   wave: number // 当前波次 1-5
   totalWaves: number
+  /** 波间事件三选一（phase='interlude' 时非空，选完清除） */
+  eventOffer?: NightEvent[]
   innHp: number
   innMaxHp: number
   enemies: BattleEnemy[]

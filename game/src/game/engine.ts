@@ -5,9 +5,10 @@ import type {
   Element,
   FloatText,
   InnFacilities,
+  NightBuffEffect,
+  NightEvent,
   SkillEffect,
 } from './types'
-import type { NightBuffEffect } from './config'
 import {
   AD_CAPTURE_BONUS,
   BOSS_NIGHT,
@@ -24,6 +25,7 @@ import {
   computeFacilityBonus,
   counterDamageMult,
   elementRelation,
+  pickNightEvents,
   facilityAbilityActive,
   facilityAbilityEnhanced,
   levelScale,
@@ -188,6 +190,57 @@ export class BattleEngine {
       )
     }
     this.nightBuff = { ...this.nightBuff, ...effect }
+    this.emit()
+  }
+
+  /** 波间事件三选一：应用第 idx 个事件并开启下一波 */
+  pickEvent(idx: number) {
+    if (this.state.phase !== 'interlude') return
+    const ev = this.state.eventOffer?.[idx]
+    if (!ev) return
+    const now = this.state.elapsed
+    switch (ev.kind) {
+      case 'buff':
+      case 'deal':
+        if (ev.effect) this.applyBuff(ev.effect)
+        if (ev.kind === 'deal' && ev.cost) {
+          this.state.waveGold = Math.max(0, this.state.waveGold - ev.cost)
+          this.float(50, 26, `-${ev.cost}金`, 'gold')
+        }
+        break
+      case 'rest':
+        if (ev.innHpPct) {
+          this.state.innHp = Math.min(this.state.innMaxHp, this.state.innHp + Math.round(this.state.innMaxHp * ev.innHpPct))
+          this.float(50, 24, `+${Math.round(ev.innHpPct * 100)}%耐久`, 'heal')
+        }
+        if (ev.healPct) {
+          for (const d of this.state.defenders) {
+            if (d.dead) continue
+            const heal = Math.round(d.maxHp * ev.healPct)
+            d.hp = Math.min(d.maxHp, d.hp + heal)
+            this.float(d.x, 12, `+${heal}`, 'heal')
+          }
+        }
+        break
+      case 'curse': {
+        if (ev.innHpPct && ev.innHpPct < 0) {
+          this.state.innHp = Math.max(1, this.state.innHp - Math.round(this.state.innMaxHp * -ev.innHpPct))
+          this.float(50, 24, '客栈受损', 'damage')
+        }
+        if (ev.compensation) {
+          this.applyBuff(ev.compensation)
+          this.float(50, 30, '获得补偿增益', 'skill')
+        }
+        break
+      }
+    }
+    this.state.eventOffer = undefined
+    this.state.wave += 1
+    this.state.phase = 'prep'
+    this.state.prepCountdown = 8
+    this.refreshDefenders()
+    const waveName = this.opts.bossNight ? `妖王亲卫 第 ${this.state.wave} 波` : `第 ${this.state.wave} 波`
+    this.float(50, 34, `${waveName}来袭前·调整布阵`, 'skill')
     this.emit()
   }
 
@@ -613,12 +666,10 @@ export class BattleEngine {
           this.addMaterial(stoneIdFor(els[Math.floor(Math.random() * els.length)]), 1)
         }
       } else {
-        this.state.wave += 1
-        this.state.phase = 'prep'
-        this.state.prepCountdown = 8
-        this.refreshDefenders()
-        const waveName = this.opts.bossNight ? `妖王亲卫 第 ${this.state.wave} 波` : `第 ${this.state.wave} 波`
-        this.float(50, 30, `${waveName}来袭前·调整布阵`, 'skill')
+        // 波间抉择：清波后进入 interlude，三选一事件由玩家决定后再开下一波
+        this.state.phase = 'interlude'
+        this.state.eventOffer = pickNightEvents(this.opts.level, 3)
+        this.emit()
       }
     }
     if (this.state.innHp <= 0 && this.state.phase === 'fighting') {

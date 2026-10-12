@@ -6,6 +6,7 @@ import { BattleEngine, type LineupEntry } from '@/game/engine'
 import type { BattleEnemy, BattleResult } from '@/game/types'
 import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, PITY_ATTEMPTS, SLOTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, pickNightBuffs, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
 import type { NightBuff } from '@/game/config'
+import type { NightEvent } from '@/game/types'
 import { sfx } from '@/game/audio'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import { useGameStore } from '@/game/store'
@@ -189,6 +190,15 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
     setBuffOffer(pickNightBuffs(3))
     notify('已换一批增益', '重新挑选今晚的备战增益')
   }, [notify])
+
+  // ---- 波间事件三选一：interlude 相位弹出，选完自动开下一波 ----
+  const handlePickEvent = useCallback(
+    (idx: number) => {
+      sfx.play('claim')
+      engine.pickEvent(idx)
+    },
+    [engine]
+  )
 
   // ---- 引擎生命周期 ----
   useEffect(() => {
@@ -616,7 +626,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
 
   // ---- 派生显示 ----
   const phase = state.phase
-  const inBattle = phase === 'prep' || phase === 'fighting'
+  const inBattle = phase === 'prep' || phase === 'interlude' || phase === 'fighting'
   const modalOpen = exitOpen || repairAdOpen || captureAdOpen || captureSuccessId !== null
   const innHpPct = state.innMaxHp > 0 ? state.innHp / state.innMaxHp : 0
   const innLow = phase === 'fighting' && innHpPct < 0.4
@@ -1339,6 +1349,73 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
                   <span className="text-xs text-[#C9B08A]/40">今日换批已用</span>
                 )}
               </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* 波间事件三选一（肉鸽第二层）：清波后弹出，选完开下一波 */}
+      <AnimatePresence>
+        {phase === 'interlude' && state.eventOffer && (
+          <motion.div
+            key="event-offer"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="w-full max-w-[420px] rounded-2xl border-2 border-[#8FA37A]/50 bg-[#232B1C] p-4 shadow-2xl"
+              initial={{ scale: 0.85, y: 24 }}
+              animate={{ scale: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 320, damping: 24 }}
+            >
+              <p className="text-center text-lg font-bold text-[#D6E2C0]">🍃 波间际遇</p>
+              <p className="mt-1 text-center text-xs text-[#C9B08A]">
+                第 {state.wave} 波已清 · 山海之间偶有际遇（三选一）
+              </p>
+              <div className="mt-3 space-y-2">
+                {state.eventOffer.map((ev: NightEvent, i) => {
+                  const tooPoor = ev.kind === 'deal' && ev.cost != null && state.waveGold < ev.cost
+                  const style =
+                    ev.kind === 'curse'
+                      ? 'border-[#E07A6B]/50 bg-[#3B2420]/70 text-[#F5C4BC]'
+                      : ev.kind === 'deal'
+                        ? 'border-[#6FB7FF]/50 bg-[#20303F]/70 text-[#BFE0FF]'
+                        : ev.kind === 'rest'
+                          ? 'border-[#7FC98F]/50 bg-[#22331F]/70 text-[#CFE8C4]'
+                          : 'border-[#E8B84B]/50 bg-[#3A3220]/70 text-[#F0DFAE]'
+                  return (
+                    <motion.button
+                      key={ev.id}
+                      type="button"
+                      disabled={tooPoor}
+                      className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition active:scale-[0.97] disabled:opacity-40 ${style}`}
+                      initial={{ opacity: 0, x: -14 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.08 * i }}
+                      onClick={() => handlePickEvent(i)}
+                    >
+                      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-black/35">
+                        <img src={ev.icon} alt="" className="h-7 w-7 object-contain" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-bold">
+                          {ev.name}
+                          {ev.kind === 'deal' && ev.cost != null && (
+                            <em className="ml-1 text-[10px] not-italic text-[#BFE0FF]">花 {ev.cost} 金</em>
+                          )}
+                          {ev.kind === 'curse' && <em className="ml-1 text-[10px] not-italic text-[#E07A6B]">有代价</em>}
+                        </span>
+                        <span className="block text-xs opacity-85">{ev.desc}</span>
+                      </span>
+                    </motion.button>
+                  )
+                })}
+              </div>
+              <p className="mt-3 text-center text-[10px] text-[#C9B08A]/60">
+                本场金币 {state.waveGold} · 选择后立即迎接下一波
+              </p>
             </motion.div>
           </motion.div>
         )}
