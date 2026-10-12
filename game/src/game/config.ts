@@ -820,6 +820,22 @@ export interface SkinDef {
 
 export const SKINS: SkinDef[] = [
   { id: 'default', name: '青瓦木檐', desc: '经典客栈原貌', icon: '/images/ui/skin-default.png', filter: 'none', unlock: { type: 'default', value: 0 }, unlockDesc: '默认解锁' },
+  {
+    // 初始简陋档贴片做成皮肤：两档均指向 -1 图，无论设施等级都显示初建原貌
+    id: 'rustic', name: '初创原貌', desc: '客栈初建时的简朴模样', icon: '/images/scene/compo/hall-1.png', filter: 'none',
+    unlock: { type: 'default', value: 0 }, unlockDesc: '默认解锁',
+    sceneOverrides: {
+      hall: { 0: { src: '/images/scene/compo/hall-1.png', wPct: 24 }, 1: { src: '/images/scene/compo/hall-1.png', wPct: 24 } },
+      guestRoom: { 0: { src: '/images/scene/compo/guest-room-1.png', wPct: 20 }, 1: { src: '/images/scene/compo/guest-room-1.png', wPct: 20 } },
+      kitchen: { 0: { src: '/images/scene/compo/kitchen-1.png', wPct: 20 }, 1: { src: '/images/scene/compo/kitchen-1.png', wPct: 20 } },
+      warehouse: { 0: { src: '/images/scene/compo/warehouse-1.png', wPct: 18 }, 1: { src: '/images/scene/compo/warehouse-1.png', wPct: 18 } },
+      powerPool: { 0: { src: '/images/scene/compo/powerpool-1.png', wPct: 18 }, 1: { src: '/images/scene/compo/powerpool-1.png', wPct: 18 } },
+      smithy: { 0: { src: '/images/scene/compo/smithy-1.png', wPct: 19 }, 1: { src: '/images/scene/compo/smithy-1.png', wPct: 19 } },
+      pharmacy: { 0: { src: '/images/scene/compo/pharmacy-1.png', wPct: 17 }, 1: { src: '/images/scene/compo/pharmacy-1.png', wPct: 17 } },
+      wishAltar: { 0: { src: '/images/scene/compo/wishaltar-1.png', wPct: 15 }, 1: { src: '/images/scene/compo/wishaltar-1.png', wPct: 15 } },
+      hotSpring: { 0: { src: '/images/scene/compo/hotspring-1.png', wPct: 22 }, 1: { src: '/images/scene/compo/hotspring-1.png', wPct: 22 } },
+    },
+  },
   { id: 'lantern', name: '朱漆灯笼', desc: '红灯高挂 · 喜气盈门', icon: '/images/ui/skin-lantern.png', filter: 'saturate(1.35) sepia(0.16) hue-rotate(-12deg) brightness(1.03)', unlock: { type: 'wins', value: 5 }, unlockDesc: '守店成功 5 次解锁' },
   { id: 'frost', name: '霜雪琉璃', desc: '雪落屋檐 · 银装素裹', icon: '/images/ui/skin-frost.png', filter: 'saturate(0.72) hue-rotate(168deg) brightness(1.14) contrast(0.96)', unlock: { type: 'wins', value: 10 }, unlockDesc: '守店成功 10 次解锁' },
   { id: 'gilt', name: '鎏金岁月', desc: '金漆流彩 · 百年老店', icon: '/images/ui/skin-gilt.png', filter: 'sepia(0.5) saturate(1.55) hue-rotate(-8deg) brightness(1.08)', unlock: { type: 'tujian', value: 10 }, unlockDesc: '图鉴收集 10 只解锁' },
