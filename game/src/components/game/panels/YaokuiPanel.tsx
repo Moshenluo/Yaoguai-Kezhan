@@ -744,9 +744,6 @@ function YaoDetail({
             </button>
           )
         })()}
-        <p className="mt-1.5 text-center text-[10px] leading-relaxed text-stone-400">
-          体力药水可在商店「体力药铺」购买 · 也可在顶部看广告全体恢复 50%
-        </p>
       </div>
 
       {/* 白天 / 夜晚 */}
@@ -895,9 +892,6 @@ function YaoDetail({
             )
           })}
         </div>
-        <p className="mt-2 text-center text-[10px] leading-relaxed text-stone-400">
-          每级 攻击+3% · 生命+4% · 防御+2%；上限随星级提升 · 药水可在商店购买
-        </p>
       </div>
 
       {/* 属性石强化区块（元素线：克制伤害 +5%/级） */}
@@ -976,9 +970,6 @@ function YaoDetail({
               </button>
             </>
           )}
-          <p className="mt-2 text-center text-[10px] leading-relaxed text-stone-400">
-            {stoneMat?.name}可在夜战收服妖怪、击杀精英时掉落
-          </p>
         </div>
       ) : (
         <div className="rounded-2xl border border-stone-200 bg-stone-100/60 p-3">
@@ -1101,11 +1092,6 @@ function YaoDetail({
             {canUpSkill ? `精进 · Lv.${skillLevel}→Lv.${skillLevel + 1}` : '精进 · 素材不足（点击查看）'}
           </button>
         )}
-        {/* 底部指引：掉落来源 + 每级加成（数值同源 config，不硬编码） */}
-        <p className="mt-2 text-center text-[10px] leading-relaxed text-stone-400">
-          妖丹于夜战掉落 · 稀有妖丹于妖王夜掉落 · 每级技能伤害/治疗/控制 +
-          {Math.round(SKILL_LEVEL_BONUS * 100)}%
-        </p>
       </motion.div>
 
       {/* 升星区块 */}

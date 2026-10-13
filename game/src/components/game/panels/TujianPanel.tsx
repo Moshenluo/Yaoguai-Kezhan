@@ -62,8 +62,8 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
   const [detailId, setDetailId] = useState<string | null>(null)
   const [lockedId, setLockedId] = useState<string | null>(null)
   const [hintAdOpen, setHintAdOpen] = useState(false)
-  /** 属性克制说明卡展开态（默认展开，便于玩家了解新系统） */
-  const [elemOpen, setElemOpen] = useState(true)
+  /** 属性克制说明卡展开态（默认收起，避免占屏；玩家可自行展开查阅） */
+  const [elemOpen, setElemOpen] = useState(false)
   /** 已看广告解锁线索的妖怪（本会话有效） */
   const [hinted, setHinted] = useState<ReadonlySet<string>>(new Set())
 
@@ -195,9 +195,6 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                             ))}
                           </div>
                         </div>
-                        <p className="text-center text-[9px] leading-relaxed text-stone-400">
-                          野妖与精英怪也带属性，上阵克制妖怪伤害大增；属性石可在妖库详情中强化
-                        </p>
                       </div>
                     </CollapsibleContent>
                   </div>

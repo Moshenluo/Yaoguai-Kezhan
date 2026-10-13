@@ -466,8 +466,7 @@ export function GatherPanel({ open, onOpenChange }: GatherPanelProps) {
 
               {/* 底部说明条（数值同源：体力折扣 / 累积上限取自 config 常量） */}
               <p className="rounded-xl bg-stone-800/90 px-3 py-2 text-center text-[10px] leading-relaxed text-stone-300">
-                出野采集体力消耗为打工的 {Math.round(GATHER_STAMINA_COST_MULT * 100)}%（不享受休息恢复） ·
-                体力越充沛效率越高 · 累积上限 {GATHER_ACC_CAP} 个/任务，请及时采收 · 素材入仓受仓库容量限制
+                体力消耗为打工的 {Math.round(GATHER_STAMINA_COST_MULT * 100)}% · 累积上限 {GATHER_ACC_CAP} 个/任务请及时采收
               </p>
             </div>
           </ScrollArea>

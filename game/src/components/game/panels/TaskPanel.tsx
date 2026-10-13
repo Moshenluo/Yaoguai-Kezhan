@@ -347,10 +347,6 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
                 </div>
               )
             })()}
-
-            <p className="px-2 pb-1 text-center text-[10px] text-stone-400">
-              任务进度随玩法自动累计，奖励记得当日领取，过期清零哦
-            </p>
           </div>
         ) : (
           <div
@@ -474,10 +470,6 @@ export function TaskPanel({ open, onOpenChange }: TaskPanelProps) {
                 })}
               </div>
             ))}
-
-            <p className="px-2 pb-1 text-center text-[10px] text-stone-400">
-              成就永久累计 · 捉妖/守店/妖王/经营四条线共同记录掌柜的山海传奇
-            </p>
           </div>
         )}
       </DrawerContent>

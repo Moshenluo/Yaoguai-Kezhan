@@ -364,7 +364,6 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                       <ConfigIcon icon="/images/ui/potion-exp-small.png" size={14} />
                       经验药水
                     </p>
-                    <p className="text-[9px] text-stone-400">喂给妖怪提升等级</p>
                   </div>
                   <div className="flex flex-col gap-2">
                     {EXP_POTIONS.map((p) => {
@@ -405,9 +404,6 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                       )
                     })}
                   </div>
-                  <p className="mt-1.5 text-center text-[10px] text-stone-400">
-                    药水在【妖库→妖怪卡】中使用
-                  </p>
                 </div>
 
                 {/* 体力药铺：三档体力药水（单只小/中 + 全体大） */}
@@ -417,7 +413,6 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                       <ConfigIcon icon="/images/ui/potion-stamina-small.png" size={14} />
                       体力药铺
                     </p>
-                    <p className="text-[9px] text-stone-400">妖怪疲惫/力竭时喝一瓶回状态</p>
                   </div>
                   <div className="flex flex-col gap-2">
                     {STAMINA_POTIONS.map((p) => {
@@ -443,7 +438,7 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                               </span>
                             </p>
                             <p className="text-[11px] font-bold text-emerald-700">体力 +{p.value}</p>
-                            <p className="text-[10px] text-stone-400">{p.desc} · 已持有 {held} 瓶</p>
+                            <p className="text-[10px] text-stone-400">已持有 {held} 瓶</p>
                           </div>
                           <button
                             type="button"
@@ -463,16 +458,12 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                       )
                     })}
                   </div>
-                  <p className="mt-1.5 text-center text-[10px] text-stone-400">
-                    体力药水在【妖库→妖怪卡】中使用 · 妖库顶部可看广告全体恢复
-                  </p>
                 </div>
 
                 {/* 杂货铺：食材与建材 */}
                 <div>
                   <div className="mb-2 flex items-baseline justify-between">
                     <p className="text-xs font-black text-[#8B2E24]">🧺 杂货铺</p>
-                    <p className="text-[9px] text-stone-400">仓库有空位才能购买</p>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {GROCERY_GOLD.map((g) => {
@@ -529,16 +520,12 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                       )
                     })}
                   </div>
-                  <p className="mt-1.5 text-center text-[10px] text-stone-400">
-                    食材下锅做饭 · 建材升级设施 · 妖丹可在仓库出售换金
-                  </p>
                 </div>
 
                 {/* 法宝铺（V1.1 道具实装：缚妖网 / 聚宝符；妖王诱引香在上方灵石区） */}
                 <div>
                   <div className="mb-2 flex items-baseline justify-between">
                     <p className="text-xs font-black text-[#8B2E24]">🧿 法宝铺</p>
-                    <p className="text-[9px] text-stone-400">关键时刻的神器，存仓库随时取用</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {(
@@ -559,7 +546,7 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                           desc: HASTE_TALISMAN.desc,
                           price: HASTE_TALISMAN.price,
                           held: materials[HASTE_TALISMAN.id] ?? 0,
-                          hint: '可在仓库法宝页直接激活',
+                          hint: '仓库激活 · 多张可叠加顺延',
                         },
                       ] as const
                     ).map((it) => {
@@ -590,14 +577,11 @@ export function ShopPanel({ open, onOpenChange }: ShopPanelProps) {
                           >
                             <GemIcon size={12} /> {it.price}
                           </button>
-                          <span className="text-[8px] leading-tight text-stone-400">{it.hint}</span>
+                          <span className="text-[9px] leading-tight text-stone-400">{it.hint}</span>
                         </div>
                       )
                     })}
                   </div>
-                  <p className="mt-1.5 text-center text-[10px] text-stone-400">
-                    🕸️ 缚妖网本场夜战收服 +{Math.round(CAPTURE_NET.bonus * 100)}% · 🧿 聚宝符可叠加顺延
-                  </p>
                 </div>
               </div>
             </ScrollArea>
