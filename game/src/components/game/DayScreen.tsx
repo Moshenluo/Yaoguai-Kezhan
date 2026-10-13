@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useGameStore, STAR_UP_COST, bossNightUnlocked, signInAvailable } from '@/game/store'
 import { sfx } from '@/game/audio'
@@ -20,7 +20,7 @@ import {
 } from '@/game/config'
 import { achievementProgress } from '@/game/store'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
-import { SCENE_COMPS, DECO_PIECE_CAP, nextPieceGate, sceneCap, sceneTierIndex, sceneTotalCap } from '@/game/scene-layers'
+import { SCENE_COMPS, DECO_PIECE_CAP, nextPieceGate, sceneCap, sceneTierIndex, sceneTotalCap, type SceneComp, type SceneCompTier } from '@/game/scene-layers'
 import type { GameSave } from '@/game/types'
 import { AnimNumber, ConfigIcon, GoldIcon, GemIcon, TicketIcon, YaoFigure } from './shared'
 import { FacilityPanel } from './panels/FacilityPanel'
@@ -53,6 +53,22 @@ const HUD_NAVS: { key: Extract<PanelKey, 'gather' | 'map'>; icon: string; label:
   { key: 'gather', icon: '/images/ui/nav-gather.png', label: '采集' },
   { key: 'map', icon: '/images/ui/nav-map.png', label: '地图' },
 ]
+
+/** 白天界面动效 keyframes（组件内 <style> 注入；yg- 前缀惯例） */
+const DAY_CSS = `
+@keyframes yg-gain-pop-kf {
+  0% { transform: translate(-50%, 0) scale(0.85); opacity: 0 }
+  15% { opacity: 1 }
+  100% { transform: translate(-50%, -30px) scale(1.12); opacity: 0 }
+}
+.yg-gain-pop {
+  position: absolute; left: 50%; top: -8px; z-index: 5;
+  animation: yg-gain-pop-kf 1.3s ease-out forwards;
+  color: #F5D77E; font-weight: 900; font-size: 12px; line-height: 1;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.85);
+  pointer-events: none; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+`
 
 const WORKER_LINES = [
   '客官里边请～',
@@ -132,6 +148,184 @@ interface WorkerSprite {
   x: number
   y: number
 }
+
+// ---------- 场景贴片（memo：挂机/飞币触发的 DayScreen 重渲染不再连坐 ~10 个 framer-motion 贴片子树） ----------
+
+interface ScenePieceData {
+  id: string
+  comp: SceneComp
+  pos: { x: number; y: number; s?: number }
+  f: boolean
+  tier: number
+  ghost: boolean
+  lv: number
+}
+
+interface ScenePieceViewProps {
+  piece: ScenePieceData
+  idx: number
+  dressing: boolean
+  selected: boolean
+  /** 皮肤覆盖后的目标档（父级已算好 src/wPct） */
+  tierDef: SceneCompTier
+  skinFilter: string
+  guideHighlight: boolean
+  onOpenFacility: (key: FacilityKey) => void
+  onPiecePointerDown: (id: string) => (e: React.PointerEvent<HTMLDivElement>) => void
+  onScaleHandleDown: (id: string) => (e: React.PointerEvent<HTMLSpanElement>) => void
+  scaleSel: (delta: number) => void
+  flipPiece: (id: string) => void
+  removePiece: (id: string) => void
+  onDeselect: () => void
+}
+
+const ScenePieceView = memo(function ScenePieceView({
+  piece,
+  idx,
+  dressing,
+  selected,
+  tierDef: t,
+  skinFilter,
+  guideHighlight,
+  onOpenFacility,
+  onPiecePointerDown,
+  onScaleHandleDown,
+  scaleSel,
+  flipPiece,
+  removePiece,
+  onDeselect,
+}: ScenePieceViewProps) {
+  const { id, comp, pos, f, lv } = piece
+  const scale = pos.s ?? 1
+  const label = comp.label
+  return (
+    <div
+      aria-label={`${label}${comp.facility ? '设施' : '装饰'}`}
+      role={!dressing && comp.facility ? 'button' : undefined}
+      onClick={
+        !dressing && comp.facility
+          ? () => {
+              sfx.play('click')
+              onOpenFacility(comp.key as FacilityKey)
+            }
+          : undefined
+      }
+      onPointerDown={onPiecePointerDown(id)}
+      className={cn(
+        'absolute touch-none',
+        dressing ? 'cursor-grab active:cursor-grabbing' : comp.facility ? 'cursor-pointer pointer-events-auto active:scale-[0.97] transition-transform' : 'pointer-events-none',
+        selected && 'z-30'
+      )}
+      style={{
+        left: `${pos.x}%`,
+        top: `${pos.y}%`,
+        width: `${t.wPct * scale}%`,
+        transform: 'translateX(-50%) translateY(-100%)',
+        zIndex: (dressing ? 10 : 5) + idx,
+      }}
+    >
+      {selected && (
+        <div
+          className="absolute -top-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-lg border border-[#E8B84B]/80 bg-[#2A1F14]/92 px-1.5 py-1 shadow-lg"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            onClick={() => scaleSel(-0.1)}
+            aria-label={`缩小${label}`}
+            className="flex h-5 w-5 items-center justify-center rounded bg-black/40 text-[12px] font-black text-[#FFE9B8]"
+          >
+            −
+          </button>
+          <span className="min-w-[30px] text-center text-[9px] font-bold tabular-nums text-[#C9A96B]">
+            {+scale.toFixed(2)}×
+          </span>
+          <button
+            type="button"
+            onClick={() => scaleSel(0.1)}
+            aria-label={`放大${label}`}
+            className="flex h-5 w-5 items-center justify-center rounded bg-black/40 text-[12px] font-black text-[#FFE9B8]"
+          >
+            ＋
+          </button>
+          <button
+            type="button"
+            onClick={() => flipPiece(id)}
+            aria-pressed={f}
+            aria-label={`翻转${label}`}
+            className={cn(
+              'flex h-5 w-5 items-center justify-center rounded text-[10px] font-black',
+              f ? 'bg-[#E8B84B]/80 text-[#2A1F14]' : 'bg-black/40 text-[#FFE9B8]'
+            )}
+          >
+            ⇋
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              sfx.play('click')
+              removePiece(id)
+              onDeselect()
+            }}
+            aria-label={`收回${label}`}
+            className="flex h-5 w-5 items-center justify-center rounded bg-[#6B4A1F]/80 text-[10px] font-black text-[#FFE9B8]"
+          >
+            ⇱
+          </button>
+          <button
+            type="button"
+            onClick={onDeselect}
+            aria-label="取消选择"
+            className="ml-0.5 flex h-5 w-5 items-center justify-center rounded bg-[#8B2E24]/80 text-[10px] font-black text-[#FFE9B8]"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+      {selected && <div className="absolute inset-0 rounded-lg ring-2 ring-[#E8B84B]/90 ring-offset-1 ring-offset-transparent" />}
+      <span
+        className="block w-full select-none"
+        style={{ transform: f ? 'scaleX(-1)' : undefined }}
+      >
+        <motion.img
+          src={t.src}
+          alt=""
+          aria-hidden
+          initial={{ y: -14, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="w-full"
+          style={{
+            filter: `${skinFilter === 'none' ? '' : `${skinFilter} `}drop-shadow(0 6px 8px rgba(60,40,20,0.35))`,
+          }}
+          draggable={false}
+        />
+      </span>
+      {/* 缩放角柄（装扮模式选中时出现，拖动等比缩放） */}
+      {selected && (
+        <span
+          onPointerDown={onScaleHandleDown(id)}
+          aria-label={`拖动缩放${label}`}
+          className="absolute -bottom-1.5 -right-1.5 z-30 flex h-6 w-6 touch-none cursor-nwse-resize items-center justify-center rounded-full border-2 border-[#E8B84B] bg-[#2A1F14] text-[10px] font-black leading-none text-[#F5D77E] shadow-lg"
+        >
+          ◢
+        </span>
+      )}
+      {/* 名牌：悬浮在建筑上方（不遮挡建筑本体） */}
+      {comp.facility && (
+        <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap">
+          <span className="day-hotspot-name">
+            {label}
+            <span className="day-hotspot-lv">{lv}</span>
+          </span>
+        </span>
+      )}
+      {guideHighlight && (
+        <div className="pointer-events-none absolute inset-0 z-[15] rounded-lg ring-2 ring-[#E8B84B] ring-offset-2 ring-offset-transparent" />
+      )}
+    </div>
+  )
+})
 
 /** 白天经营主界面：挂机收益 + 场景互动 + 功能入口 */
 export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps) {
@@ -479,6 +673,8 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
     },
     [selId, setPiecePos]
   )
+  /** 取消贴片选中（memo 子组件用，引用稳定） */
+  const deselectPiece = useCallback(() => setSelId(null), [])
 
   // ---------- 体力可视化（白天侧只读 owned：总览 chip / 预警横幅 / 小妖角标） ----------
   const staminaStats = useMemo(() => {
@@ -580,12 +776,32 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
   const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const resPillRef = useRef<HTMLButtonElement | null>(null)
   const flyTargetRef = useRef<{ x: number; y: number }>({ x: 11, y: 2.5 })
+  // 收益浮字：挂机每秒一跳的正增量在此累计，飞币落袋时合并弹出 +N（与 3 秒飞币节奏对齐）
+  const gainAccRef = useRef(0)
+  const gainSeq = useRef(0)
+  const [gainPop, setGainPop] = useState<{ id: number; amount: number } | null>(null)
+  const lastGoldRef = useRef(gold)
+  useEffect(() => {
+    const d = gold - lastGoldRef.current
+    lastGoldRef.current = gold
+    if (d > 0) gainAccRef.current += d
+  }, [gold])
+  useEffect(() => {
+    if (!gainPop) return
+    const t = setTimeout(() => setGainPop(null), 1350)
+    return () => clearTimeout(t)
+  }, [gainPop])
 
   const pulseGold = useCallback(() => {
     sfx.play('coin')
     setGoldPulse(true)
     if (pulseTimer.current) clearTimeout(pulseTimer.current)
     pulseTimer.current = setTimeout(() => setGoldPulse(false), 380)
+    const acc = gainAccRef.current
+    if (acc >= 1) {
+      gainAccRef.current = 0
+      setGainPop({ id: ++gainSeq.current, amount: Math.round(acc) })
+    }
   }, [])
 
   useEffect(() => {
@@ -639,6 +855,7 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
 
   return (
     <div className="day-stage relative h-full w-full overflow-hidden" ref={stageRef}>
+      <style>{DAY_CSS}</style>
       {/* ===== 全幅场景（地形底图 + 设施建筑贴片；地形缺失时回退整图） ===== */}
       <div className="absolute inset-0" aria-hidden={false}>
         <div className="absolute inset-0 bg-gradient-to-b from-[#FDF3DA] via-[#F5E6C4] to-[#E7CDA0]" />
@@ -665,140 +882,28 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
           />
         )}
 
-        {/* 设施/装饰贴片实例：底部中心锚点，Lv.3+ 换精致档；装扮模式可拖拽/缩放/翻转/收回 */}
-        {scenePieces.map(({ id, comp, pos, f, tier, ghost, lv }, idx) => {
-          const ovr = skinDef?.sceneOverrides?.[comp.key]
-          const t = ovr?.[tier as 0 | 1] ?? comp.tiers[tier as 0 | 1]
-          const scale = pos.s ?? 1
-          const label = comp.label
-          const selected = dressing && selId === id
+        {/* 设施/装饰贴片实例：底部中心锚点，Lv.3+ 换精致档；装扮模式可拖拽/缩放/翻转/收回（memo 子组件隔离重渲染） */}
+        {scenePieces.map((piece, idx) => {
+          const ovr = skinDef?.sceneOverrides?.[piece.comp.key]
+          const t = ovr?.[piece.tier as 0 | 1] ?? piece.comp.tiers[piece.tier as 0 | 1]
           return (
-            <div
-              key={id}
-              aria-label={`${label}${comp.facility ? '设施' : '装饰'}`}
-              role={!dressing && comp.facility ? 'button' : undefined}
-              onClick={
-                !dressing && comp.facility
-                  ? () => {
-                      sfx.play('click')
-                      openFacility(comp.key as Parameters<typeof openFacility>[0])
-                    }
-                  : undefined
-              }
-              onPointerDown={onPiecePointerDown(id)}
-              className={cn(
-                'absolute touch-none',
-                dressing ? 'cursor-grab active:cursor-grabbing' : comp.facility ? 'cursor-pointer pointer-events-auto active:scale-[0.97] transition-transform' : 'pointer-events-none',
-                selected && 'z-30'
-              )}
-              style={{
-                left: `${pos.x}%`,
-                top: `${pos.y}%`,
-                width: `${t.wPct * scale}%`,
-                transform: 'translateX(-50%) translateY(-100%)',
-                zIndex: (dressing ? 10 : 5) + idx,
-              }}
-            >
-              {selected && (
-                <div
-                  className="absolute -top-10 left-1/2 z-20 flex -translate-x-1/2 items-center gap-1 rounded-lg border border-[#E8B84B]/80 bg-[#2A1F14]/92 px-1.5 py-1 shadow-lg"
-                  onPointerDown={(e) => e.stopPropagation()}
-                >
-                  <button
-                    type="button"
-                    onClick={() => scaleSel(-0.1)}
-                    aria-label={`缩小${label}`}
-                    className="flex h-5 w-5 items-center justify-center rounded bg-black/40 text-[12px] font-black text-[#FFE9B8]"
-                  >
-                    −
-                  </button>
-                  <span className="min-w-[30px] text-center text-[9px] font-bold tabular-nums text-[#C9A96B]">
-                    {+scale.toFixed(2)}×
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => scaleSel(0.1)}
-                    aria-label={`放大${label}`}
-                    className="flex h-5 w-5 items-center justify-center rounded bg-black/40 text-[12px] font-black text-[#FFE9B8]"
-                  >
-                    ＋
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => flipPiece(id)}
-                    aria-pressed={f}
-                    aria-label={`翻转${label}`}
-                    className={cn(
-                      'flex h-5 w-5 items-center justify-center rounded text-[10px] font-black',
-                      f ? 'bg-[#E8B84B]/80 text-[#2A1F14]' : 'bg-black/40 text-[#FFE9B8]'
-                    )}
-                  >
-                    ⇋
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      sfx.play('click')
-                      removePiece(id)
-                      setSelId(null)
-                    }}
-                    aria-label={`收回${label}`}
-                    className="flex h-5 w-5 items-center justify-center rounded bg-[#6B4A1F]/80 text-[10px] font-black text-[#FFE9B8]"
-                  >
-                    ⇱
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelId(null)}
-                    aria-label="取消选择"
-                    className="ml-0.5 flex h-5 w-5 items-center justify-center rounded bg-[#8B2E24]/80 text-[10px] font-black text-[#FFE9B8]"
-                  >
-                    ✕
-                  </button>
-                </div>
-              )}
-              {selected && <div className="absolute inset-0 rounded-lg ring-2 ring-[#E8B84B]/90 ring-offset-1 ring-offset-transparent" />}
-              <span
-                className="block w-full select-none"
-                style={{ transform: f ? 'scaleX(-1)' : undefined }}
-              >
-                <motion.img
-                  src={t.src}
-                  alt=""
-                  aria-hidden
-                  initial={{ y: -14, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ duration: 0.5, ease: 'easeOut' }}
-                  className="w-full"
-                  style={{
-                    filter: `${skinFilter === 'none' ? '' : `${skinFilter} `}drop-shadow(0 6px 8px rgba(60,40,20,0.35))`,
-                  }}
-                  draggable={false}
-                />
-              </span>
-              {/* 缩放角柄（装扮模式选中时出现，拖动等比缩放） */}
-              {selected && (
-                <span
-                  onPointerDown={onScaleHandleDown(id)}
-                  aria-label={`拖动缩放${label}`}
-                  className="absolute -bottom-1.5 -right-1.5 z-30 flex h-6 w-6 touch-none cursor-nwse-resize items-center justify-center rounded-full border-2 border-[#E8B84B] bg-[#2A1F14] text-[10px] font-black leading-none text-[#F5D77E] shadow-lg"
-                >
-                  ◢
-                </span>
-              )}
-              {/* 名牌：悬浮在建筑上方（不遮挡建筑本体） */}
-              {comp.facility && (
-                <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-1 -translate-x-1/2 whitespace-nowrap">
-                  <span className="day-hotspot-name">
-                    {label}
-                    <span className="day-hotspot-lv">{lv}</span>
-                  </span>
-                </span>
-              )}
-              {guideStep === 1 && comp.key === 'guestRoom' && (
-                <div className="pointer-events-none absolute inset-0 z-[15] rounded-lg ring-2 ring-[#E8B84B] ring-offset-2 ring-offset-transparent" />
-              )}
-            </div>
+            <ScenePieceView
+              key={piece.id}
+              piece={piece}
+              idx={idx}
+              dressing={dressing}
+              selected={dressing && selId === piece.id}
+              tierDef={t}
+              skinFilter={skinFilter}
+              guideHighlight={guideStep === 1 && piece.comp.key === 'guestRoom'}
+              onOpenFacility={openFacility}
+              onPiecePointerDown={onPiecePointerDown}
+              onScaleHandleDown={onScaleHandleDown}
+              scaleSel={scaleSel}
+              flipPiece={flipPiece}
+              removePiece={removePiece}
+              onDeselect={deselectPiece}
+            />
           )
         })}
 
@@ -1256,10 +1361,16 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
             scale: { type: 'spring', stiffness: 420, damping: 16 },
             boxShadow: { duration: 0.32, ease: 'easeOut' },
           }}
-          className="day-res-pill shrink-0 gap-1.5"
+          className="day-res-pill relative shrink-0 gap-1.5"
         >
           <GoldIcon size={16} />
           <AnimNumber value={gold} className="text-[13px] font-bold tabular-nums text-[#FFE9B8]" />
+          {/* 收益入账浮字：飞币落袋时弹出本周期合并的 +N */}
+          {gainPop && (
+            <span key={gainPop.id} className="yg-gain-pop" aria-hidden>
+              +{gainPop.amount.toLocaleString()}
+            </span>
+          )}
           <span
             aria-hidden
             className={cn(
