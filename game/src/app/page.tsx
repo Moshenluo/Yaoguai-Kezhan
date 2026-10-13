@@ -11,6 +11,7 @@ import { useGameStore } from '@/game/store'
 import { onBootProgress, preloadBoot, preloadExtras, preloadNightAssets, preloadSkinPieces } from '@/game/preload'
 import { SCENE_COMPS } from '@/game/scene-layers'
 import type { BattleResult } from '@/game/types'
+import { NIGHT_PHASES, rollNightPhase } from '@/game/config'
 import type { BgmTrackName } from '@/game/audio'
 import { saveCloud, trackEvent } from '@/game/cloud'
 import { BgmPlayer } from '@/components/game/BgmPlayer'
@@ -34,6 +35,8 @@ type Transition = null | 'to-night' | 'to-day'
 export default function Home() {
   const [stage, setStage] = useState<Stage>('splash')
   const [transition, setTransition] = useState<Transition>(null)
+  /** 转场期预告夜相（与 NightScreen 引擎各自独立 roll，仅作氛围预告，数值以引擎为准） */
+  const [transitionPhase, setTransitionPhase] = useState<keyof typeof NIGHT_PHASES | null>(null)
   const [panel, setPanel] = useState<PanelKey | null>(null)
   const [settleOpen, setSettleOpen] = useState(false)
   const [pendingResult, setPendingResult] = useState<BattleResult | null>(null)
@@ -112,9 +115,13 @@ export default function Home() {
 
   // ---------- 昼夜切换（仪式感动画，普通夜/妖王夜共用） ----------
   const startNight = useCallback((target: NightStage) => {
-    preloadNightAssets() // 幂等：无论空闲预载是否已跑，点入夜都确保夜战素材就绪
+    // 幂等：无论空闲预载是否已跑，点入夜都确保夜战素材就绪；
+    // 顺带把全部已拥有妖灵立绘加急拉入缓存（布阵期任意换人不闪白）
+    const ownedIds = Object.keys(useGameStore.getState().owned)
+    preloadNightAssets(ownedIds)
     setPanel(null)
     setTransition('to-night')
+    setTransitionPhase(rollNightPhase(target === 'boss-night')) // 预告夜相（引擎另roll，纯氛围）
     setLastNightStage(target)
     trackEvent(target === 'boss-night' ? 'boss_night_start' : 'night_start', {
       level: useGameStore.getState().level,
@@ -123,7 +130,10 @@ export default function Home() {
       setStage(target)
       setBattleKey((k) => k + 1)
     }, 1400)
-    window.setTimeout(() => setTransition(null), 3000)
+    window.setTimeout(() => {
+      setTransition(null)
+      setTransitionPhase(null)
+    }, 3000)
   }, [])
 
   const goNight = useCallback(() => startNight('night'), [startNight])
@@ -235,7 +245,7 @@ export default function Home() {
 
         {/* 昼夜切换覆盖动画 */}
         <AnimatePresence>
-          {transition && <DayNightTransition kind={transition} />}
+          {transition && <DayNightTransition kind={transition} nightPhase={transitionPhase} />}
         </AnimatePresence>
       </div>
 
@@ -456,8 +466,11 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
 
 // ============ 昼夜切换过渡 ============
 
-function DayNightTransition({ kind }: { kind: 'to-night' | 'to-day' }) {
+function DayNightTransition({ kind, nightPhase }: { kind: 'to-night' | 'to-day'; nightPhase: keyof typeof NIGHT_PHASES | null }) {
   const isNight = kind === 'to-night'
+  const phase = isNight && nightPhase && nightPhase !== 'calm' ? NIGHT_PHASES[nightPhase] : null
+  // 血月夜转场底色染红，氛围前置
+  const tint = phase?.id === 'blood' ? 'rgba(127,29,29,0.28)' : phase?.id === 'waxing' ? 'rgba(217,119,6,0.12)' : null
   return (
     <motion.div
       // 纯视觉过场：绝不拦截点击（framer exit 偶发残留 DOM 时也不挡 UI）
@@ -474,6 +487,8 @@ function DayNightTransition({ kind }: { kind: 'to-night' | 'to-day' }) {
             : 'absolute inset-0 bg-gradient-to-b from-[#c9a227]/80 via-[#e6dcc8] to-[#d2c4a8]'
         }
       />
+      {/* 夜相氛围染色（血月红 / 盈月金） */}
+      {tint && <div className="absolute inset-0" style={{ background: tint }} aria-hidden />}
       {/* 日/月升起点缀 */}
       <motion.div
         className="relative"
@@ -485,6 +500,24 @@ function DayNightTransition({ kind }: { kind: 'to-night' | 'to-day' }) {
           icon={isNight ? '/images/ui/status-moon.png' : '/images/ui/ui-sun.png'}
           size={96}
         />
+        {/* 夜相宣告牌（非平常夜）：月升时同步预告，衔接引擎横幅 */}
+        {phase && (
+          <motion.div
+            className="absolute left-1/2 top-full mt-3 -translate-x-1/2 whitespace-nowrap rounded-full border px-3 py-1 text-center"
+            style={{
+              borderColor: phase.id === 'blood' ? 'rgba(248,113,113,0.4)' : 'rgba(217,119,6,0.4)',
+              background: 'rgba(10,13,24,0.72)',
+            }}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9, duration: 0.5 }}
+          >
+            <span className={`font-display text-xs font-black tracking-[0.3em] ${phase.id === 'blood' ? 'text-rose-300' : 'text-amber-300'}`}>
+              {phase.name}
+            </span>
+            <span className="ml-2 text-[10px] text-[#E6DCC8]/75">{phase.desc}</span>
+          </motion.div>
+        )}
       </motion.div>
       <motion.p
         className={

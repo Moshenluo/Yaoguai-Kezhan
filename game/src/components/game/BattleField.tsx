@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import { BOSS_SKILL_TEXT, type BattleEngine } from '@/game/engine'
 import type { BattleDefender, BattleEnemy, BattleState, FloatText } from '@/game/types'
 import { CAPTURE_HP_THRESHOLD, ELITE_AFFIXES, SLOTS, regionDef, slotUnlockAt } from '@/game/config'
@@ -137,7 +137,8 @@ function safeCoord(v: number, fallback: number): number {
   return Number.isFinite(v) ? v : fallback
 }
 
-function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, onRelease, skinFilter }: EnemyViewProps) {
+/** 敌人单元：memo 化——对象引用未变（未移动/未受伤）时跳过重渲染，10fps emit 下大幅省帧 */
+const EnemyView = memo(function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, onRelease, skinFilter }: EnemyViewProps) {
   const [imgFailed, setImgFailed] = useState(false)
 
   // 传说妖王（妖王夜第 5 波 BOSS）：专属强化渲染
@@ -325,7 +326,16 @@ function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, on
       )}
     </div>
   )
-}
+}, (prev, next) => {
+  // 对象引用未变 + 交互态未变 → 跳过；hp/x/状态变化必换引用（引擎 emit 前已重建）
+  return (
+    prev.enemy === next.enemy &&
+    prev.capturable === next.capturable &&
+    prev.selected === next.selected &&
+    prev.hitTick === next.hitTick &&
+    prev.skinFilter === next.skinFilter
+  )
+})
 
 // ---------- 防守妖怪 ----------
 
@@ -338,7 +348,8 @@ interface DefenderViewProps {
   showLabel: boolean
 }
 
-function DefenderView({ defender: d, slotY, now, floatTexts, showLabel }: DefenderViewProps) {
+/** 防守妖单元：memo 化——对象引用未变（未受伤/未放技能）时跳过重渲染 */
+const DefenderView = memo(function DefenderView({ defender: d, slotY, now, floatTexts, showLabel }: DefenderViewProps) {
   const size = d.star >= 4 ? 52 : d.star >= 2 ? 46 : 42
   const shielded = !d.dead && d.shieldUntil > now
   // 技能释放：最近 0.55s 内出现与本防守者同 x 坐标的 skill 浮字
@@ -390,7 +401,14 @@ function DefenderView({ defender: d, slotY, now, floatTexts, showLabel }: Defend
       )}
     </div>
   )
-}
+}, (prev, next) => {
+  return (
+    prev.defender === next.defender &&
+    prev.slotY === next.slotY &&
+    prev.floatTexts === next.floatTexts &&
+    prev.showLabel === next.showLabel
+  )
+})
 
 // ---------- 主组件 ----------
 
@@ -428,18 +446,33 @@ export function BattleField({
     if (state.killCount > prevKills.current) sfx.play('kill')
     prevKills.current = state.killCount
   }, [state.killCount])
+  const now = state.elapsed
+
+  // 防守妖只关心 skill 浮字（其余浮字变化不触发其重渲染——配合 DefenderView memo）
+  // 用 ref 保持引用稳定：skill 集合未变时沿用旧数组
+  const skillFloatRef = useRef<{ src: FloatText[]; out: FloatText[] }>({ src: [], out: [] })
+  const skillFloatTexts = (() => {
+    const filtered = state.floatTexts.filter((f) => f.type === 'skill')
+    const prev = skillFloatRef.current
+    const same =
+      prev.src === state.floatTexts ||
+      (prev.out.length === filtered.length && prev.out.every((f, i) => f === filtered[i]))
+    if (!same) {
+      skillFloatRef.current = { src: state.floatTexts, out: filtered }
+      return filtered
+    }
+    return prev.out
+  })()
+
   // 技能：新技能浮字出现时嗖声（浮字 id 单调递增，取最新的 skill 类型）
   const prevSkillId = useRef(0)
   useEffect(() => {
-    const skills = state.floatTexts.filter((f) => f.type === 'skill')
-    const newest = skills.length > 0 ? skills[skills.length - 1] : null
+    const newest = skillFloatTexts.length > 0 ? skillFloatTexts[skillFloatTexts.length - 1] : null
     if (newest && newest.id > prevSkillId.current) {
       prevSkillId.current = newest.id
       sfx.play('skill')
     }
-  }, [state.floatTexts])
-
-  const now = state.elapsed
+  }, [skillFloatTexts])
   const isPrep = state.phase === 'prep'
 
   return (
@@ -628,7 +661,7 @@ export function BattleField({
           defender={d}
           slotY={SLOTS[d.slot]?.y ?? SLOTS[0].y}
           now={now}
-          floatTexts={state.floatTexts}
+          floatTexts={skillFloatTexts}
           showLabel={isPrep}
         />
       ))}

@@ -177,8 +177,11 @@ const YAOGUAI_SPRITES = [
 ].map((n) => `/images/yaoguai/${n}.png`)
 
 /** night 批：入夜前必备 —— 夜战地图、夜色底图、妖怪立绘、战斗 UI 图标 */
-export function preloadNightAssets(): void {
+export function preloadNightAssets(lineupIds?: string[]): void {
+  // 当前阵容立绘加急：extras 批串行慢补大概率来不及，首入夜战会闪白
+  const lineupSrcs = (lineupIds ?? []).map((id) => `/images/yaoguai/${id}.png`)
   void preloadImages([
+    ...lineupSrcs,
     '/images/scene/scene-battle.jpg',
     '/images/scene/scene-night.jpg',
     '/images/enemy/enemy-1.png',
