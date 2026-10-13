@@ -9,6 +9,7 @@ import type {
   NightEvent,
   SkillEffect,
 } from './types'
+import type { NightPhase } from './config'
 import {
   AD_CAPTURE_BONUS,
   BOSS_NIGHT,
@@ -26,6 +27,10 @@ import {
   counterDamageMult,
   elementRelation,
   pickNightEvents,
+  ELITE_AFFIXES,
+  rollEliteAffix,
+  NIGHT_PHASES,
+  rollNightPhase,
   facilityAbilityActive,
   facilityAbilityEnhanced,
   levelScale,
@@ -74,6 +79,8 @@ export interface EngineOptions {
   maxSlots?: number
   /** 属性石强化等级（克制伤害 +5%/级） */
   elementBoost?: Record<Element, number>
+  /** 本夜夜相（入场由 NightScreen roll；缺省按平常夜） */
+  nightPhase?: 'calm' | 'waxing' | 'waning' | 'blood'
 }
 
 /** 妖王技能飘字文案（BattleField 依此渲染专属紫/红配色浮字） */
@@ -147,11 +154,16 @@ export class BattleEngine {
   private springTimer = 0
   /** 夜战备战增益（肉鸽三选一，进入战斗前由 NightScreen 选择后注入） */
   private nightBuff: NightBuffEffect = {}
+  /** 同名增益获得计数（第 3 张觉醒：额外再灌一份同效果） */
+  private buffPickCounts: Record<string, number> = {}
+  /** 本夜夜相 modifier（每夜随机：影响敌攻/金币/精英概率） */
+  private phase: NightPhase
 
   state: BattleState
 
   constructor(opts: EngineOptions) {
     this.opts = opts
+    this.phase = NIGHT_PHASES[opts.nightPhase ?? rollNightPhase(!!opts.bossNight)]
     this.state = {
       phase: 'prep',
       wave: 1,
@@ -164,6 +176,7 @@ export class BattleEngine {
       prepCountdown: 12,
       killCount: 0,
       waveGold: 0,
+      nightPhase: this.phase.id,
       // 妖王夜不出妖雾彩蛋
       fogTriggered: opts.bossNight ? false : Math.random() < 0.28,
       fogYaoguai: undefined,
@@ -179,8 +192,23 @@ export class BattleEngine {
     this.refreshDefenders()
   }
 
-  /** 注入备战增益（客栈耐久乘区按比例放大当前耐久）；重复注入覆盖 */
-  applyBuff(effect: NightBuffEffect) {
+  /**
+ * 注入备战增益（乘区叠加：同类效果相乘而非覆盖；回复/掉落类相加）。
+ * 传 buffId/buffName 时计入觉醒：同名第 3 张额外再灌一份同效果并飘字。
+ */
+  applyBuff(effect: NightBuffEffect, buffId?: string, buffName?: string) {
+    if (buffId) {
+      this.buffPickCounts[buffId] = (this.buffPickCounts[buffId] ?? 0) + 1
+      if (this.buffPickCounts[buffId] === 3) {
+        // 觉醒：三张同名聚气成丹，额外再吃一份完整效果
+        this.injectBuff(effect)
+        if (buffName) this.float(50, 30, `✦ ${buffName}·觉醒！`, 'skill')
+      }
+    }
+    this.injectBuff(effect)
+  }
+
+  private injectBuff(effect: NightBuffEffect) {
     if (effect.innHpMul && effect.innHpMul !== 1) {
       const prevMax = this.state.innMaxHp
       this.state.innMaxHp = Math.round(this.state.innMaxHp * effect.innHpMul)
@@ -189,7 +217,18 @@ export class BattleEngine {
         this.state.innHp + (this.state.innMaxHp - prevMax)
       )
     }
-    this.nightBuff = { ...this.nightBuff, ...effect }
+    const nb = this.nightBuff
+    this.nightBuff = {
+      // 乘区叠加（后选的增益与已累积效果复合，而不是覆盖）
+      atkMul: (nb.atkMul ?? 1) * (effect.atkMul ?? 1),
+      atkSpeedMul: (nb.atkSpeedMul ?? 1) * (effect.atkSpeedMul ?? 1),
+      cdSpeedMul: (nb.cdSpeedMul ?? 1) * (effect.cdSpeedMul ?? 1),
+      goldMul: (nb.goldMul ?? 1) * (effect.goldMul ?? 1),
+      innHpMul: (nb.innHpMul ?? 1) * (effect.innHpMul ?? 1),
+      // 加法叠加
+      regenPct: (nb.regenPct ?? 0) + (effect.regenPct ?? 0),
+      dropBonus: (nb.dropBonus ?? 0) + (effect.dropBonus ?? 0),
+    }
     this.emit()
   }
 
@@ -202,7 +241,7 @@ export class BattleEngine {
     switch (ev.kind) {
       case 'buff':
       case 'deal':
-        if (ev.effect) this.applyBuff(ev.effect)
+        if (ev.effect) this.applyBuff(ev.effect, ev.buffId, ev.buffName)
         if (ev.kind === 'deal' && ev.cost) {
           this.state.waveGold = Math.max(0, this.state.waveGold - ev.cost)
           this.float(50, 26, `-${ev.cost}金`, 'gold')
@@ -242,6 +281,23 @@ export class BattleEngine {
     const waveName = this.opts.bossNight ? `妖王亲卫 第 ${this.state.wave} 波` : `第 ${this.state.wave} 波`
     this.float(50, 34, `${waveName}来袭前·调整布阵`, 'skill')
     this.emit()
+  }
+
+  /** 妖潮预览：当前波敌人成分（布阵博弈用；精英词缀保持临场惊喜不预览） */
+  peekWave(): { minions: number; brutes: number; sprites: number; hasBoss: boolean; elitePct: number } {
+    const wave = this.waves[this.state.wave - 1]
+    const reg = regionDef(this.opts.region ?? 1)
+    const eliteChance = Math.min(
+      0.95,
+      wave.eliteChance + this.opts.rareBonus + (this.opts.bossNight ? 0 : reg.eliteBonus) + this.phase.eliteBonus
+    )
+    return {
+      minions: wave.minions,
+      brutes: wave.brutes,
+      sprites: wave.sprites,
+      hasBoss: !!wave.boss,
+      elitePct: this.state.wave >= 3 ? eliteChance : 0,
+    }
   }
 
   // ---------- 外部商店接口 ----------
@@ -458,7 +514,8 @@ export class BattleEngine {
     // 妖王夜：敌军整体强化（叠加 levelScale 与波次倍率）；区域二：水墨系野妖更强（妖王夜固定区域一）
     const reg = regionDef(this.opts.region ?? 1)
     const nightHpMult = this.opts.bossNight ? BOSS_NIGHT.hpScale : reg.hpScale
-    const nightAtkMult = this.opts.bossNight ? BOSS_NIGHT.atkScale : reg.atkScale
+    // 夜相 modifier：敌军攻击 / 精英出没概率（金币乘区在 goldForKill 调用处）
+    const nightAtkMult = (this.opts.bossNight ? BOSS_NIGHT.atkScale : reg.atkScale) * this.phase.enemyAtkMult
     this.spawnQueue = []
     this.spawnTimer = 0
     this.waveEliteSpawned = false
@@ -512,7 +569,7 @@ export class BattleEngine {
     }
 
     // 精英妖怪（第3/4/5波概率刷新，可捕捉；妖王夜照常；区域二/三刷新率更高；水墨系新妖仅区域二池）
-    const eliteChance = wave.eliteChance + this.opts.rareBonus + (this.opts.bossNight ? 0 : reg.eliteBonus)
+    const eliteChance = wave.eliteChance + this.opts.rareBonus + (this.opts.bossNight ? 0 : reg.eliteBonus) + this.phase.eliteBonus
     if (waveIdx >= 2 && Math.random() < eliteChance) {
       this.spawnQueue.push(this.makeElite(pickWaveEliteId(this.opts.region ?? 1), delay + 1.2, wave.hpScale * nightHpMult))
       this.waveEliteSpawned = true
@@ -553,12 +610,18 @@ export class BattleEngine {
   private makeElite(yaoguaiId: string, delay: number, hpScale: number, prefix?: string, boss = false): BattleEnemy {
     const def = YAOGUAI_MAP[yaoguaiId]
     const scale = levelScale(this.opts.level)
-    // 妖王夜：精英怪攻击也吃整体强化（hpScale 由调用方已乘）
-    const nightAtkMult = this.opts.bossNight ? BOSS_NIGHT.atkScale : 1
+    // 妖王夜：精英怪攻击也吃整体强化（hpScale 由调用方已乘）；夜相 modifier 同样生效
+    const nightAtkMult = (this.opts.bossNight ? BOSS_NIGHT.atkScale : 1) * this.phase.enemyAtkMult
     const hp = Math.round(def.hp * 1.5 * hpScale * scale.hp)
     // 野性难驯（V1.2.1）：稀有精英有概率桀骜不驯，本夜无法收服只能放归
     // （妖雾彩蛋是限时福利不参与；传说妖王另有专属保底公式不受影响）
     const wild = def.grade === 'rare' && prefix !== '妖雾' && Math.random() < RARE_WILD_RATE
+    // 精英词缀（V2.0 反背板）：普通精英 70% 概率携带；妖雾福利怪与妖王 BOSS 不带
+    const affix = !prefix && !boss ? rollEliteAffix() : undefined
+    if (affix) {
+      const a = ELITE_AFFIXES[affix]
+      this.float(8, 44, `词缀·${a.name}：${a.desc}`, 'skill')
+    }
     return {
       uid: uid('e'),
       kind: `elite:${yaoguaiId}`,
@@ -568,7 +631,8 @@ export class BattleEngine {
       hp,
       maxHp: hp,
       atk: Math.round(def.atk * (boss ? 0.85 : 1.1) * scale.atk * nightAtkMult),
-      speed: boss ? 2.6 : 4.6,
+      speed: (boss ? 2.6 : 4.6) * (affix === 'swift' ? 1.4 : 1),
+      affix,
       size: boss ? 74 : 64,
       x: -6,
       elite: true,
@@ -714,7 +778,7 @@ export class BattleEngine {
       }
       if (e.protectedFlag) continue
 
-      const stunned = e.stunnedUntil > now
+      const stunned = e.stunnedUntil > now && e.affix !== 'stone'
       const charmed = e.charmedUntil > now
 
       // 魅惑结束爆发伤害
@@ -728,10 +792,17 @@ export class BattleEngine {
       if (!stunned && !charmed) {
         if (target && Math.abs(target.x - e.x) <= CELL * 1.1) {
           e.attackTimer += dt
-          const interval = 1.5
+          // 精英词缀·狂暴：生命过半后攻速大幅提升（间隔缩短 1/3）
+          const interval = 1.5 * (e.affix === 'rampage' && e.hp / e.maxHp < 0.5 ? 0.67 : 1)
           if (e.attackTimer >= interval) {
             e.attackTimer = 0
-            this.damageDefender(target, Math.round(e.atk * 0.7), e)
+            const dealt = Math.round(e.atk * 0.7)
+            this.damageDefender(target, dealt, e)
+            // 精英词缀·嗜血：攻击守卫回复等量生命
+            if (e.affix === 'vampire') {
+              e.hp = Math.min(e.maxHp, e.hp + dealt)
+              this.float(e.x, e.lane - 6, `嗜血+${dealt}`, 'heal')
+            }
           }
         } else if (e.x >= INN_X) {
           e.attackTimer += dt
@@ -1211,6 +1282,8 @@ export class BattleEngine {
     const now = this.state.elapsed
     let final = dmg
     if (e.markedUntil > now) final *= 1 + e.markBonus
+    // 精英词缀·铁壁：受伤减免 45%
+    if (e.affix === 'bulwark') final *= 0.55
     // ---- 属性克制：克 +30%（属性石每级+5%）；被克 -20% ----
     const rel = attacker ? elementRelation(attacker.element, e.element) : 'none'
     if (rel !== 'none') {
@@ -1232,7 +1305,7 @@ export class BattleEngine {
       e.hp = 0
       e.dead = true
       this.state.killCount += 1
-      const gold = Math.round(this.goldForKill(e) * (this.nightBuff.goldMul ?? 1))
+      const gold = Math.round(this.goldForKill(e) * (this.nightBuff.goldMul ?? 1) * this.phase.goldMult)
       this.state.waveGold += gold
       this.float(e.x, e.lane, `+${gold}金`, 'gold')
       // 击杀素材掉落：精英妖丹 + 野妖随机建材
@@ -1256,6 +1329,41 @@ export class BattleEngine {
       // 妖力池 Lv.3 妖力涌动：击杀者 5 秒攻速 +30%（Lv.5 45%）
       if (attacker && facilityAbilityActive(this.opts.facilities, 'powerPool')) {
         attacker.atkSpeedBuffUntil = now + 5
+      }
+      // 精英词缀·分裂：死亡时原地分裂两只残血小妖（不延迟波次判定，正常入队列战斗）
+      if (e.affix === 'fission' && !e.kind.startsWith('boss:')) {
+        const base = ENEMY_TYPES.minion
+        for (let i = 0; i < 2; i++) {
+          this.state.enemies.push({
+            uid: uid('e'),
+            kind: base.name,
+            name: `分裂小妖`,
+            img: base.img,
+            element: e.element,
+            hp: Math.round(e.maxHp * 0.12),
+            maxHp: Math.round(e.maxHp * 0.12),
+            atk: Math.round(e.atk * 0.35),
+            speed: base.speed,
+            x: e.x - 2 - i * 3,
+            size: base.size,
+            elite: false,
+            attackTimer: 0,
+            stunnedUntil: -1,
+            slowedUntil: -1,
+            slowFactor: 1,
+            charmedUntil: -1,
+            markedUntil: -1,
+            markBonus: 0,
+            burningUntil: -1,
+            burningDps: 0,
+            dead: false,
+            protectedFlag: false,
+            captureFailCount: 0,
+            lane: e.lane,
+            spawnDelay: 0,
+          })
+        }
+        this.float(e.x, e.lane - 8, '分裂！', 'skill')
       }
     }
   }

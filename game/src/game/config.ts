@@ -1,5 +1,5 @@
 import type { SceneComp, SceneCompTier } from './scene-layers'
-import type { Element, GameSave, InnFacilities, NightBuffEffect, NightEvent, NightRole } from './types'
+import type { Element, EliteAffixId, GameSave, InnFacilities, NightBuffEffect, NightEvent, NightRole } from './types'
 
 // ============ 妖怪客栈 · 数值配置 ============
 
@@ -854,7 +854,7 @@ export function pickNightEvents(level: number, n = 3): NightEvent[] {
   const dealCost = Math.round(DEAL_COST_PER_LEVEL * (1 + (level - 1) * 0.35))
   const gift = pickNightBuffs(1)[0]
   const out: NightEvent[] = [
-    { id: `gift-${gift.id}`, name: gift.name, desc: gift.desc, icon: gift.icon, kind: 'buff', effect: gift.effect },
+    { id: `gift-${gift.id}`, name: gift.name, desc: gift.desc, icon: gift.icon, kind: 'buff', effect: gift.effect, buffId: gift.id, buffName: gift.name },
   ]
   const others = NIGHT_EVENTS.filter((e) => e.kind !== 'buff')
   while (out.length < n) {
@@ -862,12 +862,67 @@ export function pickNightEvents(level: number, n = 3): NightEvent[] {
     if (out.some((o) => o.id === e.id)) continue
     if (e.kind === 'deal') {
       const b = pickNightBuffs(1)[0]
-      out.push({ ...e, cost: dealCost, effect: b.effect, desc: `花金币换「${b.name}」：${b.desc}` })
+      out.push({ ...e, cost: dealCost, effect: b.effect, buffId: b.id, buffName: b.name, desc: `花金币换「${b.name}」：${b.desc}` })
     } else {
       out.push({ ...e })
     }
   }
   return out
+}
+
+// ============ 精英词缀（V2.0 反背板：精英怪随机携带） ============
+
+export const ELITE_AFFIXES: Record<EliteAffixId, { name: string; desc: string; color: string }> = {
+  swift: { name: '迅捷', desc: '移动速度 +40%', color: '#7FC9FF' },
+  bulwark: { name: '铁壁', desc: '受到的伤害降低 45%', color: '#B0A6C8' },
+  vampire: { name: '嗜血', desc: '攻击守卫时回复等量生命', color: '#E07A6B' },
+  stone: { name: '磐石', desc: '免疫眩晕', color: '#C8B08A' },
+  fission: { name: '分裂', desc: '死亡时分裂出两只残血小妖', color: '#9FD98F' },
+  rampage: { name: '狂暴', desc: '生命过半后攻速大幅提升', color: '#F0A24B' },
+}
+
+const ELITE_AFFIX_IDS = Object.keys(ELITE_AFFIXES) as EliteAffixId[]
+
+/** 精英词缀随机抽取（70% 概率携带；妖雾福利怪与妖王不带） */
+export function rollEliteAffix(): EliteAffixId | undefined {
+  if (Math.random() >= 0.7) return undefined
+  return ELITE_AFFIX_IDS[Math.floor(Math.random() * ELITE_AFFIX_IDS.length)]
+}
+
+// ============ 夜相（每夜随机全局 modifier：让"今晚"和"昨晚"不同） ============
+
+export interface NightPhase {
+  id: 'calm' | 'waxing' | 'waning' | 'blood'
+  name: string
+  desc: string
+  /** 敌军攻击力乘区 */
+  enemyAtkMult: number
+  /** 击杀金币乘区 */
+  goldMult: number
+  /** 精英刷新概率加成（绝对值） */
+  eliteBonus: number
+  /** 抽取权重 */
+  weight: number
+}
+
+export const NIGHT_PHASES: Record<NightPhase['id'], NightPhase> = {
+  calm: { id: 'calm', name: '平常夜', desc: '夜色平稳，宜守店', enemyAtkMult: 1, goldMult: 1, eliteBonus: 0, weight: 52 },
+  waxing: { id: 'waxing', name: '盈月夜', desc: '月满财旺：击杀金币 +15%', enemyAtkMult: 1, goldMult: 1.15, eliteBonus: 0, weight: 24 },
+  waning: { id: 'waning', name: '朔月夜', desc: '妖气萎靡：敌军攻击 -10%，但金币 -10%', enemyAtkMult: 0.9, goldMult: 0.9, eliteBonus: 0, weight: 14 },
+  blood: { id: 'blood', name: '血月夜', desc: '血月当空：敌军攻击 +15%、金币 +25%、精英出没更勤', enemyAtkMult: 1.15, goldMult: 1.25, eliteBonus: 0.1, weight: 10 },
+}
+
+/** 夜相抽取：妖王夜不出朔月（弱化项），血月权重翻倍 */
+export function rollNightPhase(bossNight: boolean): NightPhase['id'] {
+  const entries = Object.values(NIGHT_PHASES).filter((p) => !(bossNight && p.id === 'waning'))
+  let total = 0
+  for (const p of entries) total += p.id === 'blood' && bossNight ? p.weight * 2 : p.weight
+  let roll = Math.random() * total
+  for (const p of entries) {
+    roll -= p.id === 'blood' && bossNight ? p.weight * 2 : p.weight
+    if (roll <= 0) return p.id
+  }
+  return 'calm'
 }
 
 // ============ 七日目标（每日事件计数驱动的周链） ============

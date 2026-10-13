@@ -342,11 +342,16 @@ export interface BattleEnemy {
   captureFailCount: number
   /** 野性难驯（稀有精英概率生成）：本夜无法收服，只能放归 */
   uncapturable?: boolean
+  /** 精英词缀（V2.0 反背板：精英怪随机携带，普通怪/妖雾/妖王不带） */
+  affix?: EliteAffixId
   /** 纵向车道位置（渲染用，0-100） */
   lane: number
   /** 出场延迟（秒） */
   spawnDelay: number
 }
+
+/** 精英词缀 id（池见 config.ELITE_AFFIXES） */
+export type EliteAffixId = 'swift' | 'bulwark' | 'vampire' | 'stone' | 'fission' | 'rampage'
 
 export interface FloatText {
   id: number
@@ -395,6 +400,10 @@ export interface NightEvent {
   cost?: number
   /** buff/deal：注入的增益效果 */
   effect?: NightBuffEffect
+  /** buff/deal：对应底层增益 id（觉醒计数用，3 张同名觉醒） */
+  buffId?: string
+  /** buff/deal：增益名（觉醒飘字用） */
+  buffName?: string
   /** rest/curse：客栈耐久变化比例（+修复 / -受损） */
   innHpPct?: number
   /** rest：全体守卫回血比例 */
@@ -409,6 +418,8 @@ export interface BattleState {
   totalWaves: number
   /** 波间事件三选一（phase='interlude' 时非空，选完清除） */
   eventOffer?: NightEvent[]
+  /** 本夜夜相（入场随机全局 modifier，池见 config.NIGHT_PHASES） */
+  nightPhase: 'calm' | 'waxing' | 'waning' | 'blood'
   innHp: number
   innMaxHp: number
   enemies: BattleEnemy[]

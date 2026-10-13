@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { BOSS_SKILL_TEXT, type BattleEngine } from '@/game/engine'
 import type { BattleDefender, BattleEnemy, BattleState, FloatText } from '@/game/types'
-import { CAPTURE_HP_THRESHOLD, SLOTS, regionDef, slotUnlockAt } from '@/game/config'
+import { CAPTURE_HP_THRESHOLD, ELITE_AFFIXES, SLOTS, regionDef, slotUnlockAt } from '@/game/config'
 import { sfx } from '@/game/audio'
 import { HpBar, YaoFigure, ConfigIcon } from './shared'
 import { ElementBadge } from './ElementBadge'
@@ -172,6 +172,14 @@ function EnemyView({ enemy: e, now, capturable, selected, hitTick, onCapture, on
                 : 'bg-black/55 text-amber-200'
           )}
         >
+          {e.affix && (
+            <span
+              className="ml-1 inline-block rounded px-1 align-middle text-[9px] font-bold"
+              style={{ color: ELITE_AFFIXES[e.affix].color, background: 'rgba(0,0,0,0.45)' }}
+            >
+              {ELITE_AFFIXES[e.affix].name}
+            </span>
+          )}
           {e.name}
           {e.uncapturable && (
             <span className="ml-0.5 inline-flex align-middle">
@@ -702,6 +710,21 @@ export function BattleField({
               {Math.ceil(Math.max(0, state.prepCountdown))}
             </div>
             <div className="text-[9px] text-[#5C3A24]/75">下方调整布阵 · 光圈点击上阵</div>
+            {/* 妖潮预览：下一波敌人成分（精英词缀保持临场惊喜） */}
+            {(() => {
+              const pk = engine.peekWave()
+              const parts: string[] = []
+              if (pk.minions) parts.push(`小妖×${pk.minions}`)
+              if (pk.brutes) parts.push(`山怪×${pk.brutes}`)
+              if (pk.sprites) parts.push(`精怪×${pk.sprites}`)
+              if (pk.elitePct > 0) parts.push(`⚠精英 ${Math.round(pk.elitePct * 100)}%`)
+              if (pk.hasBoss) parts.push('👹压阵')
+              return (
+                <div className="mt-1 border-t border-[#5C3A24]/15 pt-1 text-[9px] font-bold text-[#5C3A24]/85">
+                  妖潮 · {parts.join(' ')}
+                </div>
+              )
+            })()}
           </div>
         </div>
       )}

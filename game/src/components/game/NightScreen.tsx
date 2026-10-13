@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { AnimatePresence, motion } from 'framer-motion'
 import { BattleEngine, type LineupEntry } from '@/game/engine'
 import type { BattleEnemy, BattleResult } from '@/game/types'
-import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, PITY_ATTEMPTS, SLOTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, pickNightBuffs, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
+import { ATTEMPT_BONUS_STEP, BOSS_NIGHT, BOSS_NIGHT_WAVES, BOSS_WAVE_STAMINA_COST, CAPTURE_GEM_COST, CAPTURE_HP_THRESHOLD, CAPTURE_NET, NIGHT_PHASES, PITY_ATTEMPTS, SLOTS, VICTORY_GOLD_PER_LEVEL, WAVES, WAVE_STAMINA_COST, battleExpGain, currentBossId, levelCapForStar, maxSlotsForInn, pickNightBuffs, regionDef, slotUnlockAt, staminaTier, victoryGems } from '@/game/config'
 import type { NightBuff } from '@/game/config'
 import type { NightEvent } from '@/game/types'
 import { sfx } from '@/game/audio'
@@ -132,6 +132,10 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
     })
   }
   const engine = engineRef.current
+  // dev 调试口：仅开发构建暴露引擎实例（线上静态导出为 production，不含此行效果）
+  if (process.env.NODE_ENV === 'development') {
+    ;(window as unknown as Record<string, unknown>).__nightEngine = engine
+  }
   const state = useSyncExternalStore(engine.subscribe, engine.getSnapshot)
 
   // ---- store 订阅（派生数据仍以 getState 读取，避免每帧重算） ----
@@ -158,6 +162,13 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   const [bossBannerVisible, setBossBannerVisible] = useState(bossNight)
   /** 移驻横幅（区域二/三入场 3 秒） */
   const [regionBannerVisible, setRegionBannerVisible] = useState(!bossNight && region !== 1)
+  /** 夜相横幅（非平常夜入场 3.2 秒预告全局 modifier） */
+  const [phaseBannerVisible, setPhaseBannerVisible] = useState(engine.state.nightPhase !== 'calm')
+  useEffect(() => {
+    if (!phaseBannerVisible) return
+    const t = setTimeout(() => setPhaseBannerVisible(false), 3200)
+    return () => clearTimeout(t)
+  }, [phaseBannerVisible])
   const pausedByDialogRef = useRef(false)
 
   // ---- 备战增益三选一（肉鸽钩子）：prep 阶段弹出，选一注入引擎；广告可换一批一次 ----
@@ -165,7 +176,14 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   const [buffChosen, setBuffChosen] = useState(false)
   const [buffRerollOpen, setBuffRerollOpen] = useState(false)
   const buffRerollUsedRef = useRef(false)
-  const buffOpen = !buffChosen && buffOffer !== null && state.phase === 'prep'
+  // 入夜转场层（page 级 z-80，约 3 秒）会盖住弹窗：转场结束后再亮出选择卡，
+  // 且转场期间也保持暂停——布阵倒计时不被转场偷走
+  const [offerReady, setOfferReady] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setOfferReady(true), 3000)
+    return () => clearTimeout(t)
+  }, [])
+  const buffOpen = !buffChosen && buffOffer !== null && state.phase === 'prep' && offerReady
 
   // ---- toast（带自动消失；项目 Toaster 移除延迟极长，需显式 duration） ----
   const { toast } = useToast()
@@ -178,7 +196,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
 
   const handlePickBuff = useCallback(
     (b: NightBuff) => {
-      engine.applyBuff(b.effect)
+      engine.applyBuff(b.effect, b.id, b.name)
       sfx.play('claim')
       notify(`✦ 增益生效：${b.name}`, b.desc)
       setBuffChosen(true)
@@ -376,7 +394,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   useEffect(() => lockPause(repairAdOpen), [repairAdOpen, lockPause])
   useEffect(() => lockPause(captureAdOpen), [captureAdOpen, lockPause])
   useEffect(() => lockPause(captureSuccessId !== null), [captureSuccessId, lockPause])
-  useEffect(() => lockPause(buffOpen || buffRerollOpen), [buffOpen, buffRerollOpen, lockPause])
+  useEffect(() => lockPause(buffOpen || buffRerollOpen || (!buffChosen && buffOffer !== null && !offerReady)), [buffOpen, buffRerollOpen, offerReady, buffChosen, buffOffer, lockPause])
 
   // ---- 捕捉目标（多个可捕捉精英时点击战场切换） ----
   const capturables = useMemo(
@@ -856,6 +874,35 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
           )}
         </AnimatePresence>
 
+        {/* 夜相预告横幅：非平常夜才出，3.2 秒自动收起 */}
+        <AnimatePresence>
+          {phaseBannerVisible && state.nightPhase !== 'calm' && (() => {
+            const ph = NIGHT_PHASES[state.nightPhase]
+            const tone =
+              ph.id === 'blood'
+                ? 'border-[#E0526B]/60 bg-gradient-to-r from-[#2c0a10]/95 via-[#7c1d2a]/95 to-[#2c0a10]/95 text-[#FFC9CF]'
+                : ph.id === 'waxing'
+                  ? 'border-[#E8B84B]/50 bg-gradient-to-r from-[#2c2820]/95 via-[#4a3d20]/95 to-[#2c2820]/95 text-[#FFE9B8]'
+                  : 'border-[#8FA3C8]/50 bg-gradient-to-r from-[#1c2230]/95 via-[#2a3245]/95 to-[#1c2230]/95 text-[#C9D4E8]'
+            return (
+              <motion.div
+                key="phase-banner"
+                initial={{ y: -48, opacity: 0, x: '-50%' }}
+                animate={{ y: 58, opacity: 1, x: '-50%' }}
+                exit={{ y: -48, opacity: 0, x: '-50%' }}
+                className="absolute left-1/2 top-0 z-30 w-[92%]"
+              >
+                <div className={`rounded-xl border px-3 py-2 text-center shadow-lg backdrop-blur-sm ${tone}`}>
+                  <p className="font-display text-sm font-black tracking-[0.2em]">
+                    {ph.id === 'blood' ? '🌑' : ph.id === 'waxing' ? '🌕' : '🌒'} 今夜·{ph.name}
+                  </p>
+                  <p className="mt-0.5 text-[10px] opacity-85">{ph.desc}</p>
+                </div>
+              </motion.div>
+            )
+          })()}
+        </AnimatePresence>
+
         {/* 妖雾降临横幅 */}
         <AnimatePresence>
           {fogBannerVisible && (
@@ -982,6 +1029,24 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
         {!bossNight && region === 3 && (
           <div className={cn(HUD_CHIP, 'border-[#E8A26B]/50 text-[#FFD9B8] hidden min-[380px]:block')}>沸火</div>
         )}
+        {/* 夜相徽章（平常夜不显示，省顶栏空间） */}
+        {state.nightPhase !== 'calm' && (() => {
+          const ph = NIGHT_PHASES[state.nightPhase]
+          return (
+            <div
+              className={cn(
+                HUD_CHIP,
+                'hidden min-[380px]:block',
+                ph.id === 'blood' && 'border-[#E0526B]/60 text-[#FFC9CF]',
+                ph.id === 'waxing' && 'border-[#E8B84B]/50 text-[#FFE9B8]',
+                ph.id === 'waning' && 'border-[#8FA3C8]/50 text-[#C9D4E8]'
+              )}
+              title={ph.desc}
+            >
+              {ph.id === 'blood' ? '血月' : ph.id === 'waxing' ? '盈月' : '朔月'}
+            </div>
+          )
+        })()}
 
         <div className={HUD_CHIP}>
           {bossNight ? `亲卫 ${state.wave}/${state.totalWaves}` : `${state.wave}/${state.totalWaves}波`}

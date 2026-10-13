@@ -460,7 +460,8 @@ function DayNightTransition({ kind }: { kind: 'to-night' | 'to-day' }) {
   const isNight = kind === 'to-night'
   return (
     <motion.div
-      className="absolute inset-0 z-[80] flex items-center justify-center"
+      // 纯视觉过场：绝不拦截点击（framer exit 偶发残留 DOM 时也不挡 UI）
+      className="pointer-events-none absolute inset-0 z-[80] flex items-center justify-center"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
