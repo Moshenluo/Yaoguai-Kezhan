@@ -1,0 +1,103 @@
+{
+  "project": "妖怪客栈 · 等你当家｜文字 PV V12",
+  "duration_seconds": 27,
+  "canvas": [
+    1080,
+    1920
+  ],
+  "fps": 60,
+  "music": {
+    "credit": "末深落",
+    "title": "妖怪客栈等你当家",
+    "source": "User uploaded MP3",
+    "source_filename": "末深落 - 妖怪客栈等你当家.mp3",
+    "source_sha256": "cbb817a96a557ed2cabccc976cbde3cdb7b6d51e5fee56d535ab1c8c75b3aff0",
+    "source_metadata_note": "The supplied file contains an AI-generation label. No external music was added.",
+    "source_cut_seconds": [
+      13.7,
+      40.7
+    ],
+    "speed": 1,
+    "fade_in_seconds": 0.018,
+    "fade_out_seconds": 0.7,
+    "excerpt_sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48",
+    "full_source_distributed": false,
+    "identical_to_v11_excerpt": true
+  },
+  "lyrics": {
+    "authority": "Exact verse and chorus specified by the user",
+    "characters": 55,
+    "text": [
+      "叮叮当",
+      "算盘响",
+      "山海伙伴",
+      "来帮忙",
+      "你当掌柜",
+      "我来跑堂",
+      "小小客栈",
+      "大有名堂",
+      "来来来",
+      "坐坐坐",
+      "一桌烟火",
+      "热热闹闹",
+      "开张",
+      "开张",
+      "妖怪客栈",
+      "等你当家"
+    ]
+  },
+  "timing": {
+    "method": "Local sherpa-onnx Paraformer Chinese recognition, chunked; user text replaces homophone transcription errors. No external ASR upload.",
+    "precision_note": "Estimated syllable onsets, with typical animation anticipation of 120 ms and overlapping scene bridges. Not phoneme-level forced alignment.",
+    "clock": "audio.currentTime in HTML; deterministic n/fps time when exporting",
+    "score_identical_to_v11": true,
+    "embedded_timeline_identical_to_v11": true
+  },
+  "visuals": {
+    "method": "Original deterministic Canvas typography and geometric animation",
+    "fonts": [
+      "Noto Sans CJK SC Bold",
+      "Noto Serif CJK SC Bold",
+      "Ma Shan Zheng Regular"
+    ],
+    "licenses": [
+      "source/assets/FONT-LICENSE.txt",
+      "source/assets/MaShanZheng-OFL.txt"
+    ],
+    "font_subsets": true,
+    "external_images_used": false,
+    "revision": "V12: fixed-seed paper fibers and ink variation, softer gold, refined role composition, a compact small-inn stamp opening into 大, staggered peripheral invitation lettering, printed card and shop-sign edges, and a tighter final title bookplate with a matching opening/closing seal.",
+    "supplemental_copy": {
+      "text": "经营客栈 · 招募妖怪 · 夜晚守家",
+      "authority": "User-confirmed gameplay: inn management and guests, nighttime tower defense, and recruiting monsters. User approved adding this short caption.",
+      "presentation": "PVSong text with geometric diamond separators, separate from the unchanged sung lyrics"
+    },
+    "font_subset_extension": "Existing V11 font subsets retained. Current hashes and cmap coverage are recorded in font-check.json.",
+    "v12_review_status": "Completed. Final source, sampled layouts and transition boundaries, encoded samples, offline player, encoded video playback, full media decode and unchanged audio payload verified; see validation.json.",
+    "visual_loop": {
+      "start_seconds": 26.68,
+      "opening_restored_seconds": 26.96,
+      "end_equals_start": true,
+      "audio_seamless": false,
+      "comparison_scope": "Deterministic Canvas pixels at 0 and 27 seconds"
+    },
+    "brand_hold": {
+      "cta_settled_seconds": 24.98,
+      "seal_settled_seconds": 25.04,
+      "end_seconds": 26.68,
+      "complete_static_hold_seconds": 1.64,
+      "verified_identical_sample_times": [
+        25.06,
+        26.66
+      ]
+    }
+  },
+  "audio_delivery": "The AAC excerpt is copied into the MP4 without an additional audio encode.",
+  "base_revision": {
+    "version": "V11",
+    "repository_path": "promo/tiktok-type-v11",
+    "source_commit": "f8df64fb14c32273a02ce4b50cadaf02da7cc40c",
+    "film_sha256": "d530eb0e4964d8799508d41eb4e540b0955194b87412f178bf4e11b2c782ec93",
+    "note": "V12 refines the approved typography PV. No SVG monster studies are included."
+  }
+}

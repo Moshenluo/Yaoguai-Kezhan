@@ -1,0 +1,277 @@
+{
+  "version": "V12",
+  "source_sha256": {
+    "film.js": "2396779eb432870afb5bbfbb43ae6fdaf6c301067f882a10392fee8b32947443",
+    "timeline.js": "387e861ecaac17edb50b067021fd3d6d1ea628760e8dfb14f7830118834178f2",
+    "score.json": "606b1f9e8c93ae7fefd7f516b07f74f019ae8b0a9d87fa195208bf51287654e2",
+    "index.html": "b553209a937657fbfa8c0bfbca3ce168e655f4d5a7712a1d694247b3fa4600e3"
+  },
+  "media": {
+    "duration_seconds": 27,
+    "width": 1080,
+    "height": 1920,
+    "fps": 60,
+    "frames": 1620,
+    "color_space": "bt709",
+    "video_codec": "h264",
+    "audio_codec": "aac",
+    "audio_sample_rate": 48000,
+    "audio_channels": 2,
+    "video_start_seconds": 0,
+    "audio_start_seconds": 0,
+    "audio_packet_payload_matches_excerpt": true,
+    "audio_packet_md5": "MD5=d07d424c68a9d5c54404a1a9761d9854",
+    "faststart": true,
+    "full_decode": "passed with -xerror",
+    "file_bytes": 10322059,
+    "file_sha256": "d9bc6edae90f74843edf2c7ea4cc5bef25f4ce657687c1ea03d9550d3cd3236b"
+  },
+  "player": {
+    "offline": {
+      "fonts": [
+        true,
+        true,
+        true
+      ],
+      "overflow": false,
+      "canvasReadable": true,
+      "audioDuration": 27,
+      "played": true,
+      "seekAndMute": true,
+      "replayed": true,
+      "httpRequests": 0
+    },
+    "video": {
+      "duration": 27,
+      "width": 1080,
+      "height": 1920,
+      "start": 13.00377,
+      "after": 13.467844
+    },
+    "errors": []
+  },
+  "content": {
+    "lyrics": "叮叮当算盘响山海伙伴来帮忙你当掌柜我来跑堂小小客栈大有名堂来来来坐坐坐一桌烟火热热闹闹开张开张妖怪客栈等你当家",
+    "lyric_characters": 55,
+    "lyrics_match_user_selection": true,
+    "score_and_timing_unchanged_from_v11": true,
+    "audio_excerpt_unchanged_from_v11": true,
+    "fonts": [
+      {
+        "font": "heavy.otf",
+        "all_required_characters_present": true,
+        "sha256": "d527a9a52245ce3bb75f5666a359c6e41af576b78045cb316e15aef1bc84d833"
+      },
+      {
+        "font": "serif.otf",
+        "all_required_characters_present": true,
+        "sha256": "4f95cfa5a3eb1daa274b518556e84a0b930a8d52ad77548f7632c0bd07ef5044"
+      },
+      {
+        "font": "brush.ttf",
+        "all_required_characters_present": true,
+        "sha256": "f5b47d54ac1d64e6d3a033be8efa8230c79b298fbe9e8a796b024ad229ed37f4"
+      }
+    ],
+    "visual_route": "Canvas typography and geometry; rejected SVG character studies not used"
+  },
+  "font_coverage": {
+    "purpose": "V12 uses the unchanged V11 font subsets; current file hashes and cmap coverage inspected with fontTools.",
+    "caption": "经营客栈 · 招募妖怪 · 夜晚守家",
+    "lyrics_character_count": 55,
+    "recommended_caption_font": "PVSong",
+    "note": "MaShanZheng has no U+00B7 middle dot. Caption uses PVSong; brush glyph outlines are not replaced or synthesized. This report does not assess browser rendering or layout.",
+    "fonts": [
+      {
+        "file": "assets/heavy.otf",
+        "family": "NotoSansCJKsc-Bold",
+        "source": "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+        "source_collection_index": 2,
+        "source_sha256": "faa5f3656a78b2e2d450d27fe8382c778bc2b6bb5ea29c986664a6a435056ceb",
+        "sha256": "d527a9a52245ce3bb75f5666a359c6e41af576b78045cb316e15aef1bc84d833",
+        "bytes": 27936,
+        "cmap_codepoints": 74,
+        "identical_to_v11_subset": true,
+        "missing_lyrics": "",
+        "missing_caption": ""
+      },
+      {
+        "file": "assets/serif.otf",
+        "family": "NotoSerifCJKsc-Bold",
+        "source": "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc",
+        "source_collection_index": 2,
+        "source_sha256": "1505ee3b9c0890fae6302ee0e9c6fd74d690f4a55a6ace1d9944f3f6352d622d",
+        "sha256": "4f95cfa5a3eb1daa274b518556e84a0b930a8d52ad77548f7632c0bd07ef5044",
+        "bytes": 40188,
+        "cmap_codepoints": 74,
+        "identical_to_v11_subset": true,
+        "missing_lyrics": "",
+        "missing_caption": ""
+      },
+      {
+        "file": "assets/brush.ttf",
+        "family": "MaShanZheng-Regular",
+        "source": "/workspace/yaoguai-pv-ink/assets/MaShanZheng-Regular.ttf",
+        "source_collection_index": null,
+        "source_sha256": "6d2546bb189c732a8ca29af9e22457b152387d158aa459e4ac2ce1e51788b7fb",
+        "sha256": "f5b47d54ac1d64e6d3a033be8efa8230c79b298fbe9e8a796b024ad229ed37f4",
+        "bytes": 45764,
+        "cmap_codepoints": 73,
+        "identical_to_v11_subset": true,
+        "missing_lyrics": "",
+        "missing_caption": "·"
+      }
+    ]
+  },
+  "review_capture": {
+    "frames": 36,
+    "source_unchanged_during_capture": true,
+    "measurements": {
+      "loop": {
+        "before_seconds": 0,
+        "after_seconds": 27,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0,
+        "exact": true
+      },
+      "continuity": [
+        {
+          "boundary_seconds": 2.92,
+          "before_seconds": 2.919999,
+          "after_seconds": 2.920001,
+          "changedPixels": 2507,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0029454411008230453,
+          "maxChannelDelta": 34
+        },
+        {
+          "boundary_seconds": 6.1,
+          "before_seconds": 6.0999989999999995,
+          "after_seconds": 6.100001,
+          "changedPixels": 1486,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.00037937242798353907,
+          "maxChannelDelta": 3
+        },
+        {
+          "boundary_seconds": 8.98,
+          "before_seconds": 8.979999000000001,
+          "after_seconds": 8.980001,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        },
+        {
+          "boundary_seconds": 12.56,
+          "before_seconds": 12.559999000000001,
+          "after_seconds": 12.560001,
+          "changedPixels": 1063,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0008050411522633745,
+          "maxChannelDelta": 34
+        },
+        {
+          "boundary_seconds": 15.68,
+          "before_seconds": 15.679999,
+          "after_seconds": 15.680000999999999,
+          "changedPixels": 24,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 5.787037037037037e-06,
+          "maxChannelDelta": 1
+        },
+        {
+          "boundary_seconds": 20,
+          "before_seconds": 19.999999,
+          "after_seconds": 20.000001,
+          "changedPixels": 242,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 4.468878600823045e-05,
+          "maxChannelDelta": 2
+        },
+        {
+          "boundary_seconds": 21.21,
+          "before_seconds": 21.209999,
+          "after_seconds": 21.210001000000002,
+          "changedPixels": 316,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.007912487139917695,
+          "maxChannelDelta": 105
+        },
+        {
+          "boundary_seconds": 21.78,
+          "before_seconds": 21.779999,
+          "after_seconds": 21.780001000000002,
+          "changedPixels": 1554,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0021519740226337448,
+          "maxChannelDelta": 15
+        },
+        {
+          "boundary_seconds": 22.02,
+          "before_seconds": 22.019999,
+          "after_seconds": 22.020001,
+          "changedPixels": 5169,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0015848443930041153,
+          "maxChannelDelta": 20
+        },
+        {
+          "boundary_seconds": 26.68,
+          "before_seconds": 26.679999,
+          "after_seconds": 26.680001,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        }
+      ]
+    },
+    "errors": [],
+    "scope": "Deterministic Canvas before lossy encoding; epsilon-boundary deltas do not measure perceived motion quality."
+  },
+  "title_hold": {
+    "times": [
+      25.06,
+      26.66
+    ],
+    "identical": true
+  },
+  "encoded_frame_samples": {
+    "samples": [
+      {
+        "time_seconds": 0,
+        "mean_absolute_rgb_difference": 1.9390346900720161
+      },
+      {
+        "time_seconds": 11.75,
+        "mean_absolute_rgb_difference": 1.7021153227880659
+      },
+      {
+        "time_seconds": 18.8,
+        "mean_absolute_rgb_difference": 1.9333325295781894
+      },
+      {
+        "time_seconds": 25.6,
+        "mean_absolute_rgb_difference": 1.9754470486111109
+      }
+    ],
+    "comparison": "Decoded MP4 frames versus same-time deterministic Canvas PNG; RGB differences reflect lossy H.264 encoding."
+  },
+  "visual_review": {
+    "reviewer": "Assistant visual inspection",
+    "result": "passed",
+    "scope": [
+      "16 keyframes",
+      "20 transition boundary samples",
+      "final title cover",
+      "4 frames decoded from final MP4"
+    ],
+    "resolved": "Final left title column moved right by 20px to clear the inset border.",
+    "findings": "No unintended text collisions or clipping in the reviewed frames; paper texture remains subtle, lyric contrast preserved.",
+    "limit": "Sampled visual review does not predict audience response or virality."
+  },
+  "offline_method": "Playwright offline context with embedded HTML content; direct file:// navigation unavailable in cloud environment."
+}
