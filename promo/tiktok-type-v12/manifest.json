@@ -27,8 +27,8 @@
     },
     {
       "path": "preview-standalone.html",
-      "bytes": 1354517,
-      "sha256": "397600e81691885174cf6b9f9d6d7d82b98fedcb2b3d3f0211f50eee53724849"
+      "bytes": 1354516,
+      "sha256": "8cb95734c93b4c53a7aba165237305d9a7c58730cb614519eb08aa12f9143e9e"
     },
     {
       "path": "provenance.json",
@@ -72,8 +72,8 @@
     },
     {
       "path": "source/film.js",
-      "bytes": 21908,
-      "sha256": "2396779eb432870afb5bbfbb43ae6fdaf6c301067f882a10392fee8b32947443"
+      "bytes": 21907,
+      "sha256": "cdad58f9bdbc778f86c3c0b55940fc14423ce592519720b9fa54339927e8bded"
     },
     {
       "path": "source/font-text.txt",
@@ -137,8 +137,8 @@
     },
     {
       "path": "validation.json",
-      "bytes": 9320,
-      "sha256": "f72b95cbc846c4b725ca0f6d57f22dd724fc0082aba95516cac8a50da5d80b65"
+      "bytes": 9661,
+      "sha256": "4f5c39062ae0a547ab63852ed125e8af68c6f174e56d79cff55d909f99eb202f"
     },
     {
       "path": "yaoguai-type-v12.mp4",

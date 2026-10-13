@@ -1,7 +1,7 @@
 {
   "version": "V12",
   "source_sha256": {
-    "film.js": "2396779eb432870afb5bbfbb43ae6fdaf6c301067f882a10392fee8b32947443",
+    "film.js": "cdad58f9bdbc778f86c3c0b55940fc14423ce592519720b9fa54339927e8bded",
     "timeline.js": "387e861ecaac17edb50b067021fd3d6d1ea628760e8dfb14f7830118834178f2",
     "score.json": "606b1f9e8c93ae7fefd7f516b07f74f019ae8b0a9d87fa195208bf51287654e2",
     "index.html": "b553209a937657fbfa8c0bfbca3ce168e655f4d5a7712a1d694247b3fa4600e3"
@@ -273,5 +273,11 @@
     "findings": "No unintended text collisions or clipping in the reviewed frames; paper texture remains subtle, lyric contrast preserved.",
     "limit": "Sampled visual review does not predict audience response or virality."
   },
-  "offline_method": "Playwright offline context with embedded HTML content; direct file:// navigation unavailable in cloud environment."
+  "offline_method": "Playwright offline context with embedded HTML content; direct file:// navigation unavailable in cloud environment.",
+  "post_render_source_formatting": {
+    "change": "Removed one whitespace-only line indentation; no executable text changed.",
+    "line": 64,
+    "rendered_film_sha256": "2396779eb432870afb5bbfbb43ae6fdaf6c301067f882a10392fee8b32947443",
+    "delivered_film_sha256": "cdad58f9bdbc778f86c3c0b55940fc14423ce592519720b9fa54339927e8bded"
+  }
 }

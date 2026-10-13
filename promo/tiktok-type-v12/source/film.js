@@ -61,7 +61,7 @@ function companions(t){bg(R);const arrive=smooth(prog(t,2.88,.85)),help=smooth(p
  const r=ease(prog(t,at(2),.8));line(169,876,169+701*r,876,P,1.6,.46);circle(163,876,3.5,G,0,r);
  for(let n=0;n<3;n++)curvedStroke([170,466+n*12,350,416+n*12,660,505+n*12,860,435+n*12],P,1.1,.14*r);c.restore();
  const w=650*help,h=176*ease(prog(help,.025,.65)),py=1416-h/2;rect(520-w/2,py,w,h,P);if(w>60&&h>30){line(520-w/2+13,py+13,520+w/2-13,py+13,R,1,.3);line(520-w/2+13,py+h-13,520+w/2-13,py+h-13,R,1,.3);}if(help>.05){c.save();c.beginPath();c.rect(520-w/2,py,w,h);c.clip();word(3,t,520,1410,130,R,{font:F.heavy,dy:42,step:166,dur:.36});c.restore()}
- 
+
 }
 // 03 — a single reading baseline for each role. The second role makes room first.
 function roles(t){bg(P);const lower=smooth(prog(t,at(5)-.24,.50)),topY=mix(838,658,lower),split=mix(1920,956,lower);c.save();c.beginPath();c.rect(0,split,W,H);c.clip();bg(I);c.restore();line(100,split,940,split,G,2.3);
