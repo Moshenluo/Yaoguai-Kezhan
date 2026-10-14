@@ -519,9 +519,11 @@ function YaoDetail({
   const gems = useGameStore((s) => s.gems ?? 0)
   // 技能精进消耗行所需货币（?? 0 兜底防脏档，历史崩溃教训）
   const gold = useGameStore((s) => s.gold ?? 0)
-  // 体力与轮换所需状态（体力线）
+  // 体力与轮换所需状态（体力线；恢复速率参数与 store.applyStaminaTick 结算同源）
   const staminaPotions = useGameStore((s) => s.staminaPotions ?? { small: 0, medium: 0, large: 0 })
   const guestRoom = useGameStore((s) => s.facilities?.guestRoom ?? 0)
+  const hotSpringLv = useGameStore((s) => s.facilities?.hotSpring ?? 0)
+  const branchOpen = useGameStore((s) => s.region2Opened || s.region3Opened)
   const cookingUntil = useGameStore((s) => s.cooking?.until ?? 0)
   // 是否存在未满体力的妖怪（大瓶全体药水按钮禁用判定）
   const anyStaminaLow = useGameStore((s) =>
@@ -562,12 +564,15 @@ function YaoDetail({
   const stTier = staminaTier(stamina)
   // 满体力判定取整后比较：打工妖每秒微量消耗（如 99.95）显示 ⚡100，按钮禁用需与显示一致
   const stMaxed = Math.round(stamina) >= 100
-  // 打工按定位差异化消耗；休息按客房+灶火加成恢复
+  // 打工按定位差异化消耗；休息按客房+灶火+分店+温泉加成恢复（与实际结算同源）
   const jobCost = JOB_STAMINA_COST[def.nightRole] ?? 6
   const cookingActive = cookingUntil > Date.now()
-  const regen = staminaRegenRate(guestRoom, cookingActive)
+  const regen = staminaRegenRate(guestRoom, cookingActive, branchOpen, hotSpringLv)
   // 恢复速率固定显示一位小数（如 15.4/时）
   const regenText = regen.toFixed(1)
+  // 预计时间：休息回满 / 打工跌至不支（体力<20 效率下降线）
+  const etaFullHours = !o.deployed && !stMaxed && regen > 0 ? (100 - stamina) / regen : null
+  const etaLowHours = o.deployed && stamina > 20 && jobCost > 0 ? (stamina - 20) / jobCost : null
 
   // ---- 技能精进（V1.3 技能升级线：妖丹消耗，每级技能效果 +15%） ----
   // 老档 skillLevel 缺省视为 1；上限受星级约束（min(5, 星级+1)），封顶需先升星
@@ -675,6 +680,14 @@ function YaoDetail({
             ? `🛖 打工中 · 消耗体力 ${jobCost}/时（${def.nightRoleName}定位）`
             : `😴 休息中 · 恢复体力 +${regenText}/时（客房 Lv.${guestRoom} 加成${cookingActive ? ' · 灶火增益中' : ''}）`}
         </p>
+        {/* 预计时间：休息回满 / 打工跌至不支线（体力<20 效率下降），把黑盒数值透明化便于规划轮换 */}
+        {(etaFullHours !== null || etaLowHours !== null) && (
+          <p className="mt-0.5 text-center text-[10px] tabular-nums text-stone-500">
+            {etaFullHours !== null
+              ? `约 ${etaFullHours < 1 ? `${Math.max(1, Math.round(etaFullHours * 60))} 分钟` : `${etaFullHours.toFixed(1)} 小时`}后回满`
+              : `约 ${etaLowHours! < 1 ? `${Math.max(1, Math.round(etaLowHours! * 60))} 分钟` : `${etaLowHours!.toFixed(1)} 小时`}后不支（体力<20 效率下降）`}
+          </p>
+        )}
         {/* 体力药水（小瓶/中瓶单只；大瓶全体） */}
         <div className="mt-2 grid grid-cols-2 gap-1.5">
           {STAMINA_POTIONS.filter((p) => p.target === 'single').map((p) => {
