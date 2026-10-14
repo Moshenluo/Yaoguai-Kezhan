@@ -21,6 +21,7 @@ import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { AdDialog } from '@/components/game/AdDialog'
+import { SharePosterDialog } from '@/components/game/SharePosterDialog'
 import { ElementBadge, ElementChip } from '@/components/game/ElementBadge'
 import { ConfigIcon, GemIcon, GoldIcon, GradeTag, TicketIcon, YaoAvatar, notify } from '@/components/game/shared'
 import { useGameStore } from '@/game/store'
@@ -36,6 +37,9 @@ export interface TujianPanelProps {
 
 /** 五行相克环：金→木→土→水→火→（循环回金） */
 const CYCLE: Element[] = ['metal', 'wood', 'earth', 'water', 'fire']
+
+/** 收集进度属性分区展示顺序（五行 + 光暗） */
+const ELEM_ORDER: Element[] = ['metal', 'wood', 'water', 'fire', 'earth', 'light', 'dark']
 
 /** 五行相生加成对（数据驱动：拿全五行阵容跑 lineupSynergy 得全部 pairs） */
 const SYNERGY_PAIRS = lineupSynergy([
@@ -60,9 +64,34 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
   const [elemOpen, setElemOpen] = useState(false)
   /** 已看广告解锁线索的妖怪（本会话有效） */
   const [hinted, setHinted] = useState<ReadonlySet<string>>(new Set())
+  const [posterOpen, setPosterOpen] = useState(false)
 
   const unlocked = useMemo(() => new Set(tujian), [tujian])
   const total = YAOGUAI.length
+
+  /** 属性分区收集进度（已收录/总数） */
+  const elemProgress = useMemo(() => {
+    const m = new Map<Element, { have: number; total: number }>()
+    for (const y of YAOGUAI) {
+      if (!y.element) continue
+      const e = m.get(y.element) ?? { have: 0, total: 0 }
+      e.total += 1
+      if (unlocked.has(y.id)) e.have += 1
+      m.set(y.element, e)
+    }
+    return m
+  }, [unlocked])
+
+  /** 品级收集进度（普通/稀有/传说） */
+  const gradeProgress = useMemo(() => {
+    const g = { normal: { have: 0, total: 0 }, rare: { have: 0, total: 0 }, legend: { have: 0, total: 0 } }
+    for (const y of YAOGUAI) {
+      const e = g[y.grade]
+      e.total += 1
+      if (unlocked.has(y.id)) e.have += 1
+    }
+    return g
+  }, [unlocked])
 
   const rewardState = (count: number) => {
     const claimed = tasksClaimed.includes(`tujian-${count}`)
@@ -101,7 +130,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
           >
             <ScrollArea className="min-h-0 flex-1">
               <div className="flex flex-col gap-3 p-1.5">
-                {/* 收集进度 */}
+                {/* 收集进度（总进度 + 属性分区 + 品级 + 分享海报入口） */}
                 <div className="rounded-2xl border border-[#D4A574]/50 bg-white/80 p-3">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-xs font-black text-stone-700">📜 收集进度</span>
@@ -113,6 +142,40 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                     value={(tujian.length / total) * 100}
                     className="h-2.5 bg-stone-200 [&>div]:bg-gradient-to-r [&>div]:from-[#E8B84B] [&>div]:to-[#D4933D] [&>div]:shadow-[0_0_6px_rgba(232,184,75,0.6)]"
                   />
+                  {/* 属性分区：集齐点亮金色 */}
+                  <div className="mt-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+                    {ELEM_ORDER.map((el) => {
+                      const p = elemProgress.get(el)
+                      if (!p) return null
+                      const done = p.have === p.total
+                      return (
+                        <span
+                          key={el}
+                          className={cn(
+                            'flex items-center gap-0.5 text-[10px] font-bold tabular-nums',
+                            done ? 'text-[#B8860B]' : 'text-stone-400'
+                          )}
+                        >
+                          <ElementBadge element={el} size="xs" />
+                          {p.have}/{p.total}
+                        </span>
+                      )
+                    })}
+                  </div>
+                  {/* 品级进度 + 分享海报入口 */}
+                  <div className="mt-2 flex items-center justify-between border-t border-[#D4A574]/30 pt-2">
+                    <span className="text-[10px] font-bold tabular-nums text-stone-500">
+                      普通 {gradeProgress.normal.have}/{gradeProgress.normal.total} · 稀有 {gradeProgress.rare.have}/{gradeProgress.rare.total} · 传说 {gradeProgress.legend.have}/{gradeProgress.legend.total}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setPosterOpen(true)}
+                      className="flex shrink-0 items-center gap-1 rounded-full border border-[#E8B84B]/70 bg-amber-50 px-2.5 py-1 text-[10px] font-black text-[#B8860B] transition active:scale-95"
+                    >
+                      <ConfigIcon icon="/images/ui/festival-lantern.png" size={11} />
+                      分享海报
+                    </button>
+                  </div>
                 </div>
 
                 {/* 属性克制 · 相生说明卡（可折叠） */}
@@ -470,6 +533,9 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
           if (lockedId) setHinted((prev) => new Set(prev).add(lockedId))
         }}
       />
+
+      {/* 分享海报 */}
+      <SharePosterDialog open={posterOpen} onOpenChange={setPosterOpen} />
     </>
   )
 }
