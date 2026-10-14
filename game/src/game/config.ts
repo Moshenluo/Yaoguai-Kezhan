@@ -1,4 +1,5 @@
 import type { SceneComp, SceneCompTier } from './scene-layers'
+import { YAOGUAI } from './yaoguai'
 import type { Element, EliteAffixId, GameSave, InnFacilities, NightBuffEffect, NightEvent, NightRole } from './types'
 
 // ============ 妖怪客栈 · 数值配置 ============
@@ -307,12 +308,15 @@ const GOAL_TABLE: { id: string; text: string; done: (s: GameSave) => boolean }[]
   { id: 'facility', text: '点院子里的建筑，把一处设施升到 Lv.2', done: (s) => Object.values(s.facilities).some((v) => v >= 2) },
   { id: 'first-win', text: '入夜守店，拿下第一胜（控血可收服）', done: (s) => s.stats.wins >= 1 },
   { id: 'shop', text: '客栈升到 Lv.2，商店开张招募新妖', done: (s) => s.innLevel >= 2 },
-  { id: 'boss', text: `守店累计 ${2} 胜，妖王夜将现`, done: (s) => s.stats.wins >= BOSS_NIGHT.unlockWins },
+  { id: 'boss', text: `守店累计 ${BOSS_NIGHT.unlockWins} 胜，妖王夜将现`, done: (s) => s.stats.wins >= BOSS_NIGHT.unlockWins },
   { id: 'gather', text: '客栈升到 Lv.3，采集队可组', done: (s) => s.innLevel >= 3 },
   { id: 'deco', text: '客栈升到 Lv.5，庭院装修开放', done: (s) => s.innLevel >= 5 },
   { id: 'map', text: '守店推进到第 5 夜，世界地图开启', done: (s) => s.level >= 5 || s.region !== 1 },
   { id: 'branch', text: `第 ${REGION2_UNLOCK.level} 夜 + 累计 ${REGION2_UNLOCK.wins} 胜，水墨幽谷可探`, done: (s) => region2Unlockable(s) || s.region2Opened },
   { id: 'branch-open', text: '打开地图，开设水墨幽谷分店', done: (s) => s.region2Opened },
+  { id: 'branch2', text: `水墨幽谷推进到第 ${REGION3_UNLOCK.level} 夜，沸火赤川可探`, done: (s) => region3Unlockable(s) || s.region3Opened },
+  { id: 'branch3-open', text: '打开地图，开设沸火赤川分店', done: (s) => s.region3Opened },
+  { id: 'tujian-full', text: `收齐全图鉴 ${YAOGUAI.length} 妖，达成山海全图`, done: (s) => s.tujian.length >= YAOGUAI.length },
 ]
 
 /** 下一目标：全部达标后落到日常兜底项 */

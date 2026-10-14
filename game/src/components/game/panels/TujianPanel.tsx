@@ -355,7 +355,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                       >
                         {isLegend && !isUnlocked && (
                           <span className="absolute left-1 top-1 rounded-full bg-rose-400/90 px-1.5 py-px text-[8px] font-bold text-white">
-                            V1.1
+                            妖王夜
                           </span>
                         )}
                         <div className="pt-1">
@@ -382,7 +382,7 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                               isLegend ? 'font-bold text-rose-400' : 'text-stone-400'
                             )}
                           >
-                            {isLegend ? '敬请期待' : '未解锁'}
+                            {isLegend ? '妖王夜限定' : '未解锁'}
                           </span>
                         )}
                         {!isUnlocked && !isLegend && hinted.has(y.id) && (
@@ -483,11 +483,27 @@ export function TujianPanel({ open, onOpenChange }: TujianPanelProps) {
                 <>
                   <p className="text-center text-sm font-bold text-stone-600">？？？</p>
                   <div className="rounded-2xl border border-rose-200 bg-rose-50/70 p-3 text-center">
-                    <p className="text-xs font-black text-rose-500">V1.1 敬请期待</p>
-                    <p className="mt-1 text-[11px] leading-relaxed text-stone-500">
-                      传说妖王「{lockedDef.name}」将在 V1.1 版本降临客栈，届时开放收服
-                    </p>
+                    <p className="text-xs font-black text-rose-500">妖王夜限定 · 传说妖王</p>
+                    <p className="mt-1 text-[11px] leading-relaxed text-stone-500">{lockedDef.obtain}</p>
                   </div>
+                  {hinted.has(lockedDef.id) && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="w-full rounded-2xl border border-amber-200 bg-amber-50/80 p-3"
+                    >
+                      <p className="mb-1 text-[10px] font-black text-amber-600">线索 · 形态</p>
+                      <p className="text-[11px] leading-relaxed text-stone-700">{lockedDef.form}</p>
+                    </motion.div>
+                  )}
+                  {!hinted.has(lockedDef.id) && (
+                    <Button
+                      onClick={() => setHintAdOpen(true)}
+                      className="h-11 w-full rounded-xl bg-gradient-to-r from-[#E8B84B] to-[#D4933D] text-sm font-black text-white shadow-md shadow-amber-500/30 transition-transform active:scale-95"
+                    >
+                      看广告解锁线索
+                    </Button>
+                  )}
                 </>
               ) : (
                 <>
