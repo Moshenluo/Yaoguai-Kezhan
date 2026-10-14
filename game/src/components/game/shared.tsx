@@ -4,6 +4,13 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { GRADE_COLOR, GRADE_LABEL, YAOGUAI_MAP, yaoImg } from '@/game/yaoguai'
 import type { Grade } from '@/game/types'
 import { cn } from '@/lib/utils'
+import { toast } from '@/hooks/use-toast'
+
+/** 统一轻提示（替代各面板重复定义的 notify）：单条 toast，2.2s 自动消失 */
+export function notify(title: string, description?: string) {
+  const t = toast({ title, description })
+  window.setTimeout(() => t.dismiss(), 2200)
+}
 
 /** 星级显示（金星徽，高星微光） */
 export function StarBadge({ star, size = 'sm' }: { star: number; size?: 'sm' | 'md' | 'lg' }) {

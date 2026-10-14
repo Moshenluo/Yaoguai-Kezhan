@@ -10,7 +10,7 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { ConfigIcon, GoldIcon, HpBar } from '@/components/game/shared'
+import { ConfigIcon, GoldIcon, HpBar, notify } from '@/components/game/shared'
 import { useGameStore } from '@/game/store'
 import {
   BRANCH_GOLD_BONUS,
@@ -28,7 +28,6 @@ import {
 import { trackEvent } from '@/game/cloud'
 import { sfx } from '@/game/audio'
 import { RARE_IDS, YAOGUAI_MAP } from '@/game/yaoguai'
-import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 export interface WorldMapPanelProps {
@@ -186,8 +185,6 @@ const CARD_THEME: Record<1 | 2 | 3, CardTheme> = {
  * 25000 金币开「沸泉别馆」→ 挂机金币+50% / 休息恢复+30%（与水墨分店加成叠乘）。
  */
 export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
-  const { toast } = useToast()
-
   // ?? 兜底：即使存档异常也不至于渲染层崩溃（沿用 ShopPanel 约定）
   const region = useGameStore((s) => s.region)
   const region2Opened = useGameStore((s) => s.region2Opened === true)
@@ -215,10 +212,6 @@ export function WorldMapPanel({ open, onOpenChange }: WorldMapPanelProps) {
       if (armTimer.current !== null) window.clearTimeout(armTimer.current)
     }
   }, [])
-
-  const notify = (title: string, description?: string) => {
-    toast({ title, description, duration: 2800 })
-  }
 
   /** 移驻区域：click 音效 → setRegion → toast 结果（成功再放 upgrade + 埋点） */
   const handleSwitch = (target: 1 | 2 | 3) => {

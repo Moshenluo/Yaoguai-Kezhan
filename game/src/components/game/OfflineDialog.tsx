@@ -5,8 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { AdDialog } from './AdDialog'
 import { useGameStore } from '@/game/store'
 import { sfx } from '@/game/audio'
-import { AnimNumber, GoldIcon, GemIcon, ConfigIcon } from './shared'
-import { toast } from '@/hooks/use-toast'
+import { AnimNumber, GoldIcon, GemIcon, ConfigIcon, notify } from './shared'
 
 /** 秒 → 「X小时Y分钟」 */
 function formatDuration(seconds: number): string {
@@ -15,11 +14,6 @@ function formatDuration(seconds: number): string {
   if (h > 0) return `${h} 小时${m > 0 ? ` ${m} 分钟` : ''}`
   if (m > 0) return `${m} 分钟`
   return `${seconds} 秒`
-}
-
-function notify(title: string, description?: string) {
-  const t = toast({ title, description })
-  window.setTimeout(() => t.dismiss(), 2200)
 }
 
 /**

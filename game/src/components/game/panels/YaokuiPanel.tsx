@@ -49,7 +49,7 @@ import {
 } from '@/game/config'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import type { Element, Grade, OwnedYaoguai, PotionStock, YaoguaiDef } from '@/game/types'
-import { toast } from '@/hooks/use-toast'
+import { notify } from '../shared'
 import { cn } from '@/lib/utils'
 
 export interface YaokuiPanelProps {
@@ -60,11 +60,6 @@ export interface YaokuiPanelProps {
 type FilterTab = 'all' | Grade
 
 const GRADE_ORDER: Record<Grade, number> = { legend: 0, rare: 1, normal: 2 }
-
-function notify(message: string) {
-  const t = toast({ title: message })
-  window.setTimeout(() => t.dismiss(), 2400)
-}
 
 /**
  * 妖库面板 —— 妖怪收藏管理（升星 / 打工上阵）

@@ -32,7 +32,7 @@ import {
 } from '@/game/config'
 import { ELEMENT_ORDER, MATERIALS_MAP, matCap, stoneIdFor } from '@/game/config'
 import type { Element } from '@/game/types'
-import { toast } from '@/hooks/use-toast'
+import { notify } from '../shared'
 import { cn } from '@/lib/utils'
 
 export interface ShopPanelProps {
@@ -41,11 +41,6 @@ export interface ShopPanelProps {
 }
 
 type RecruitKind = 'normal' | 'ten' | 'advanced' | 'advancedTen' | 'free' | 'ticket'
-
-function notify(message: string) {
-  const t = toast({ title: message })
-  window.setTimeout(() => t.dismiss(), 2400)
-}
 
 /**
  * 商店面板 —— 招募（免费/单抽/十连/高级/招募券/广告）、经验药水与道具预告

@@ -22,22 +22,16 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Button } from '@/components/ui/button'
 import { AdDialog } from '@/components/game/AdDialog'
 import { ElementBadge, ElementChip } from '@/components/game/ElementBadge'
-import { ConfigIcon, GemIcon, GoldIcon, GradeTag, TicketIcon, YaoAvatar } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GoldIcon, GradeTag, TicketIcon, YaoAvatar, notify } from '@/components/game/shared'
 import { useGameStore } from '@/game/store'
 import { TUJIAN_REWARDS, lineupSynergy } from '@/game/config'
 import { YAOGUAI, YAOGUAI_MAP } from '@/game/yaoguai'
 import type { Element, YaoguaiDef } from '@/game/types'
-import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 export interface TujianPanelProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-}
-
-function notify(message: string) {
-  const t = toast({ title: message })
-  window.setTimeout(() => t.dismiss(), 2400)
 }
 
 /** 五行相克环：金→木→土→水→火→（循环回金） */

@@ -11,7 +11,6 @@ import { sfx } from '@/game/audio'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import { useGameStore } from '@/game/store'
 import { trackEvent } from '@/game/cloud'
-import { useToast } from '@/hooks/use-toast'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +25,7 @@ import { AdDialog } from './AdDialog'
 import { BattleField } from './BattleField'
 import { CaptureSuccessDialog } from './CaptureSuccessDialog'
 import { LineupBar } from './LineupBar'
-import { AnimNumber, ConfigIcon, GemIcon, GoldIcon, HpBar, YaoAvatar } from './shared'
+import { AnimNumber, ConfigIcon, GemIcon, GoldIcon, HpBar, YaoAvatar, notify } from './shared'
 import { cn } from '@/lib/utils'
 
 /** 夜战 HUD 漆木按钮（与白天 ui-wood 同调） */
@@ -185,14 +184,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   }, [])
   const buffOpen = !buffChosen && buffOffer !== null && state.phase === 'prep' && offerReady
 
-  // ---- toast（带自动消失；项目 Toaster 移除延迟极长，需显式 duration） ----
-  const { toast } = useToast()
-  const notify = useCallback(
-    (title: string, description?: string) => {
-      toast({ title, description, duration: 2800 })
-    },
-    [toast]
-  )
+  // ---- toast：统一走 shared.notify（2.2s 自动消失；模块级引用稳定，可直接进依赖数组） ----
 
   const handlePickBuff = useCallback(
     (b: NightBuff) => {

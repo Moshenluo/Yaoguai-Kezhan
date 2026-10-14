@@ -23,18 +23,12 @@ import {
   matCap,
 } from '@/game/config'
 import type { MaterialCat } from '@/game/config'
-import { ConfigIcon, GoldIcon } from '../shared'
-import { toast } from '@/hooks/use-toast'
+import { ConfigIcon, GoldIcon, notify } from '../shared'
 import { cn } from '@/lib/utils'
 
 export interface BagPanelProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-}
-
-function notify(message: string) {
-  const t = toast({ title: message })
-  window.setTimeout(() => t.dismiss(), 2400)
 }
 
 /** 一键出售：基础素材保留底线（>20 的部分卖掉），高级素材与属性石不参与 */

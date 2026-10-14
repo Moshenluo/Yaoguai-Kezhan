@@ -24,8 +24,7 @@ import {
 } from '@/game/config'
 import type { FacilityConfig } from '@/game/config'
 import type { GameSave } from '@/game/types'
-import { ConfigIcon, GoldIcon, HpBar } from '../shared'
-import { toast } from '@/hooks/use-toast'
+import { ConfigIcon, GoldIcon, HpBar, notify } from '../shared'
 import { cn } from '@/lib/utils'
 
 type FacilityKey = keyof GameSave['facilities']
@@ -35,11 +34,6 @@ export interface FacilityPanelProps {
   onOpenChange: (open: boolean) => void
   /** 打开时高亮并滚动到的设施 */
   focusKey?: keyof GameSave['facilities']
-}
-
-function notify(title: string, description?: string) {
-  const t = toast({ title, description })
-  window.setTimeout(() => t.dismiss(), 2200)
 }
 
 function formatRate(n: number): string {
@@ -231,7 +225,7 @@ export function FacilityPanel({ open, onOpenChange, focusKey }: FacilityPanelPro
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="panel-sheet mx-auto max-w-[480px] rounded-t-3xl">
+      <DrawerContent className="panel-sheet mx-auto h-[78vh] max-w-[480px] rounded-t-[28px]">
         <DrawerHeader className="pb-2 text-center">
           <DrawerTitle className="panel-title text-lg tracking-wide">
             客栈设施

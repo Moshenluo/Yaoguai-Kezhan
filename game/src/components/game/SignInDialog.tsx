@@ -9,22 +9,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { ConfigIcon, GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GoldIcon, TicketIcon, notify } from '@/components/game/shared'
 import { SEVEN_DAY_REWARDS } from '@/game/config'
 import type { SignInReward } from '@/game/config'
 import { signInAvailable, useGameStore } from '@/game/store'
 import { sfx } from '@/game/audio'
-import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 export interface SignInDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-}
-
-function notify(title: string, description?: string) {
-  const t = toast({ title, description })
-  window.setTimeout(() => t.dismiss(), 2200)
 }
 
 type CardState = 'claimed' | 'today' | 'future'

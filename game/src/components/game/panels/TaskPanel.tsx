@@ -10,12 +10,11 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer'
 import { Progress } from '@/components/ui/progress'
-import { ConfigIcon, GemIcon, GoldIcon, TicketIcon } from '@/components/game/shared'
+import { ConfigIcon, GemIcon, GoldIcon, TicketIcon, notify } from '@/components/game/shared'
 import { achievementProgress, taskProgress, weekGoalInfo, useGameStore } from '@/game/store'
 import { sfx } from '@/game/audio'
 import { ACHIEVEMENTS, ACHIEVEMENT_CATEGORY_LABEL, DAILY_TASKS, WEEK_GOALS } from '@/game/config'
 import type { AchievementCategory } from '@/game/config'
-import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 export interface TaskPanelProps {
@@ -45,11 +44,6 @@ const CATEGORY_ICON: Record<AchievementCategory, string> = {
 function fmtNum(n: number): string {
   if (n >= 10000) return `${Math.floor(n / 1000)}k`
   return n.toLocaleString()
-}
-
-function notify(message: string) {
-  const t = toast({ title: message })
-  window.setTimeout(() => t.dismiss(), 2400)
 }
 
 /**

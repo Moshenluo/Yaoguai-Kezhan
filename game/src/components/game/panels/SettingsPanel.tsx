@@ -22,14 +22,8 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog'
 import { useGameStore } from '@/game/store'
-import { toast } from '@/hooks/use-toast'
-import { ConfigIcon } from '@/components/game/shared'
+import { ConfigIcon, notify } from '@/components/game/shared'
 import { cn } from '@/lib/utils'
-
-function notify(title: string, description?: string) {
-  const t = toast({ title, description })
-  window.setTimeout(() => t.dismiss(), 2200)
-}
 
 /** 设置弹窗：音乐音效开关 / 统计数据 / 重置存档 */
 export function SettingsPanel({
