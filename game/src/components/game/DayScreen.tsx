@@ -16,13 +16,16 @@ import {
   region2Unlockable,
   region3Unlockable,
   regionDef,
+  nextGoal,
+  systemHint,
+  systemUnlocked,
   skinUnlocked,
 } from '@/game/config'
 import { achievementProgress } from '@/game/store'
 import { YAOGUAI_MAP } from '@/game/yaoguai'
 import { SCENE_COMPS, DECO_PIECE_CAP, nextPieceGate, sceneCap, sceneTierIndex, sceneTotalCap, type SceneComp, type SceneCompTier } from '@/game/scene-layers'
 import type { GameSave } from '@/game/types'
-import { AnimNumber, ConfigIcon, GoldIcon, GemIcon, TicketIcon, YaoFigure } from './shared'
+import { AnimNumber, ConfigIcon, GoldIcon, GemIcon, TicketIcon, YaoFigure, notify } from './shared'
 import { FacilityPanel } from './panels/FacilityPanel'
 import { SettingsPanel } from './panels/SettingsPanel'
 import { OfflineDialog } from './OfflineDialog'
@@ -400,6 +403,27 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
   // 采集队：有可收取产出时「采」导航亮红点
   const gatherCollectable = useGameStore((s) =>
     Object.values(s.gather?.acc ?? {}).some((v) => v >= 1)
+  )
+
+  // ===== 系统逐步开放（config.SYSTEM_GATES 驱动）+ 下一目标 =====
+  const gateShop = useGameStore((s) => systemUnlocked(s, 'shop'))
+  const gateGather = useGameStore((s) => systemUnlocked(s, 'gather'))
+  const gateMap = useGameStore((s) => systemUnlocked(s, 'map'))
+  const gateDeco = useGameStore((s) => systemUnlocked(s, 'deco'))
+  /** 面板入口是否开放（妖怪/任务/图鉴/仓库始终开放；其余查 SYSTEM_GATES） */
+  const panelOpen = useCallback(
+    (key: PanelKey) => {
+      if (key === 'shop') return gateShop
+      if (key === 'gather') return gateGather
+      if (key === 'map') return gateMap
+      return true
+    },
+    [gateShop, gateGather, gateMap]
+  )
+  const goal = useMemo(
+    () => nextGoal(useGameStore.getState()),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 覆盖 nextGoal 读取的全部存档字段
+    [wins, innLevel, level, region, region2Opened, region2Level, region3Level, facilities]
   )
 
   // 皮肤
@@ -1384,25 +1408,46 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
 
         <div className="ml-auto flex items-center gap-1.5">
         {HUD_NAVS.map((n) => {
-          const dot = n.key === 'map' ? regionUnlockable : gatherCollectable
+          const open = panelOpen(n.key)
+          const dot = open && (n.key === 'map' ? regionUnlockable : gatherCollectable)
           return (
             <button
               key={n.key}
               type="button"
               onClick={() => {
                 sfx.play('click')
+                if (!open) {
+                  notify(systemHint(useGameStore.getState(), n.key))
+                  return
+                }
                 onOpenPanel(n.key)
               }}
-              aria-label={n.label}
+              aria-label={open ? n.label : `${n.label}未解锁`}
               className="relative flex h-12 w-11 shrink-0 flex-col items-center justify-center gap-0.5 transition active:scale-90"
             >
               {dot && (
                 <span className="absolute right-0.5 top-1 z-10 flex h-2 w-2 rounded-full border border-[#3a1410] bg-[#D0453B] shadow-sm" />
               )}
-              <span className="flex h-6 w-6 items-center justify-center">
-                <ConfigIcon icon={n.icon} size={22} className="ink-chip" />
+              <span className="relative flex h-6 w-6 items-center justify-center">
+                <ConfigIcon
+                  icon={n.icon}
+                  size={22}
+                  className={cn('ink-chip', !open && 'opacity-35 grayscale')}
+                />
+                {!open && (
+                  <span className="absolute -right-1.5 -top-1.5 flex h-3 w-3 items-center justify-center rounded-full border border-[#3a1410] bg-stone-700 text-[6px] font-bold leading-none text-stone-300">
+                    🔒
+                  </span>
+                )}
               </span>
-              <span className="yao-nametag max-w-none px-1.5 text-[9px] leading-tight">{n.label}</span>
+              <span
+                className={cn(
+                  'yao-nametag max-w-none px-1.5 text-[9px] leading-tight',
+                  !open && 'opacity-40'
+                )}
+              >
+                {n.label}
+              </span>
             </button>
           )
         })}
@@ -1650,6 +1695,19 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
         </AnimatePresence>
       </div>
 
+      {/* 下一目标：常驻轻指引（"下一步干嘛"），数据驱动 nextGoal，纯展示不拦截点击 */}
+      <div
+        className="pointer-events-none absolute bottom-[4.85rem] right-2.5 z-30 max-w-[62%]"
+        aria-live="polite"
+      >
+        <span className="block truncate rounded border border-[#D4A574]/40 bg-[#5C4013]/90 px-2 py-1 text-[9px] font-bold leading-tight text-[#FFE9B8] shadow-sm">
+          <span aria-hidden className="mr-1 text-[#E8B84B]">
+            ◆
+          </span>
+          {goal.text}
+        </span>
+      </div>
+
       {/* 妖王夜：次级入口，贴底栏上方左侧，不抢入夜 CTA */}
       <AnimatePresence>
         {bossUnlocked && (
@@ -1752,6 +1810,7 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
       >
         <div className="flex min-w-0 flex-1 items-stretch gap-1 pb-0.5">
           {NAVS.map((n) => {
+            const open = panelOpen(n.key)
             const dot =
               n.key === 'yaokui'
                 ? starUpReady
@@ -1766,39 +1825,79 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
                 type="button"
                 onClick={() => {
                   sfx.play('click')
+                  if (!open) {
+                    notify(systemHint(useGameStore.getState(), n.key))
+                    return
+                  }
                   onOpenPanel(n.key)
                 }}
-                aria-label={n.label}
+                aria-label={open ? n.label : `${n.label}未解锁`}
                 className="relative flex min-h-[48px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg transition active:scale-95 active:bg-black/15 hover:bg-black/5"
               >
                 <span className="ink-chip relative h-8 w-8 items-center justify-center">
-                  <ConfigIcon icon={n.icon} size={24} />
-                  {dot && (
+                  <ConfigIcon
+                    icon={n.icon}
+                    size={24}
+                    className={cn(!open && 'opacity-35 grayscale')}
+                  />
+                  {open && dot && (
                     <span className="absolute -right-0.5 -top-0.5 flex h-2 w-2 rounded-full border border-[#3a1410] bg-[#D0453B] shadow-sm" />
                   )}
+                  {!open && (
+                    <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#3a1410] bg-stone-700 text-[7px] font-bold leading-none text-stone-300 shadow-sm">
+                      🔒
+                    </span>
+                  )}
                 </span>
-                <span className="font-display truncate text-[10px] tracking-wide text-[#FFF6DF]/90">{n.label}</span>
+                <span
+                  className={cn(
+                    'font-display truncate text-[10px] tracking-wide',
+                    open ? 'text-[#FFF6DF]/90' : 'text-[#FFF6DF]/40'
+                  )}
+                >
+                  {n.label}
+                </span>
               </button>
             )
           })}
 
-          {/* 装修：庭院摆放独立入口（仓库之后） */}
+          {/* 装修：庭院摆放独立入口（仓库之后；客栈 Lv.5 开放） */}
           <button
             type="button"
             onClick={() => {
               sfx.play('click')
+              if (!gateDeco) {
+                notify(systemHint(useGameStore.getState(), 'deco'))
+                return
+              }
               setDressing(true)
               dragPosRef.current = {}
               setDragPos({})
               setSelId(null)
             }}
-            aria-label="装修庭院"
+            aria-label={gateDeco ? '装修庭院' : '装修庭院未解锁'}
             className="relative flex min-h-[48px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-lg transition active:scale-95 active:bg-black/15 hover:bg-black/5"
           >
-            <span className="ink-chip flex h-8 w-8 items-center justify-center">
-              <ConfigIcon icon="/images/ui/nav-deco.png" size={24} />
+            <span className="ink-chip relative flex h-8 w-8 items-center justify-center">
+              <ConfigIcon
+                icon="/images/ui/nav-deco.png"
+                size={24}
+                className={cn(!gateDeco && 'opacity-35 grayscale')}
+              />
+              {!gateDeco && (
+                <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full border border-[#3a1410] bg-stone-700 text-[7px] font-bold leading-none text-stone-300 shadow-sm">
+                  🔒
+                </span>
+              )}
             </span>
-            <span className="font-display truncate text-[10px] tracking-wide text-[#FFF6DF]/90">装修</span>
+            <span
+              className={cn(
+                'font-display truncate text-[10px] tracking-wide',
+                gateDeco ? 'text-[#FFF6DF]/90' : 'text-[#FFF6DF]/40'
+              )}
+            >
+              装修
+            </span>
           </button>
         </div>
 

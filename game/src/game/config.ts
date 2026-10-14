@@ -253,6 +253,74 @@ export function region3Unlockable(save: GameSave): boolean {
   )
 }
 
+// ============ 系统逐步开放（V1.4）：登记一处，门卫/锁标/红点/提示全生效 ============
+// 未在此表登记的系统（妖怪/任务/图鉴/仓库/入夜）视为始终开放；
+// 新系统只需加一条 SystemGate，即可接入底栏锁标 + page 门卫 + 点击提示。
+export interface SystemGate {
+  /** 锁定时点击的提示文案（含解锁条件） */
+  hint: (save: GameSave) => string
+  /** 解锁谓词（纯存档驱动，老档自然全开，无需迁移） */
+  unlocked: (save: GameSave) => boolean
+}
+
+export const SYSTEM_GATES: Record<string, SystemGate> = {
+  /** 商店：先体验一轮升级，再开招募/买卖 */
+  shop: {
+    hint: () => '客栈 Lv.2 后商店开张，可招募新妖',
+    unlocked: (s) => s.innLevel >= 2,
+  },
+  /** 采集队：素材线延后（食材可先由夜战掉落/商店补给） */
+  gather: {
+    hint: () => '客栈 Lv.3 后可组建采集队',
+    unlocked: (s) => s.innLevel >= 3,
+  },
+  /** 世界地图：第 5 夜启程（恰在区域二需求前一步，制造预期） */
+  map: {
+    hint: (s) => `守店推进到第 5 夜后开启世界地图（当前第 ${s.level} 夜）`,
+    unlocked: (s) => s.level >= 5 || s.region !== 1 || s.region2Opened,
+  },
+  /** 庭院装修：纯装扮，最后开放 */
+  deco: {
+    hint: () => '客栈 Lv.5 后可装修庭院',
+    unlocked: (s) => s.innLevel >= 5,
+  },
+}
+
+/** 系统是否已解锁（未登记默认开放） */
+export function systemUnlocked(save: GameSave, id: string): boolean {
+  const gate = SYSTEM_GATES[id]
+  return !gate || gate.unlocked(save)
+}
+
+/** 锁定提示文案 */
+export function systemHint(save: GameSave, id: string): string {
+  return SYSTEM_GATES[id]?.hint(save) ?? '暂未解锁'
+}
+
+// ============ 下一目标（"不知道该干嘛"的解法）：自上而下首个未达标项 ============
+export interface NextGoal {
+  id: string
+  text: string
+}
+
+const GOAL_TABLE: { id: string; text: string; done: (s: GameSave) => boolean }[] = [
+  { id: 'facility', text: '点院子里的建筑，把一处设施升到 Lv.2', done: (s) => Object.values(s.facilities).some((v) => v >= 2) },
+  { id: 'first-win', text: '入夜守店，拿下第一胜（控血可收服）', done: (s) => s.stats.wins >= 1 },
+  { id: 'shop', text: '客栈升到 Lv.2，商店开张招募新妖', done: (s) => s.innLevel >= 2 },
+  { id: 'boss', text: `守店累计 ${2} 胜，妖王夜将现`, done: (s) => s.stats.wins >= BOSS_NIGHT.unlockWins },
+  { id: 'gather', text: '客栈升到 Lv.3，采集队可组', done: (s) => s.innLevel >= 3 },
+  { id: 'deco', text: '客栈升到 Lv.5，庭院装修开放', done: (s) => s.innLevel >= 5 },
+  { id: 'map', text: '守店推进到第 5 夜，世界地图开启', done: (s) => s.level >= 5 || s.region !== 1 },
+  { id: 'branch', text: `第 ${REGION2_UNLOCK.level} 夜 + 累计 ${REGION2_UNLOCK.wins} 胜，水墨幽谷可探`, done: (s) => region2Unlockable(s) || s.region2Opened },
+  { id: 'branch-open', text: '打开地图，开设水墨幽谷分店', done: (s) => s.region2Opened },
+]
+
+/** 下一目标：全部达标后落到日常兜底项 */
+export function nextGoal(save: GameSave): NextGoal {
+  for (const g of GOAL_TABLE) if (!g.done(save)) return { id: g.id, text: g.text }
+  return { id: 'daily', text: '完成每日任务，领取悬赏奖励' }
+}
+
 /** 某区域的当前关卡进度 */
 export function regionLevelOf(save: GameSave, region: 1 | 2 | 3): number {
   if (region === 2) return save.region2Level ?? 1

@@ -11,11 +11,11 @@ import { useGameStore } from '@/game/store'
 import { onBootProgress, preloadBoot, preloadExtras, preloadNightAssets, preloadSkinPieces } from '@/game/preload'
 import { SCENE_COMPS } from '@/game/scene-layers'
 import type { BattleResult } from '@/game/types'
-import { NIGHT_PHASES, rollNightPhase } from '@/game/config'
+import { NIGHT_PHASES, rollNightPhase, systemHint, systemUnlocked } from '@/game/config'
 import type { BgmTrackName } from '@/game/audio'
 import { saveCloud, trackEvent } from '@/game/cloud'
 import { BgmPlayer } from '@/components/game/BgmPlayer'
-import { ConfigIcon } from '@/components/game/shared'
+import { ConfigIcon, notify } from '@/components/game/shared'
 import { DayScreen } from '@/components/game/DayScreen'
 import { NightScreen } from '@/components/game/NightScreen'
 import { SettlementDialog } from '@/components/game/SettlementDialog'
@@ -37,7 +37,18 @@ export default function Home() {
   const [transition, setTransition] = useState<Transition>(null)
   /** 转场期预告夜相（与 NightScreen 引擎各自独立 roll，仅作氛围预告，数值以引擎为准） */
   const [transitionPhase, setTransitionPhase] = useState<keyof typeof NIGHT_PHASES | null>(null)
-  const [panel, setPanel] = useState<PanelKey | null>(null)
+  const [panel, setPanelRaw] = useState<PanelKey | null>(null)
+  /** 面板门卫：未解锁系统统一拦截（底栏/顶栏/任务跳转等所有入口都走这里） */
+  const setPanel = useCallback((key: PanelKey | null) => {
+    if (key) {
+      const s = useGameStore.getState()
+      if (!systemUnlocked(s, key)) {
+        notify(systemHint(s, key))
+        return
+      }
+    }
+    setPanelRaw(key)
+  }, [])
   const [settleOpen, setSettleOpen] = useState(false)
   const [pendingResult, setPendingResult] = useState<BattleResult | null>(null)
   const [battleKey, setBattleKey] = useState(0)
