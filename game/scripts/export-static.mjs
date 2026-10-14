@@ -52,6 +52,8 @@ try {
     ["'/images/", "'/yaoguaikezhan/images/"],
     ['(/images/', '(/yaoguaikezhan/images/'],
     ['=/images/', '=/yaoguaikezhan/images/'],
+    // 反引号模板字符串（yaoImg 等）——SWC 保留模板字面量，必须单独覆盖
+    ['`/images/', '`/yaoguaikezhan/images/'],
   ]
   const REWRITE_EXTS = new Set(['.html', '.js', '.css', '.txt', '.xml', '.json', '.webmanifest', '.map'])
   let rewrote = 0
