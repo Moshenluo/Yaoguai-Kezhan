@@ -22,6 +22,7 @@ import {
   LEVEL_BONUS,
   PROTECT_HP_THRESHOLD,
   SLOTS,
+  TREASURE_TRAIN,
   WAVES,
   computeFacilityBonus,
   counterDamageMult,
@@ -575,6 +576,26 @@ export class BattleEngine {
       this.waveEliteSpawned = true
     }
 
+    // 宝箱波（V1.4）：普通夜 2-4 波概率刷运宝小妖——不打客栈，打死掉宝，溜走无惩罚
+    const treasureCfg = this.opts.bossNight ? null : TREASURE_TRAIN
+    if (
+      treasureCfg &&
+      waveIdx + 1 >= treasureCfg.waveMin &&
+      waveIdx + 1 <= treasureCfg.waveMax &&
+      Math.random() < treasureCfg.chance
+    ) {
+      const t = makeEnemy(ENEMY_TYPES.minion, lanes[li++ % lanes.length], Math.max(2, delay * 0.5))
+      t.treasure = true
+      t.name = '运宝小妖'
+      t.img = '/images/ui/gift.png'
+      t.atk = 0
+      t.size = 40
+      t.hp = t.maxHp = Math.round(ENEMY_TYPES.minion.hp * treasureCfg.hpMult * scale.hp * nightHpMult)
+      t.speed = ENEMY_TYPES.minion.speed * scale.speed * treasureCfg.speedMult
+      this.spawnQueue.push(t)
+      this.float(50, 26, '✦ 运宝小妖出没！拦住它', 'gold')
+    }
+
     // 妖雾彩蛋：随机波次额外刷新1只限定稀有妖怪（妖王夜关闭）
     if (this.state.fogTriggered && this.state.fogYaoguai && this.state.wave === 4) {
       this.spawnQueue.push(this.makeElite(this.state.fogYaoguai, delay + 2.5, wave.hpScale * 1.3, '妖雾'))
@@ -805,11 +826,17 @@ export class BattleEngine {
             }
           }
         } else if (e.x >= INN_X) {
-          e.attackTimer += dt
-          if (e.attackTimer >= 1.15) {
-            e.attackTimer = 0
-            this.damageInn(e.atk, e.lane)
-            // 客栈受击震屏由 UI 层监听处理
+          if (e.treasure) {
+            // 运宝小妖到达客栈：不造成伤害，带着宝箱溜走（玩家的损失只是奖励）
+            e.dead = true
+            this.float(INN_X, e.lane, '运宝小妖溜了…', 'damage')
+          } else {
+            e.attackTimer += dt
+            if (e.attackTimer >= 1.15) {
+              e.attackTimer = 0
+              this.damageInn(e.atk, e.lane)
+              // 客栈受击震屏由 UI 层监听处理
+            }
           }
         } else {
           // 移动
@@ -1308,8 +1335,14 @@ export class BattleEngine {
       const gold = Math.round(this.goldForKill(e) * (this.nightBuff.goldMul ?? 1) * this.phase.goldMult)
       this.state.waveGold += gold
       this.float(e.x, e.lane, `+${gold}金`, 'gold')
-      // 击杀素材掉落：精英妖丹 + 野妖随机建材
-      if (e.kind.startsWith('elite:')) {
+      // 击杀素材掉落：运宝小妖开箱 / 精英妖丹 + 野妖随机建材
+      if (e.treasure) {
+        const bonus = TREASURE_TRAIN.gold + Math.round(Math.random() * 100)
+        this.state.waveGold += bonus
+        this.addMaterial(['wood', 'stone', 'iron', 'meat', 'rice', 'salt'][Math.floor(Math.random() * 6)], 1)
+        if (Math.random() < 0.5) this.addMaterial(['meat', 'rice', 'salt'][Math.floor(Math.random() * 3)], 1)
+        this.float(e.x, e.lane - 6, `开箱！+${bonus}金`, 'gold')
+      } else if (e.kind.startsWith('elite:')) {
         this.addMaterial('pill-normal', 1)
       } else if (e.kind.startsWith('boss:')) {
         this.addMaterial('pill-normal', 2)

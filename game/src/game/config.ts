@@ -52,6 +52,20 @@ export const ENEMY_TYPES = {
   sprite: { name: '精怪', img: '/images/enemy/enemy-3.png', hp: 80, atk: 9, speed: 6, size: 48 },
 } as const
 
+/** 宝箱波（V1.4）：2-4 波概率刷运宝小妖——拦住打死掉宝，溜走无惩罚（不打客栈） */
+export const TREASURE_TRAIN = {
+  /** 每夜整体触发概率 */
+  chance: 0.32,
+  /** 可出没的波次（1-based） */
+  waveMin: 2,
+  waveMax: 4,
+  /** 击杀宝箱基础金币（±随机 100） */
+  gold: 200,
+  /** 血量/速度相对小妖模板倍率（跑得快，鼓励提前布防） */
+  hpMult: 1.25,
+  speedMult: 1.3,
+} as const
+
 /** 站位格（10 格：沿妖道两侧一圈分布——上排 5 / 下排 5，路百分比坐标；妖道带 42%~56%） */
 export const SLOTS = [
   { slot: 0, x: 16, y: 38 },

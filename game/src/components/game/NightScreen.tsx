@@ -92,6 +92,55 @@ type LineupSlots = Array<LineupEntry | null>
 const EMPTY_LINEUP: LineupSlots = Array.from({ length: 6 }, () => null)
 const EMPTY_UID_SET: ReadonlySet<string> = new Set()
 
+// ---- 上次夜战阵容（localStorage 持久化）：入场即预填，prep 阶段可自由调整 ----
+const LINEUP_KEY = 'yaoz-last-lineup'
+interface StoredLineupEntry {
+  yaoguaiId: string
+  slot: number
+}
+
+/** 读上次阵容并校验（已拥有 + 体力可上阵 + 槽位合法），返回预填槽位 */
+function loadLastLineup(): LineupSlots {
+  try {
+    const raw = localStorage.getItem(LINEUP_KEY)
+    if (!raw) return EMPTY_LINEUP
+    const arr: StoredLineupEntry[] = JSON.parse(raw)
+    const store = useGameStore.getState()
+    const maxSlots = maxSlotsForInn(store.innLevel)
+    const slots: LineupSlots = Array.from({ length: maxSlots }, () => null)
+    let filled = false
+    for (const e of arr) {
+      if (!e || !Number.isInteger(e.slot) || e.slot < 0 || e.slot >= maxSlots) continue
+      const o = store.owned[e.yaoguaiId]
+      if (!o || o.count <= 0 || !staminaTier(o.stamina ?? 100).battleOk) continue
+      slots[e.slot] = {
+        yaoguaiId: e.yaoguaiId,
+        star: o.star,
+        level: o.level ?? 1,
+        slot: e.slot,
+        stamina: o.stamina ?? 100,
+        skillLevel: o.skillLevel ?? 1,
+      }
+      filled = true
+    }
+    return filled ? slots : EMPTY_LINEUP
+  } catch {
+    return EMPTY_LINEUP
+  }
+}
+
+/** 结算/退出时记录本次阵容，供下次入场预填 */
+function saveLastLineup(entries: Array<{ yaoguaiId: string; slot: number }>) {
+  try {
+    const arr = entries
+      .filter((e) => e.yaoguaiId && Number.isInteger(e.slot))
+      .map(({ yaoguaiId, slot }) => ({ yaoguaiId, slot }))
+    if (arr.length > 0) localStorage.setItem(LINEUP_KEY, JSON.stringify(arr))
+  } catch {
+    // localStorage 不可用（隐私模式等）：跳过持久化
+  }
+}
+
 // 挂载探测用空订阅（useSyncExternalStore 惯用法）
 const emptySubscribe = (): (() => void) => () => undefined
 const getTrue = (): boolean => true
@@ -147,7 +196,13 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   const [netBuffed, setNetBuffed] = useState(false)
 
   // ---- 本地 UI 状态 ----
-  const [lineup, setLineup] = useState<LineupSlots>(EMPTY_LINEUP)
+  // ---- 防呆保底 ref：预填/兜底共用，置位后不再自动改阵 ----
+  const autoFilledRef = useRef(false)
+  const [lineup, setLineup] = useState<LineupSlots>(() => {
+    const preset = loadLastLineup()
+    if (preset.some((l) => l !== null)) autoFilledRef.current = true
+    return preset
+  })
   /** 槽位吸附式布阵：当前打开就地菜单的站位（空位=上阵菜单 / 已占=守卫浮窗），null=关闭 */
   const [activeSlot, setActiveSlot] = useState<number | null>(null)
   const [exitOpen, setExitOpen] = useState(false)
@@ -232,7 +287,6 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   }, [lineup, engine])
 
   // ---- 防呆保底：倒计时临结束仍空阵 → 自动上阵（新手/挂机党友好；虚脱妖怪不可上阵，体力充沛者优先） ----
-  const autoFilledRef = useRef(false)
   useEffect(() => {
     if (state.phase !== 'prep' || autoFilledRef.current) return
     if (state.prepCountdown > 1.6) return
@@ -323,6 +377,8 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
     const waveGold = state.waveGold
     const captured = [...state.capturedThisBattle]
     const materialsGained = { ...state.materialsGained }
+    // 记录本次阵容：下次入场预填（自动布阵）
+    saveLastLineup(engine.lineup.map((l) => ({ yaoguaiId: l.yaoguaiId, slot: l.slot })))
     // 胜利时最后一波（BOSS 波）体力消耗入账
     if (victory) {
       const ids = engine.lineup.map((l) => l.yaoguaiId)
@@ -605,6 +661,8 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
   // ---- 主动退出（半金结算，进度清留由外层处理） ----
   const confirmExit = useCallback(() => {
     const s = engine.state
+    // 记录本次阵容：下次入场预填（自动布阵）
+    saveLastLineup(engine.lineup.map((l) => ({ yaoguaiId: l.yaoguaiId, slot: l.slot })))
     // 参战妖怪同样获得经验（按已推进波次）
     const expPer = battleExpGain(s.wave, false, bossNight)
     const expGained: Record<string, number> = {}

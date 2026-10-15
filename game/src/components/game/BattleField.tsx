@@ -161,6 +161,12 @@ const EnemyView = memo(function EnemyView({ enemy: e, now, capturable, selected,
       className="pointer-events-none absolute z-[10] -translate-x-1/2 -translate-y-1/2"
       style={{ left: `${ex}%`, top: `${e.lane}%`, transition: 'left 120ms linear' }}
     >
+      {/* 运宝小妖名称（宝箱波：金色 + 打掉有宝提示） */}
+      {e.treasure && (
+        <div className="absolute bottom-full left-1/2 mb-3 -translate-x-1/2 animate-pulse whitespace-nowrap rounded-full border border-amber-300/50 bg-[#3d2a08]/85 px-1.5 py-px text-[9px] font-black text-amber-200 shadow-[0_0_8px_rgba(232,184,75,0.45)]">
+          运宝小妖 · 打掉有宝
+        </div>
+      )}
       {/* 精英/妖王名称（野性难驯：石灰色 + 🚫 标记） */}
       {e.elite && (
         <div
@@ -198,7 +204,7 @@ const EnemyView = memo(function EnemyView({ enemy: e, now, capturable, selected,
           value={e.hp}
           max={e.maxHp}
           height={legend ? 7 : 5}
-          color={capturable ? 'bg-amber-400' : legend ? 'bg-rose-400' : e.uncapturable && e.elite ? 'bg-stone-400' : undefined}
+          color={capturable ? 'bg-amber-400' : e.treasure ? 'bg-amber-300' : legend ? 'bg-rose-400' : e.uncapturable && e.elite ? 'bg-stone-400' : undefined}
         />
       </div>
       {/* 落地阴影：让单位有「踩在场地上」的实体感 */}
@@ -211,6 +217,7 @@ const EnemyView = memo(function EnemyView({ enemy: e, now, capturable, selected,
       <div
         className={cn(
           'relative rounded-[30%]',
+          e.treasure && 'ring-2 ring-amber-300/90 animate-pulse',
           e.elite && !legend && (e.uncapturable ? 'ring-2 ring-stone-400/70' : 'ring-2 ring-amber-300/80'),
           legend && 'ring-2 ring-rose-400/90 shadow-[0_0_16px_rgba(244,63,94,0.5)]',
           legend && !capturable && !selected && 'yg-boss-aura',

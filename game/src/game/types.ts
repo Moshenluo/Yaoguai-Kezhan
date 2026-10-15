@@ -340,6 +340,8 @@ export interface BattleEnemy {
   /** 捕捉保护（血量≤5% 停止一切伤害） */
   protectedFlag: boolean
   captureFailCount: number
+  /** 运宝小妖（宝箱波）：不打客栈，打死掉宝，到达客栈则溜走 */
+  treasure?: boolean
   /** 野性难驯（稀有精英概率生成）：本夜无法收服，只能放归 */
   uncapturable?: boolean
   /** 精英词缀（V2.0 反背板：精英怪随机携带，普通怪/妖雾/妖王不带） */
