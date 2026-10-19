@@ -365,6 +365,28 @@ export interface FloatText {
   born: number
 }
 
+/** 技能特效类别（V1.5：一类一张发光贴图，黑底 screen blend 叠加；贴图未上线时回退纯飘字） */
+export type SkillFxKind =
+  | 'slash' // 物理斩击弧光（投石/爪击/突袭/箭雨）
+  | 'burst' // 土石冲击爆发（掘地/音波）
+  | 'water' // 水系波纹
+  | 'flame' // 烈焰
+  | 'ink' // 墨浪漩涡
+  | 'shield' // 护盾光环
+  | 'heal' // 治疗灵光
+  | 'buff' // 增益金光（冲锋/标记/攻速）
+  | 'dark' // 暗影（魅惑/吞噬）
+
+/** 技能特效事件：短寿命（约 0.9s），坐标同飘字（横向/纵向 %） */
+export interface SkillFx {
+  id: number
+  kind: SkillFxKind
+  x: number
+  y: number
+  /** 出生时间（引擎 elapsed 秒） */
+  born: number
+}
+
 export type BattlePhase =
   | 'prep' // 波次间隔（布阵倒计时）
   | 'interlude' // 波间抉择（肉鸽三选一事件，暂停等待玩家）
@@ -438,6 +460,8 @@ export interface BattleState {
   speed: number
   paused: boolean
   elapsed: number
+  /** 技能特效（V1.5）：施术闪现的发光贴图，短寿命随 cleanupFloats 清理 */
+  skillFx: SkillFx[]
 }
 
 /** 战斗结算 */

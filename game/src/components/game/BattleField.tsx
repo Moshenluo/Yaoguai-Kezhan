@@ -3,7 +3,7 @@
 import { memo, useEffect, useRef, useState } from 'react'
 import { BOSS_SKILL_TEXT, type BattleEngine } from '@/game/engine'
 import type { BattleDefender, BattleEnemy, BattleState, FloatText } from '@/game/types'
-import { CAPTURE_HP_THRESHOLD, ELITE_AFFIXES, SLOTS, regionDef, slotUnlockAt } from '@/game/config'
+import { CAPTURE_HP_THRESHOLD, ELITE_AFFIXES, SLOTS, SKILL_FX_IMG, SKILL_ICON, regionDef, slotUnlockAt } from '@/game/config'
 import { sfx } from '@/game/audio'
 import { HpBar, YaoFigure, ConfigIcon } from './shared'
 import { ElementBadge } from './ElementBadge'
@@ -107,6 +107,10 @@ const BATTLE_CSS = `
 .yg-capture-selected { animation: yg-capture-selected-kf 0.9s ease-in-out infinite; }
 @keyframes yg-cast-kf { 0% { transform: scale(1.3); filter: drop-shadow(0 0 12px rgba(103,232,249,0.9)) } 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(103,232,249,0)) } }
 .yg-cast { animation: yg-cast-kf 0.55s ease-out; }
+.yg-cast-icon { animation: yg-cast-icon-kf 0.55s ease-out; }
+@keyframes yg-cast-icon-kf { 0% { opacity: 0; transform: translateX(-50%) scale(0.4) } 30% { opacity: 1; transform: translateX(-50%) scale(1.18) } 70% { opacity: 1; transform: translateX(-50%) scale(1) } 100% { opacity: 0; transform: translateX(-50%) scale(1.1) } }
+.yg-fx { mix-blend-mode: screen; animation: yg-fx-kf 0.8s ease-out forwards; }
+@keyframes yg-fx-kf { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0.45) } 28% { opacity: 1; transform: translate(-50%, -50%) scale(1.12) } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.4) } }
 @keyframes yg-twinkle-kf { 0%,100% { opacity: 0.15 } 50% { opacity: 0.9 } }
 .yg-twinkle { animation: yg-twinkle-kf 2.8s ease-in-out infinite; }
 @keyframes yg-fog-kf { 0%,100% { opacity: 0.45 } 50% { opacity: 0.95 } }
@@ -375,6 +379,18 @@ const DefenderView = memo(function DefenderView({ defender: d, slotY, now, float
       </div>
       <div className={cn('relative', casting && 'yg-cast')}>
         <YaoFigure id={d.yaoguaiId} size={size} active={!d.dead} className={d.dead ? 'opacity-40' : undefined} />
+        {/* 技能图标闪现（V1.5 试点：已生成图标表的妖怪才有，随施术窗口弹出） */}
+        {casting && SKILL_ICON[d.yaoguaiId] && (
+          <img
+            src={SKILL_ICON[d.yaoguaiId]}
+            alt=""
+            aria-hidden
+            draggable={false}
+            width={30}
+            height={30}
+            className="yg-cast-icon pointer-events-none absolute -top-4 left-1/2 z-10 drop-shadow-[0_1px_3px_rgba(0,0,0,0.6)]"
+          />
+        )}
         {d.dead && (
           <div className="absolute inset-0 flex items-center justify-center">
             <ConfigIcon icon="/images/ui/stamina-collapse.png" size={22} />
@@ -728,6 +744,27 @@ export function BattleField({
               {f.text}
             </span>
           </div>
+        )
+      })}
+
+      {/* 技能特效（V1.5）：黑底发光贴图 screen blend 叠加，缩放+淡入淡出；未上线贴图的类别跳过 */}
+      {state.skillFx.map((f) => {
+        const img = SKILL_FX_IMG[f.kind]
+        if (!img) return null
+        return (
+          <img
+            key={f.id}
+            src={img}
+            alt=""
+            aria-hidden
+            draggable={false}
+            className="yg-fx pointer-events-none absolute z-[24]"
+            style={{
+              left: `${safeCoord(f.x, 50)}%`,
+              top: `${safeCoord(f.y, 40)}%`,
+              width: f.kind === 'slash' ? '26%' : '18%',
+            }}
+          />
         )
       })}
 

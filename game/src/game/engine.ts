@@ -8,6 +8,7 @@ import type {
   NightBuffEffect,
   NightEvent,
   SkillEffect,
+  SkillFxKind,
 } from './types'
 import type { NightPhase } from './config'
 import {
@@ -22,6 +23,7 @@ import {
   LEVEL_BONUS,
   PROTECT_HP_THRESHOLD,
   SLOTS,
+  SKILL_FX,
   TREASURE_TRAIN,
   WAVES,
   computeFacilityBonus,
@@ -186,6 +188,7 @@ export class BattleEngine {
       speed: 1,
       paused: false,
       elapsed: 0,
+      skillFx: [],
     }
     if (this.state.fogTriggered) {
       this.state.fogYaoguai = pickFogYaoguaiId(this.opts.region ?? 1)
@@ -498,6 +501,9 @@ export class BattleEngine {
   private cleanupFloats() {
     if (this.state.floatTexts.length > 0) {
       this.state.floatTexts = this.state.floatTexts.filter((f) => this.state.elapsed - f.born < 1.1)
+    }
+    if (this.state.skillFx.length > 0) {
+      this.state.skillFx = this.state.skillFx.filter((f) => this.state.elapsed - f.born < 0.9)
     }
   }
 
@@ -1051,6 +1057,12 @@ export class BattleEngine {
     const rangeMult = hallAbility ? (hallEnhanced ? 1.3 : 1.2) : 1
     const dmgAtk = atk * d.skillDmgMult
     this.float(d.x, 12 + d.slot * 6, d.skillName, 'skill')
+    // 技能特效（V1.5）：按效果类别在施术位/目标位闪现发光贴图（贴图未上线时 UI 回退纯飘字）
+    const fxDef = SKILL_FX[d.skillEffect as SkillEffect]
+    if (fxDef) {
+      if (fxDef.at === 'self') this.pushFx(fxDef.kind, d.x, 12 + d.slot * 6 + 5)
+      else this.pushFx(fxDef.kind, target.x, target.lane)
+    }
     switch (d.skillEffect as SkillEffect) {
       case 'stun-aoe': {
         // 掘地冲击：范围眩晕+伤害（仓库·控制时长加成）
@@ -1451,6 +1463,12 @@ export class BattleEngine {
       type,
       born: this.state.elapsed,
     })
+  }
+
+  /** 技能特效闪现（V1.5）：发光贴图短寿命事件，UI 层按 kind 取贴图渲染 */
+  private pushFx(kind: SkillFxKind, x: number, y: number) {
+    this.floatId += 1
+    this.state.skillFx.push({ id: this.floatId, kind, x, y, born: this.state.elapsed })
   }
 
   // ---------- 捉妖系统 ----------

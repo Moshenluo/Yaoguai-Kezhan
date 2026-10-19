@@ -1,6 +1,6 @@
 import type { SceneComp, SceneCompTier } from './scene-layers'
 import { YAOGUAI } from './yaoguai'
-import type { Element, EliteAffixId, GameSave, InnFacilities, NightBuffEffect, NightEvent, NightRole } from './types'
+import type { Element, EliteAffixId, GameSave, InnFacilities, NightBuffEffect, NightEvent, NightRole, SkillEffect, SkillFxKind } from './types'
 
 // ============ 妖怪客栈 · 数值配置 ============
 
@@ -1427,6 +1427,45 @@ export const STAMINA_POTIONS: StaminaPotionDef[] = [
 // ============ 技能升级系统（V1.3：妖丹消耗，技能效果 +15%/级） ============
 
 /** 技能等级上限 */
+// ---- 技能视觉（V1.5）：特效类别映射 + 贴图/图标表（未上线的资源自动回退纯飘字） ----
+
+/** SkillEffect → 特效类别与展示位（self=施术守卫身上 / target=目标敌人身上） */
+export const SKILL_FX: Record<SkillEffect, { kind: SkillFxKind; at: 'self' | 'target' }> = {
+  'stun-aoe': { kind: 'burst', at: 'self' },
+  'multi-shot': { kind: 'slash', at: 'target' },
+  'heal-aura': { kind: 'heal', at: 'self' },
+  shield: { kind: 'shield', at: 'self' },
+  'dash-strike': { kind: 'slash', at: 'target' },
+  'claw-combo': { kind: 'slash', at: 'target' },
+  'water-bolt': { kind: 'water', at: 'target' },
+  mark: { kind: 'buff', at: 'target' },
+  charm: { kind: 'dark', at: 'target' },
+  'fire-rain': { kind: 'flame', at: 'target' },
+  'charge-buff': { kind: 'buff', at: 'self' },
+  insight: { kind: 'heal', at: 'self' },
+  devour: { kind: 'dark', at: 'target' },
+  'stone-shriek': { kind: 'burst', at: 'target' },
+  'ten-heal': { kind: 'heal', at: 'self' },
+  'nine-domains': { kind: 'buff', at: 'self' },
+  'swift-volley': { kind: 'slash', at: 'target' },
+  'ink-flood': { kind: 'ink', at: 'target' },
+  'ink-stone': { kind: 'shield', at: 'self' },
+}
+
+/** 特效类别 → 发光贴图（黑底，前端 screen blend；缺图跳过渲染） */
+export const SKILL_FX_IMG: Partial<Record<SkillFxKind, string>> = {
+  slash: '/images/ui/fx-slash.png',
+  burst: '/images/ui/fx-burst.png',
+  heal: '/images/ui/fx-heal.png',
+}
+
+/** 技能图标（按妖怪 id；释放时守卫头顶闪现，未生成图标的妖怪不显示） */
+export const SKILL_ICON: Partial<Record<string, string>> = {
+  lili: '/images/ui/skill-lili.png',
+  xuangui: '/images/ui/skill-xuangui.png',
+  lushu: '/images/ui/skill-lushu.png',
+}
+
 export const SKILL_MAX_LEVEL = 5
 /** 每级技能效果加成（伤害/治疗/控制时长统一 +15%） */
 export const SKILL_LEVEL_BONUS = 0.15
