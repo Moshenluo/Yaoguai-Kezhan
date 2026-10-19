@@ -422,7 +422,7 @@ export function DayScreen({ onOpenPanel, onNight, onBossNight }: DayScreenProps)
   )
   const goal = useMemo(
     () => nextGoal(useGameStore.getState()),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- 覆盖 nextGoal 读取的全部存档字段
+    // 依赖覆盖 nextGoal 读取的全部存档字段（wins/innLevel/level/region/区域进度/设施）
     [wins, innLevel, level, region, region2Opened, region2Level, region3Level, facilities]
   )
 
