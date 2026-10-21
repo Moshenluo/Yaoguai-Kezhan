@@ -24,6 +24,7 @@ import {
   PROTECT_HP_THRESHOLD,
   SLOTS,
   SKILL_FX,
+  SKILL_SELF_SUFFICIENT,
   TREASURE_TRAIN,
   WAVES,
   computeFacilityBonus,
@@ -989,7 +990,16 @@ export class BattleEngine {
 
       // 技能冷却
       d.skillTimer += dt
-      const target = this.targetFor(d)
+      let target = this.targetFor(d)
+      // 自足技能（护盾/治疗/光环/压制）不依赖攻击索敌：场上还有活敌即可施放
+      if (!target && SKILL_SELF_SUFFICIENT.has(d.skillEffect as SkillEffect)) {
+        for (const e of this.state.enemies) {
+          if (!e.dead) {
+            target = e
+            break
+          }
+        }
+      }
       if (d.skillTimer >= d.skillCd / (this.nightBuff.cdSpeedMul ?? 1) && target) {
         d.skillTimer = 0
         this.castSkill(d, target, atk)

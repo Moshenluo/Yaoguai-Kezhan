@@ -1456,15 +1456,48 @@ export const SKILL_FX: Record<SkillEffect, { kind: SkillFxKind; at: 'self' | 'ta
 export const SKILL_FX_IMG: Partial<Record<SkillFxKind, string>> = {
   slash: '/images/ui/fx-slash.png',
   burst: '/images/ui/fx-burst.png',
+  water: '/images/ui/fx-water.png',
+  flame: '/images/ui/fx-flame.png',
+  ink: '/images/ui/fx-ink.png',
+  shield: '/images/ui/fx-shield.png',
   heal: '/images/ui/fx-heal.png',
+  buff: '/images/ui/fx-buff.png',
+  dark: '/images/ui/fx-dark.png',
 }
 
 /** 技能图标（按妖怪 id；释放时守卫头顶闪现，未生成图标的妖怪不显示） */
 export const SKILL_ICON: Partial<Record<string, string>> = {
   lili: '/images/ui/skill-lili.png',
-  xuangui: '/images/ui/skill-xuangui.png',
+  shengsheng: '/images/ui/skill-shengsheng.png',
   lushu: '/images/ui/skill-lushu.png',
+  xuangui: '/images/ui/skill-xuangui.png',
+  qiuyu: '/images/ui/skill-qiuyu.png',
+  lei: '/images/ui/skill-lei.png',
+  lu: '/images/ui/skill-lu.png',
+  yu: '/images/ui/skill-yu.png',
+  zheng: '/images/ui/skill-zheng.png',
+  heluoyu: '/images/ui/skill-heluoyu.png',
+  jiuweihu: '/images/ui/skill-jiuweihu.png',
+  bifang: '/images/ui/skill-bifang.png',
+  luwu: '/images/ui/skill-luwu.png',
+  chenghuang: '/images/ui/skill-chenghuang.png',
+  yingzhao: '/images/ui/skill-yingzhao.png',
+  molin: '/images/ui/skill-molin.png',
+  yanling: '/images/ui/skill-yanling.png',
+  baize: '/images/ui/skill-baize.png',
+  taotie: '/images/ui/skill-taotie.png',
 }
+
+/** 自足技能：护盾/治疗/光环/范围压制类，无射程目标也可施放（否则近战辅助永远攒不出技能） */
+export const SKILL_SELF_SUFFICIENT: ReadonlySet<SkillEffect> = new Set([
+  'shield',
+  'heal-aura',
+  'ten-heal',
+  'nine-domains',
+  'ink-stone',
+  'insight',
+  'stun-aoe',
+])
 
 export const SKILL_MAX_LEVEL = 5
 /** 每级技能效果加成（伤害/治疗/控制时长统一 +15%） */
