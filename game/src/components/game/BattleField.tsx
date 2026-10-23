@@ -770,7 +770,7 @@ export function BattleField({
 
       {/* prep 布阵倒计时 */}
       {isPrep && (
-        <div className="absolute left-1/2 top-[4.5rem] z-[31] -translate-x-1/2 overflow-hidden rounded-2xl border-2 border-[#5C3A24]/50 shadow-lg">
+        <div className="absolute left-1/2 top-[7.5rem] z-[31] -translate-x-1/2 overflow-hidden rounded-2xl border-2 border-[#5C3A24]/50 shadow-lg">
           <div className="ui-wood px-4 py-1 text-center">
             <div className="text-[10px] font-bold tracking-wider text-[#FFE9B8]/90">
               {bossNight

@@ -1086,7 +1086,7 @@ function NightBattle({ level, onExit, bossNight = false, region = 1 }: NightScre
             <div
               className={cn(
                 HUD_CHIP,
-                'hidden min-[380px]:block',
+                // 手机窄屏也常驻显示：月相影响本夜 buff，耐久条 flex-1 会自动让位
                 ph.id === 'blood' && 'border-[#E0526B]/60 text-[#FFC9CF]',
                 ph.id === 'waxing' && 'border-[#E8B84B]/50 text-[#FFE9B8]',
                 ph.id === 'waning' && 'border-[#8FA3C8]/50 text-[#C9D4E8]'
