@@ -1,0 +1,33 @@
+{
+  "frames": 1620,
+  "fps": 60,
+  "width": 1920,
+  "height": 1080,
+  "duration": 27,
+  "source_hashes": {
+    "core.js": "bc4739c8906e909e95fbc739fa0f0dae3e9c31865662d778168619c23121c91e",
+    "act-one.js": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332",
+    "act-two.js": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b",
+    "film.js": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94",
+    "timeline.js": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5",
+    "index.html": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1",
+    "score.json": "17a53b4af2091cb44341729d4094df190b3dfd28784cc718dbd4fe9df2fae417"
+  },
+  "source_unchanged_during_render": true,
+  "browser_errors": [],
+  "render_source_hashes": {
+    "core.js": "f81b285e7ce3e7d2225a8c556e0f86f5713037eaab928f3e1f7d3d33fa1cd7fb",
+    "act-one.js": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332",
+    "act-two.js": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b",
+    "film.js": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94",
+    "timeline.js": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5",
+    "index.html": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1",
+    "score.json": "17a53b4af2091cb44341729d4094df190b3dfd28784cc718dbd4fe9df2fae417"
+  },
+  "post_render_formatting": {
+    "file": "core.js",
+    "change": "Removed one final blank line only; no JavaScript tokens changed.",
+    "verified_original_bytes_equal_final_bytes_plus_newline": true,
+    "canvas_recapture_comparison": "All 65 before/after Canvas PNG hashes are identical."
+  }
+}

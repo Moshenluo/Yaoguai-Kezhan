@@ -1,0 +1,51 @@
+{
+  "purpose": "V14 landscape uses the V12 font subsets unchanged. SHA-256, current cmap and lyric/caption coverage checked with fontTools on 2026-10-24.",
+  "caption": "经营客栈 · 招募妖怪 · 夜晚守家",
+  "lyrics_character_count": 55,
+  "recommended_caption_font": "PVSong",
+  "note": "MaShanZheng has no U+00B7 middle dot. Caption uses PVSong; brush glyph outlines are not replaced or synthesized. This report does not assess browser rendering or layout.",
+  "fonts": [
+    {
+      "file": "assets/heavy.otf",
+      "family": "NotoSansCJKsc-Bold",
+      "source": "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
+      "source_collection_index": 2,
+      "source_sha256": "faa5f3656a78b2e2d450d27fe8382c778bc2b6bb5ea29c986664a6a435056ceb",
+      "sha256": "d527a9a52245ce3bb75f5666a359c6e41af576b78045cb316e15aef1bc84d833",
+      "bytes": 27936,
+      "cmap_codepoints": 74,
+      "identical_to_v11_subset": true,
+      "missing_lyrics": "",
+      "missing_caption": "",
+      "identical_to_v12_subset": true
+    },
+    {
+      "file": "assets/serif.otf",
+      "family": "NotoSerifCJKsc-Bold",
+      "source": "/usr/share/fonts/opentype/noto/NotoSerifCJK-Bold.ttc",
+      "source_collection_index": 2,
+      "source_sha256": "1505ee3b9c0890fae6302ee0e9c6fd74d690f4a55a6ace1d9944f3f6352d622d",
+      "sha256": "4f95cfa5a3eb1daa274b518556e84a0b930a8d52ad77548f7632c0bd07ef5044",
+      "bytes": 40188,
+      "cmap_codepoints": 74,
+      "identical_to_v11_subset": true,
+      "missing_lyrics": "",
+      "missing_caption": "",
+      "identical_to_v12_subset": true
+    },
+    {
+      "file": "assets/brush.ttf",
+      "family": "MaShanZheng-Regular",
+      "source": "/workspace/yaoguai-pv-ink/assets/MaShanZheng-Regular.ttf",
+      "source_collection_index": null,
+      "source_sha256": "6d2546bb189c732a8ca29af9e22457b152387d158aa459e4ac2ce1e51788b7fb",
+      "sha256": "f5b47d54ac1d64e6d3a033be8efa8230c79b298fbe9e8a796b024ad229ed37f4",
+      "bytes": 45764,
+      "cmap_codepoints": 73,
+      "identical_to_v11_subset": true,
+      "missing_lyrics": "",
+      "missing_caption": "·",
+      "identical_to_v12_subset": true
+    }
+  ]
+}

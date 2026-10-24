@@ -1,0 +1,109 @@
+{
+  "project": "妖怪客栈 · 等你当家｜16:9 横版文字 PV",
+  "duration_seconds": 27,
+  "canvas": [
+    1920,
+    1080
+  ],
+  "fps": 60,
+  "music": {
+    "credit": "末深落",
+    "title": "妖怪客栈等你当家",
+    "source": "User uploaded MP3",
+    "source_filename": "末深落 - 妖怪客栈等你当家.mp3",
+    "source_sha256": "cbb817a96a557ed2cabccc976cbde3cdb7b6d51e5fee56d535ab1c8c75b3aff0",
+    "source_metadata_note": "The supplied file contains an AI-generation label. No external music was added.",
+    "source_cut_seconds": [
+      13.7,
+      40.7
+    ],
+    "speed": 1,
+    "fade_in_seconds": 0.018,
+    "fade_out_seconds": 0.7,
+    "excerpt_sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48",
+    "full_source_distributed": false,
+    "identical_to_v11_excerpt": true,
+    "identical_to_v12_excerpt": true
+  },
+  "lyrics": {
+    "authority": "Exact verse and chorus specified by the user",
+    "characters": 55,
+    "text": [
+      "叮叮当",
+      "算盘响",
+      "山海伙伴",
+      "来帮忙",
+      "你当掌柜",
+      "我来跑堂",
+      "小小客栈",
+      "大有名堂",
+      "来来来",
+      "坐坐坐",
+      "一桌烟火",
+      "热热闹闹",
+      "开张",
+      "开张",
+      "妖怪客栈",
+      "等你当家"
+    ]
+  },
+  "timing": {
+    "method": "Inherited from published V12: local sherpa-onnx Paraformer Chinese recognition with user-specified lyric text. No new transcription or external ASR upload for V14.",
+    "precision_note": "Estimated syllable onsets, with typical animation anticipation of 120 ms and overlapping scene bridges. Not phoneme-level forced alignment.",
+    "clock": "audio.currentTime in HTML; deterministic n/fps time when exporting",
+    "score_identical_to_v12": false,
+    "lyric_timing_identical_to_v12": true,
+    "canvas_geometry_changed": true,
+    "non_geometry_score_fields_identical_to_v12": true
+  },
+  "visuals": {
+    "method": "Original deterministic Canvas typography and geometric animation",
+    "fonts": [
+      "Noto Sans CJK SC Bold",
+      "Noto Serif CJK SC Bold",
+      "Ma Shan Zheng Regular"
+    ],
+    "licenses": [
+      "source/assets/FONT-LICENSE.txt",
+      "source/assets/MaShanZheng-OFL.txt"
+    ],
+    "font_subsets": true,
+    "external_images_used": false,
+    "revision": "Native landscape layouts: side-by-side keeper/runner dialogue, horizontal invitation and chorus cards, horizontal calligraphic title. Shared beams and paper corners connect scenes; lyric-specific gestures settle on readable baselines.",
+    "supplemental_copy": {
+      "text": "经营客栈 · 招募妖怪 · 夜晚守家",
+      "authority": "User-confirmed gameplay: inn management and guests, nighttime tower defense, and recruiting monsters. User approved adding this short caption.",
+      "presentation": "PVSong text with geometric diamond separators, separate from the unchanged sung lyrics"
+    },
+    "font_subset_extension": "V12 font subset bytes retained unchanged; current cmap coverage verified, see font-check.json.",
+    "review_status": "Completed: 65 deterministic captures, 11 motion groups, four decoded MP4 frames, offline/encoded browser playback and full-media decode. Details in validation.json and review/visual-review.md.",
+    "references": {
+      "notes": "REFERENCES.md",
+      "projects": [
+        "https://github.com/motion-canvas/motion-canvas",
+        "https://github.com/remotion-dev/remotion",
+        "https://github.com/juliangarnier/anime",
+        "https://github.com/codrops/OnScrollTypographyAnimations"
+      ],
+      "method": "Reviewed public source/docs for sequencing, stagger, masked text and frame-based timing; no third-party animation code or dependencies copied into the film."
+    },
+    "visual_loop": {
+      "start_seconds": 26.68,
+      "end_seconds": 26.96,
+      "first_and_last_canvas_frames_exact": true,
+      "audio_loop_seamless": false
+    },
+    "brand_hold": {
+      "fully_settled_from_seconds": 25.04,
+      "loop_transition_starts_seconds": 26.68,
+      "hold_seconds": 1.64
+    }
+  },
+  "audio_delivery": "The AAC excerpt is copied into the MP4 without an additional audio encode.",
+  "base_revision": {
+    "version": "V12",
+    "source_commit": "64c8b3442887e15a3f10a0a6668637b99e1d8018",
+    "repository_path": "promo/tiktok-type-v12",
+    "note": "Assets and audio recovered from the last published version; landscape compositions are newly authored."
+  }
+}

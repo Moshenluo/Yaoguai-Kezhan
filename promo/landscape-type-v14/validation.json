@@ -1,0 +1,429 @@
+{
+  "version": "wide-v14",
+  "checked_on": "2026-10-24",
+  "status": "passed",
+  "specification": {
+    "width": 1920,
+    "height": 1080,
+    "aspect_ratio": "16:9",
+    "fps": 60,
+    "duration_seconds": 27,
+    "frames": 1620
+  },
+  "content": {
+    "lyric_characters": 55,
+    "lyric_timing_preserved_from_v12": true,
+    "audio_excerpt_preserved": true,
+    "fonts_preserved_from_v12": true
+  },
+  "checks": {
+    "render": {
+      "frames": 1620,
+      "fps": 60,
+      "width": 1920,
+      "height": 1080,
+      "duration": 27,
+      "source_hashes": {
+        "core.js": "bc4739c8906e909e95fbc739fa0f0dae3e9c31865662d778168619c23121c91e",
+        "act-one.js": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332",
+        "act-two.js": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b",
+        "film.js": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94",
+        "timeline.js": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5",
+        "index.html": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1",
+        "score.json": "17a53b4af2091cb44341729d4094df190b3dfd28784cc718dbd4fe9df2fae417"
+      },
+      "source_unchanged_during_render": true,
+      "browser_errors": [],
+      "render_source_hashes": {
+        "core.js": "f81b285e7ce3e7d2225a8c556e0f86f5713037eaab928f3e1f7d3d33fa1cd7fb",
+        "act-one.js": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332",
+        "act-two.js": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b",
+        "film.js": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94",
+        "timeline.js": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5",
+        "index.html": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1",
+        "score.json": "17a53b4af2091cb44341729d4094df190b3dfd28784cc718dbd4fe9df2fae417"
+      },
+      "post_render_formatting": {
+        "file": "core.js",
+        "change": "Removed one final blank line only; no JavaScript tokens changed.",
+        "verified_original_bytes_equal_final_bytes_plus_newline": true,
+        "canvas_recapture_comparison": "All 65 before/after Canvas PNG hashes are identical."
+      }
+    },
+    "media": {
+      "duration_seconds": 27,
+      "width": 1920,
+      "height": 1080,
+      "fps": 60,
+      "frames": 1620,
+      "color_space": "bt709",
+      "video_codec": "h264",
+      "audio_codec": "aac",
+      "audio_sample_rate": 48000,
+      "audio_channels": 2,
+      "video_start_seconds": 0,
+      "audio_start_seconds": 0,
+      "audio_packet_payload_matches_excerpt": true,
+      "audio_packet_md5": "MD5=d07d424c68a9d5c54404a1a9761d9854",
+      "faststart": true,
+      "full_decode": "passed with -xerror",
+      "file_bytes": 10003404,
+      "file_sha256": "55fdfa9bccc4fca3b7899cabaee9be3351c3844e0fd776f5b8910dbb9e8321f3"
+    },
+    "player": {
+      "offline": {
+        "fonts": [
+          true,
+          true,
+          true
+        ],
+        "overflow": false,
+        "canvasReadable": true,
+        "audioDuration": 27,
+        "canvasWidth": 1920,
+        "canvasHeight": 1080,
+        "displayAspect": 1.7777777777777777,
+        "played": true,
+        "seekAndMute": true,
+        "replayed": true,
+        "httpRequests": 0
+      },
+      "video": {
+        "duration": 27,
+        "width": 1920,
+        "height": 1080,
+        "start": 13.001964,
+        "after": 13.474805
+      },
+      "errors": [],
+      "standalone_sha256": "00d87583af91d8247d4441527fdc2d446bd927ecc77e8cb70cf3ec095f9e2d2a",
+      "source_hashes": {
+        "index.html": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1",
+        "timeline.js": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5",
+        "core.js": "bc4739c8906e909e95fbc739fa0f0dae3e9c31865662d778168619c23121c91e",
+        "act-one.js": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332",
+        "act-two.js": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b",
+        "film.js": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94",
+        "assets/heavy.otf": "d527a9a52245ce3bb75f5666a359c6e41af576b78045cb316e15aef1bc84d833",
+        "assets/serif.otf": "4f95cfa5a3eb1daa274b518556e84a0b930a8d52ad77548f7632c0bd07ef5044",
+        "assets/brush.ttf": "f5b47d54ac1d64e6d3a033be8efa8230c79b298fbe9e8a796b024ad229ed37f4",
+        "assets/music.m4a": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+      },
+      "video_sha256": "55fdfa9bccc4fca3b7899cabaee9be3351c3844e0fd776f5b8910dbb9e8321f3"
+    },
+    "preview_build": {
+      "source_hashes": {
+        "index.html": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1",
+        "timeline.js": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5",
+        "core.js": "bc4739c8906e909e95fbc739fa0f0dae3e9c31865662d778168619c23121c91e",
+        "act-one.js": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332",
+        "act-two.js": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b",
+        "film.js": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94",
+        "assets/heavy.otf": "d527a9a52245ce3bb75f5666a359c6e41af576b78045cb316e15aef1bc84d833",
+        "assets/serif.otf": "4f95cfa5a3eb1daa274b518556e84a0b930a8d52ad77548f7632c0bd07ef5044",
+        "assets/brush.ttf": "f5b47d54ac1d64e6d3a033be8efa8230c79b298fbe9e8a796b024ad229ed37f4",
+        "assets/music.m4a": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+      },
+      "standalone_sha256": "00d87583af91d8247d4441527fdc2d446bd927ecc77e8cb70cf3ec095f9e2d2a",
+      "script_order": [
+        "timeline.js",
+        "core.js",
+        "act-one.js",
+        "act-two.js",
+        "film.js"
+      ]
+    },
+    "contact": {
+      "aspect_ratio": "16:9",
+      "storyboard_frames": 16,
+      "cover_seconds": 25.6,
+      "motion_groups": 11,
+      "motion_frames": 49,
+      "scope": "Screenshot composition; aesthetic review is separate."
+    },
+    "encoded_frames": {
+      "video_sha256": "55fdfa9bccc4fca3b7899cabaee9be3351c3844e0fd776f5b8910dbb9e8321f3",
+      "dimensions": [
+        1920,
+        1080
+      ],
+      "frames": [
+        {
+          "seconds": 0,
+          "decoded_sha256": "1d768b24fd7c70cfdf8fff1fed578cd5855bfbe5e829d91d629c0c242462d6d8",
+          "reference_capture": "wide-v14-01-0.000.png",
+          "mean_absolute_rgb_error": 1.9480402842078188
+        },
+        {
+          "seconds": 8.5,
+          "decoded_sha256": "92196e8dc8fb8589bad68487a6cd9fdda11d23e2ebb5ea0751982af6c45470ee",
+          "reference_capture": "wide-v14-06-8.500.png",
+          "mean_absolute_rgb_error": 1.8183400848765432
+        },
+        {
+          "seconds": 18.8,
+          "decoded_sha256": "3ae47f796e8dade72943136b67fb1b2a0e0c3162211de40c14371b1c2416a1e4",
+          "reference_capture": "wide-v14-12-18.800.png",
+          "mean_absolute_rgb_error": 1.9286519418724282
+        },
+        {
+          "seconds": 25.6,
+          "decoded_sha256": "c8d0400c6f225be9f08abe4d87dc6fdda075e5a52a0242480b61a65d22ce89e0",
+          "reference_capture": "wide-v14-16-25.600.png",
+          "mean_absolute_rgb_error": 1.9834071180555555
+        }
+      ],
+      "scope": "Decoded MP4 frames compared with matching Canvas captures. JPEG contact sheet for separate visual inspection."
+    },
+    "toolchain": {
+      "node": "v24.19.0",
+      "playwright": "1.62.1",
+      "chromium": "151.0.7922.173",
+      "ffmpeg": "7.1.5-0+deb13u1",
+      "python": "3.12.14"
+    }
+  },
+  "visual_review": {
+    "keyframes": 16,
+    "total_capture_frames": 65,
+    "motion_groups": 11,
+    "report": "review/visual-review.md",
+    "encoded_contact": "review/encoded-contact.jpg",
+    "measurements": {
+      "loop": {
+        "before_seconds": 0,
+        "after_seconds": 27,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0,
+        "exact": true
+      },
+      "epsilon_seconds": 1e-06,
+      "continuity": [
+        {
+          "kind": "bridge-start",
+          "label": "ledger start",
+          "boundary_seconds": 2.68,
+          "before_seconds": 2.679999,
+          "after_seconds": 2.6800010000000003,
+          "changedPixels": 2027,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.028743248456790122,
+          "maxChannelDelta": 40
+        },
+        {
+          "kind": "scene-cut",
+          "label": "scene cut",
+          "boundary_seconds": 2.92,
+          "before_seconds": 2.919999,
+          "after_seconds": 2.920001,
+          "changedPixels": 730,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.00022489068930041153,
+          "maxChannelDelta": 3
+        },
+        {
+          "kind": "bridge-end",
+          "label": "ledger end",
+          "boundary_seconds": 3.18,
+          "before_seconds": 3.179999,
+          "after_seconds": 3.1800010000000003,
+          "changedPixels": 381,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0001345486111111111,
+          "maxChannelDelta": 4
+        },
+        {
+          "kind": "bridge-start",
+          "label": "paper start",
+          "boundary_seconds": 5.86,
+          "before_seconds": 5.859999,
+          "after_seconds": 5.8600010000000005,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        },
+        {
+          "kind": "scene-cut",
+          "label": "scene cut",
+          "boundary_seconds": 6.1,
+          "before_seconds": 6.0999989999999995,
+          "after_seconds": 6.100001,
+          "changedPixels": 1702,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0007015174897119341,
+          "maxChannelDelta": 3
+        },
+        {
+          "kind": "bridge-end",
+          "label": "paper end",
+          "boundary_seconds": 6.28,
+          "before_seconds": 6.279999,
+          "after_seconds": 6.280001,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        },
+        {
+          "kind": "bridge-start",
+          "label": "counter start",
+          "boundary_seconds": 8.76,
+          "before_seconds": 8.759999,
+          "after_seconds": 8.760000999999999,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        },
+        {
+          "kind": "scene-cut",
+          "label": "scene cut",
+          "boundary_seconds": 8.98,
+          "before_seconds": 8.979999000000001,
+          "after_seconds": 8.980001,
+          "changedPixels": 1836,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0006830311213991769,
+          "maxChannelDelta": 2
+        },
+        {
+          "kind": "bridge-end",
+          "label": "counter end",
+          "boundary_seconds": 9.2,
+          "before_seconds": 9.199999,
+          "after_seconds": 9.200000999999999,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        },
+        {
+          "kind": "bridge-start",
+          "label": "corner start",
+          "boundary_seconds": 12.35,
+          "before_seconds": 12.349999,
+          "after_seconds": 12.350000999999999,
+          "changedPixels": 4104,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0070836548353909465,
+          "maxChannelDelta": 9
+        },
+        {
+          "kind": "scene-cut",
+          "label": "scene cut",
+          "boundary_seconds": 12.56,
+          "before_seconds": 12.559999000000001,
+          "after_seconds": 12.560001,
+          "changedPixels": 2510,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.001077514146090535,
+          "maxChannelDelta": 6
+        },
+        {
+          "kind": "bridge-end",
+          "label": "corner end",
+          "boundary_seconds": 12.82,
+          "before_seconds": 12.819999000000001,
+          "after_seconds": 12.820001,
+          "changedPixels": 1362,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.001598508230452675,
+          "maxChannelDelta": 45
+        },
+        {
+          "kind": "scene-cut",
+          "label": "scene cut",
+          "boundary_seconds": 15.68,
+          "before_seconds": 15.679999,
+          "after_seconds": 15.680000999999999,
+          "changedPixels": 72,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 3.29539609053498e-05,
+          "maxChannelDelta": 2
+        },
+        {
+          "kind": "scene-cut",
+          "label": "scene cut",
+          "boundary_seconds": 20,
+          "before_seconds": 19.999999,
+          "after_seconds": 20.000001,
+          "changedPixels": 424,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 7.490997942386831e-05,
+          "maxChannelDelta": 2
+        },
+        {
+          "kind": "bridge-start",
+          "label": "doors start",
+          "boundary_seconds": 21.78,
+          "before_seconds": 21.779999,
+          "after_seconds": 21.780001000000002,
+          "changedPixels": 5028,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.007696598508230452,
+          "maxChannelDelta": 19
+        },
+        {
+          "kind": "scene-cut",
+          "label": "scene cut",
+          "boundary_seconds": 22.02,
+          "before_seconds": 22.019999,
+          "after_seconds": 22.020001,
+          "changedPixels": 4789,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0.0021799447016460907,
+          "maxChannelDelta": 9
+        },
+        {
+          "kind": "bridge-end",
+          "label": "doors end",
+          "boundary_seconds": 22.38,
+          "before_seconds": 22.379998999999998,
+          "after_seconds": 22.380001,
+          "changedPixels": 40,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 1.398533950617284e-05,
+          "maxChannelDelta": 2
+        },
+        {
+          "kind": "visual-loop-start",
+          "label": "loop start",
+          "boundary_seconds": 26.68,
+          "before_seconds": 26.679999,
+          "after_seconds": 26.680001,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        },
+        {
+          "kind": "visual-loop-end",
+          "label": "loop end",
+          "boundary_seconds": 26.96,
+          "before_seconds": 26.959999,
+          "after_seconds": 26.960001000000002,
+          "changedPixels": 0,
+          "totalPixels": 2073600,
+          "meanRGBDelta": 0,
+          "maxChannelDelta": 0
+        }
+      ],
+      "title_hold": {
+        "before_seconds": 25.06,
+        "after_seconds": 26.66,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0
+      }
+    },
+    "scope": "Visual assessment of keyframes and motion contact sheets plus four decoded MP4 frames; no full-video audio-listening review."
+  },
+  "limitations": [
+    "A visual loop does not imply a seamless audio loop.",
+    "Quality checks do not predict reach or engagement."
+  ]
+}

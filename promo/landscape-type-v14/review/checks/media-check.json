@@ -1,0 +1,20 @@
+{
+  "duration_seconds": 27,
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "frames": 1620,
+  "color_space": "bt709",
+  "video_codec": "h264",
+  "audio_codec": "aac",
+  "audio_sample_rate": 48000,
+  "audio_channels": 2,
+  "video_start_seconds": 0,
+  "audio_start_seconds": 0,
+  "audio_packet_payload_matches_excerpt": true,
+  "audio_packet_md5": "MD5=d07d424c68a9d5c54404a1a9761d9854",
+  "faststart": true,
+  "full_decode": "passed with -xerror",
+  "file_bytes": 10003404,
+  "file_sha256": "55fdfa9bccc4fca3b7899cabaee9be3351c3844e0fd776f5b8910dbb9e8321f3"
+}

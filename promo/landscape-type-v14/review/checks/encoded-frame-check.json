@@ -1,0 +1,34 @@
+{
+  "video_sha256": "55fdfa9bccc4fca3b7899cabaee9be3351c3844e0fd776f5b8910dbb9e8321f3",
+  "dimensions": [
+    1920,
+    1080
+  ],
+  "frames": [
+    {
+      "seconds": 0,
+      "decoded_sha256": "1d768b24fd7c70cfdf8fff1fed578cd5855bfbe5e829d91d629c0c242462d6d8",
+      "reference_capture": "wide-v14-01-0.000.png",
+      "mean_absolute_rgb_error": 1.9480402842078188
+    },
+    {
+      "seconds": 8.5,
+      "decoded_sha256": "92196e8dc8fb8589bad68487a6cd9fdda11d23e2ebb5ea0751982af6c45470ee",
+      "reference_capture": "wide-v14-06-8.500.png",
+      "mean_absolute_rgb_error": 1.8183400848765432
+    },
+    {
+      "seconds": 18.8,
+      "decoded_sha256": "3ae47f796e8dade72943136b67fb1b2a0e0c3162211de40c14371b1c2416a1e4",
+      "reference_capture": "wide-v14-12-18.800.png",
+      "mean_absolute_rgb_error": 1.9286519418724282
+    },
+    {
+      "seconds": 25.6,
+      "decoded_sha256": "c8d0400c6f225be9f08abe4d87dc6fdda075e5a52a0242480b61a65d22ce89e0",
+      "reference_capture": "wide-v14-16-25.600.png",
+      "mean_absolute_rgb_error": 1.9834071180555555
+    }
+  ],
+  "scope": "Decoded MP4 frames compared with matching Canvas captures. JPEG contact sheet for separate visual inspection."
+}

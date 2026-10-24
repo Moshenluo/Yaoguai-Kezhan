@@ -1,0 +1,276 @@
+{
+  "title": "妖怪客栈 · 等你当家｜16:9 横版文字 PV",
+  "version": "wide-v14",
+  "duration_seconds": 27,
+  "width": 1920,
+  "height": 1080,
+  "fps": 60,
+  "aspect_ratio": "16:9",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3592,
+      "sha256": "0915807b54c3f15aa08d75bbc51a778ed396afc504c745022ad5ea7e1ef4d825"
+    },
+    {
+      "path": "REFERENCES.md",
+      "bytes": 8252,
+      "sha256": "f6a20110a8635bc1c1cf989b2b3a7949a86efaad2f911f17b2f6cfeb3200b921"
+    },
+    {
+      "path": "cover.jpg",
+      "bytes": 664041,
+      "sha256": "fabfdbada151455c658a9663ed91e03740a707b8f40e20acdd66b13dbbd4f72f"
+    },
+    {
+      "path": "font-check.json",
+      "bytes": 2159,
+      "sha256": "827035ef4972758abbf5cd8c759c4df181f034da5a849370ad9752f917a9d01e"
+    },
+    {
+      "path": "music-excerpt.m4a",
+      "bytes": 878825,
+      "sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+    },
+    {
+      "path": "preview-standalone.html",
+      "bytes": 1358816,
+      "sha256": "00d87583af91d8247d4441527fdc2d446bd927ecc77e8cb70cf3ec095f9e2d2a"
+    },
+    {
+      "path": "provenance.json",
+      "bytes": 4476,
+      "sha256": "8359c8e06923da1c8bb621c47e748940e0bbab607836ec652b0d056bf788ea0a"
+    },
+    {
+      "path": "review/checks/contact-check.json",
+      "bytes": 195,
+      "sha256": "e88c3fced4298876f77749b69bd29f7a98a27376ce6e55ab919e59c0894f33d8"
+    },
+    {
+      "path": "review/checks/encoded-frame-check.json",
+      "bytes": 1199,
+      "sha256": "78c9a1f3f68f0a5d9053c4434fd327cba7f1132b095cd11122d55a38bc57bdb1"
+    },
+    {
+      "path": "review/checks/integration-check.json",
+      "bytes": 1557,
+      "sha256": "3a725468f6e53a844de9c680efe1a3c87caefd44f8854ab6b78672e32aaacc9b"
+    },
+    {
+      "path": "review/checks/media-check.json",
+      "bytes": 561,
+      "sha256": "227cd419f644de7a6f7a0d53cfe4409d2d1bde2cd5d1a4f33116da39e996c015"
+    },
+    {
+      "path": "review/checks/preview-build.json",
+      "bytes": 1107,
+      "sha256": "189bd818f3366a139a66ef72a6275ca68077b3c95dc716c87249e1c3d9c2a9a2"
+    },
+    {
+      "path": "review/checks/render-check.json",
+      "bytes": 1702,
+      "sha256": "3df1fe7b2543b9121857f9d204f39a2048da4d57d4ffca6c608a94a6157d0f98"
+    },
+    {
+      "path": "review/encoded-contact.jpg",
+      "bytes": 205795,
+      "sha256": "d0a98b712eb7976c1b1ba6d785f8a2293465da98ef90fa6dd4004c7f9d7e47ff"
+    },
+    {
+      "path": "review/frames.json",
+      "bytes": 35026,
+      "sha256": "9320b5f3e23226523eaa53c09871d099c5c96d3a2cd6a3853f759ae068ef81ad"
+    },
+    {
+      "path": "review/motion-bustle.jpg",
+      "bytes": 161418,
+      "sha256": "182ad0d2dee2efb7bb84154bd70655bccb17359f1356168b49dd9ff6040857d0"
+    },
+    {
+      "path": "review/motion-counter.jpg",
+      "bytes": 115122,
+      "sha256": "19fbd6d98469fd5f66d2afee34f2ac8c746de157ca9ed77b220a431ff8f217f8"
+    },
+    {
+      "path": "review/motion-doors.jpg",
+      "bytes": 116828,
+      "sha256": "3a1c8c76f8cbf38c6db654880b61c3abeb06d295335281e0a485b9e73dcb41c1"
+    },
+    {
+      "path": "review/motion-gate.jpg",
+      "bytes": 150968,
+      "sha256": "a7f305729207fb88dd5a95221a489edd96151075195c9cc9aac64fe2eb3a75fb"
+    },
+    {
+      "path": "review/motion-invitation.jpg",
+      "bytes": 131828,
+      "sha256": "1fb0310ef30b0816548f066e53e6863879bdc1cf691b1573efb078599735130e"
+    },
+    {
+      "path": "review/motion-ledger.jpg",
+      "bytes": 170855,
+      "sha256": "d0111ba6be77b4f35b4464c6dcea4f36215d74a8b1d372b6c0aa01362ea2fc79"
+    },
+    {
+      "path": "review/motion-loop.jpg",
+      "bytes": 135803,
+      "sha256": "d10325986b670aaed182ca9bd599fca950d4e5a2402dab92be826dbf9a5bf543"
+    },
+    {
+      "path": "review/motion-opening.jpg",
+      "bytes": 138858,
+      "sha256": "c05ba226b137ce8cb5abc887dcedfa9c0d8e926544fbe39b418b8852c6174d0d"
+    },
+    {
+      "path": "review/motion-paper.jpg",
+      "bytes": 133606,
+      "sha256": "eaecaba61b18b26163542806b80d6c14de20762320ecaf6b4b2e33b5471e4b30"
+    },
+    {
+      "path": "review/motion-roles.jpg",
+      "bytes": 168623,
+      "sha256": "1b32737be7d267452046d2ec4aa9172ceed99f1e3d91c404165383a3283657b3"
+    },
+    {
+      "path": "review/motion-table.jpg",
+      "bytes": 107146,
+      "sha256": "bce2a6adaa4a4054b6c4b7d9a9e45e38960d7d1700c1335b612e65fa093ca027"
+    },
+    {
+      "path": "review/visual-review.md",
+      "bytes": 3523,
+      "sha256": "5c7a85727f92497567a54839c0568b11db6167ce7a29c002de1e9bcca4b5fc80"
+    },
+    {
+      "path": "source/act-one.js",
+      "bytes": 7117,
+      "sha256": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332"
+    },
+    {
+      "path": "source/act-two.js",
+      "bytes": 6661,
+      "sha256": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b"
+    },
+    {
+      "path": "source/assets/FONT-LICENSE.txt",
+      "bytes": 14712,
+      "sha256": "849f4ea9c214fa4ac3593b770c699f387534b11ce671264c1b10d85bdcb5997b"
+    },
+    {
+      "path": "source/assets/MaShanZheng-OFL.txt",
+      "bytes": 4396,
+      "sha256": "54107539e415cc21d97752b7b1738c3d152451863f65e2c4e51556d3ceab1ab9"
+    },
+    {
+      "path": "source/assets/brush.ttf",
+      "bytes": 45764,
+      "sha256": "f5b47d54ac1d64e6d3a033be8efa8230c79b298fbe9e8a796b024ad229ed37f4"
+    },
+    {
+      "path": "source/assets/heavy.otf",
+      "bytes": 27936,
+      "sha256": "d527a9a52245ce3bb75f5666a359c6e41af576b78045cb316e15aef1bc84d833"
+    },
+    {
+      "path": "source/assets/music.m4a",
+      "bytes": 878825,
+      "sha256": "26650e5a4591dc48b14f32a0a457f1a6dbf9cc87eebdb03978624f80d48b2f48"
+    },
+    {
+      "path": "source/assets/serif.otf",
+      "bytes": 40188,
+      "sha256": "4f95cfa5a3eb1daa274b518556e84a0b930a8d52ad77548f7632c0bd07ef5044"
+    },
+    {
+      "path": "source/build_preview.py",
+      "bytes": 1476,
+      "sha256": "c55373fcb785262da22a264e19c114a8c8771dbecf949adaa621a385474dd135"
+    },
+    {
+      "path": "source/core.js",
+      "bytes": 4740,
+      "sha256": "bc4739c8906e909e95fbc739fa0f0dae3e9c31865662d778168619c23121c91e"
+    },
+    {
+      "path": "source/film.js",
+      "bytes": 6906,
+      "sha256": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94"
+    },
+    {
+      "path": "source/font-text.txt",
+      "bytes": 284,
+      "sha256": "d7fdf5b1843c3d1005492090baba31689cee3355fe8f19e03c552c7b873d3456"
+    },
+    {
+      "path": "source/index.html",
+      "bytes": 2669,
+      "sha256": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1"
+    },
+    {
+      "path": "source/make_contact.py",
+      "bytes": 3239,
+      "sha256": "7fb18f796a0be9be382b8f2ca4e9f2a54c80ff602a857bfc93fc0d37fd1b710f"
+    },
+    {
+      "path": "source/package.json",
+      "bytes": 578,
+      "sha256": "5cebcddda66a27fbb50a541cefce7a3d1aac1260e97d5cba9eae623916bcf53e"
+    },
+    {
+      "path": "source/package_delivery.py",
+      "bytes": 6235,
+      "sha256": "bd7d4a328a3a2a4794469032215611a17e18b8cbd4cecdc28fbda9831ce4356b"
+    },
+    {
+      "path": "source/render.cjs",
+      "bytes": 7088,
+      "sha256": "4bc12f1652ef48dcdbfe34ba5b562d0702e348af2a854c3840e7e6fbeca36d79"
+    },
+    {
+      "path": "source/review_encoded.py",
+      "bytes": 1735,
+      "sha256": "367c4cd871764cb77e14fe7114ddcd4f896d1563a2a44fb87f7f9f3df4059f5a"
+    },
+    {
+      "path": "source/score.json",
+      "bytes": 14009,
+      "sha256": "17a53b4af2091cb44341729d4094df190b3dfd28784cc718dbd4fe9df2fae417"
+    },
+    {
+      "path": "source/timeline.js",
+      "bytes": 7152,
+      "sha256": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5"
+    },
+    {
+      "path": "source/validate_media.py",
+      "bytes": 2377,
+      "sha256": "6b54f403620e9e9aedac80a3f62fcad1eb86c0787736424068f00d68bcb3f693"
+    },
+    {
+      "path": "source/verify.cjs",
+      "bytes": 4906,
+      "sha256": "edcfc98ae2f306af87719fc9c1b5ba928f1a339d9bb1b202b2d99a311ac2db78"
+    },
+    {
+      "path": "source/visual_review.cjs",
+      "bytes": 6207,
+      "sha256": "a5610ddc9ecb532a327901d4a7b162f1c3853f1b797ae80e08862e14da072abb"
+    },
+    {
+      "path": "storyboard.jpg",
+      "bytes": 513680,
+      "sha256": "d760dadf3e66967a1f3380e2e6acdbaaf1747ff381c24949d31eff7189e2c792"
+    },
+    {
+      "path": "validation.json",
+      "bytes": 15195,
+      "sha256": "05b05cabfa700875f42071cddce541b61b2e8aac41721cd39e5340b4884a5ecb"
+    },
+    {
+      "path": "yaoguai-type-wide-v14.mp4",
+      "bytes": 10003404,
+      "sha256": "55fdfa9bccc4fca3b7899cabaee9be3351c3844e0fd776f5b8910dbb9e8321f3"
+    }
+  ]
+}

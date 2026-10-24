@@ -1,0 +1,19 @@
+{
+  "name": "yaoguai-type-wide-v14",
+  "private": true,
+  "version": "1.0.0",
+  "description": "27-second 1920x1080 typography PV synced to the selected music excerpt",
+  "scripts": {
+    "stills": "node render.cjs --stills",
+    "preview:build": "python3 build_preview.py",
+    "render": "node render.cjs",
+    "verify": "node verify.cjs",
+    "review": "node visual_review.cjs",
+    "contact": "python3 make_contact.py",
+    "verify:media": "python3 validate_media.py",
+    "package": "python3 package_delivery.py"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

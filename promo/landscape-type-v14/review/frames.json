@@ -1,0 +1,1291 @@
+{
+  "version": "wide-v14",
+  "viewport": [
+    1920,
+    1080
+  ],
+  "fps": 60,
+  "source_hashes": {
+    "core.js": "bc4739c8906e909e95fbc739fa0f0dae3e9c31865662d778168619c23121c91e",
+    "act-one.js": "e6c3fdb154c1636c218b6a8c4b20aea77b0ee649a230cb8353bc258497a74332",
+    "act-two.js": "36c091c33fd71864a0d2b8bf523c8987ff2884c6a064cce317f729e8a9b44c2b",
+    "film.js": "d47fd711a961583c6ec03c0d317b7cf1fe1a02d542d507739499ea9b36723e94",
+    "timeline.js": "4b39fcd5d35d8b1161c44071394d817eca198f545b3174f313afbf73d05628e5",
+    "index.html": "ed29bc10170a7b0a0f46b2fe28200d799ffe4cfc3fab1184883b4286ea6b35e1",
+    "score.json": "17a53b4af2091cb44341729d4094df190b3dfd28784cc718dbd4fe9df2fae417"
+  },
+  "source_unchanged_during_capture": true,
+  "timing": {
+    "bridges": [
+      {
+        "k": 1,
+        "start": 2.68,
+        "end": 3.18,
+        "type": "ledger"
+      },
+      {
+        "k": 2,
+        "start": 5.86,
+        "end": 6.28,
+        "type": "paper"
+      },
+      {
+        "k": 3,
+        "start": 8.76,
+        "end": 9.2,
+        "type": "counter"
+      },
+      {
+        "k": 4,
+        "start": 12.35,
+        "end": 12.82,
+        "type": "corner"
+      },
+      {
+        "k": 7,
+        "start": 21.78,
+        "end": 22.38,
+        "type": "doors"
+      }
+    ],
+    "loopStart": 26.68,
+    "loopEnd": 26.96
+  },
+  "captures": [
+    {
+      "kind": "keyframe",
+      "time": 0,
+      "label": "叮叮当",
+      "file": "wide-v14-01-0.000.png",
+      "sha256": "1a9966d8b0450ce862abbb52bd558a701d416df805c4c2aa08aa5a472f25c35c",
+      "state": {
+        "time": 0,
+        "scene": 0,
+        "transition": null,
+        "lyric": ""
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 2.5,
+      "label": "算盘响",
+      "file": "wide-v14-02-2.500.png",
+      "sha256": "55c2033222118fa00c8930fbcb5046b9d7437c7e71daa74acf242f840fa60e23",
+      "state": {
+        "time": 2.5,
+        "scene": 0,
+        "transition": null,
+        "lyric": "算盘响"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 4.05,
+      "label": "山海伙伴",
+      "file": "wide-v14-03-4.050.png",
+      "sha256": "b1c02fe0ce04a2d1b56b4eeaca3066f594f9b7c611b1b4307ddf24ef935bea2b",
+      "state": {
+        "time": 4.05,
+        "scene": 1,
+        "transition": null,
+        "lyric": "山海伙伴"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 5.45,
+      "label": "来帮忙",
+      "file": "wide-v14-04-5.450.png",
+      "sha256": "ec0e6d87fe4b960415d6784cbaa4222dfca2549a6028ce291217d400dadb5b75",
+      "state": {
+        "time": 5.45,
+        "scene": 1,
+        "transition": null,
+        "lyric": "来帮忙"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 7.1,
+      "label": "你当掌柜",
+      "file": "wide-v14-05-7.100.png",
+      "sha256": "5cfe49afae25447548c432a4d16809da207d880c4ebe4700b87443764d50c4e0",
+      "state": {
+        "time": 7.1,
+        "scene": 2,
+        "transition": null,
+        "lyric": "你当掌柜"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 8.5,
+      "label": "我来跑堂",
+      "file": "wide-v14-06-8.500.png",
+      "sha256": "6b736fb18d747fd11c6e54720d6cef64e4d2dc12d2f6588a6f3bd03bfbdcf20e",
+      "state": {
+        "time": 8.5,
+        "scene": 2,
+        "transition": null,
+        "lyric": "我来跑堂"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 9.8,
+      "label": "小小客栈",
+      "file": "wide-v14-07-9.800.png",
+      "sha256": "c5d617da2898db03ece456d72118a5d00e8409c5be30143ab694df8a34d6486f",
+      "state": {
+        "time": 9.8,
+        "scene": 3,
+        "transition": null,
+        "lyric": "小小客栈"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 11.75,
+      "label": "大有名堂",
+      "file": "wide-v14-08-11.750.png",
+      "sha256": "af8dd0b666d9c7a04f24a1af03cfb88ed9e168381e0c96231a0517f72e354661",
+      "state": {
+        "time": 11.75,
+        "scene": 3,
+        "transition": null,
+        "lyric": "大有名堂"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 13.55,
+      "label": "来来来",
+      "file": "wide-v14-09-13.550.png",
+      "sha256": "31e615aec55afa5c0cf699dd03036e696674b420171faee25d8ad8106cd2c8a9",
+      "state": {
+        "time": 13.55,
+        "scene": 4,
+        "transition": null,
+        "lyric": "来来来"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 15.15,
+      "label": "坐坐坐",
+      "file": "wide-v14-10-15.150.png",
+      "sha256": "c9479d2f5686bae57c775a4b3dbcb537968aecbd187b18b4c7d9e57b28e5d92a",
+      "state": {
+        "time": 15.15,
+        "scene": 4,
+        "transition": null,
+        "lyric": "坐坐坐"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 16.8,
+      "label": "一桌烟火",
+      "file": "wide-v14-11-16.800.png",
+      "sha256": "dbf4d83e950a747851e8196361779cbb1f54c479d8311534e357d5f2177fc29f",
+      "state": {
+        "time": 16.8,
+        "scene": 5,
+        "transition": null,
+        "lyric": "一桌烟火"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 18.8,
+      "label": "热热闹闹",
+      "file": "wide-v14-12-18.800.png",
+      "sha256": "6794b67728dd61012cb09004756fd638726d0ceecd1abd4e51be37e71ec558e7",
+      "state": {
+        "time": 18.8,
+        "scene": 5,
+        "transition": null,
+        "lyric": "热热闹闹"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 20.65,
+      "label": "开张",
+      "file": "wide-v14-13-20.650.png",
+      "sha256": "af87abc274daa2049d6ec71d588291a526e0f9c8d82f182667bf6d655af8935e",
+      "state": {
+        "time": 20.65,
+        "scene": 6,
+        "transition": null,
+        "lyric": "开张"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 21.55,
+      "label": "开张",
+      "file": "wide-v14-14-21.550.png",
+      "sha256": "4b8830649eacab1a6ad96d8516086709e9c6ea1091c8480a4cdfb6fbd9b71695",
+      "state": {
+        "time": 21.55,
+        "scene": 6,
+        "transition": null,
+        "lyric": "开张"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 23.6,
+      "label": "妖怪客栈",
+      "file": "wide-v14-15-23.600.png",
+      "sha256": "36b2cd725770f17d32bc4fed841629130625cf9a3efe7a7bf58a96510a38de2a",
+      "state": {
+        "time": 23.6,
+        "scene": 7,
+        "transition": null,
+        "lyric": "妖怪客栈"
+      }
+    },
+    {
+      "kind": "keyframe",
+      "time": 25.6,
+      "label": "等你当家",
+      "file": "wide-v14-16-25.600.png",
+      "sha256": "4d86b775901880b4b6cfbda6974f38c97c52b8b9175ade7339e3d15f0f41ab3a",
+      "state": {
+        "time": 25.6,
+        "scene": 7,
+        "transition": null,
+        "lyric": "等你当家"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "ledger",
+      "time": 2.68,
+      "label": "1 / 6",
+      "group_title": "算盘横梁 → 山海伙伴",
+      "file": "wide-v14-17-2.680.png",
+      "sha256": "df819355506cb7cf875d55249a442255c1bc0bef2f4d8654c45a58a334598d89",
+      "state": {
+        "time": 2.68,
+        "scene": 0,
+        "transition": "ledger",
+        "lyric": "算盘响"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "ledger",
+      "time": 2.7800000000000002,
+      "label": "2 / 6",
+      "group_title": "算盘横梁 → 山海伙伴",
+      "file": "wide-v14-18-2.780.png",
+      "sha256": "d4b8dd03e4eb850a6ccfd76515f38153073da583be1c84d1ba5877775aa79f50",
+      "state": {
+        "time": 2.7800000000000002,
+        "scene": 0,
+        "transition": "ledger",
+        "lyric": "算盘响"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "ledger",
+      "time": 2.9000000000000004,
+      "label": "3 / 6",
+      "group_title": "算盘横梁 → 山海伙伴",
+      "file": "wide-v14-19-2.900.png",
+      "sha256": "2a8e6d79813e1425e35769e2bf9f76794c885dbb46e08bb0d575f7dc98208778",
+      "state": {
+        "time": 2.9000000000000004,
+        "scene": 0,
+        "transition": "ledger",
+        "lyric": "算盘响"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "ledger",
+      "time": 3.02,
+      "label": "4 / 6",
+      "group_title": "算盘横梁 → 山海伙伴",
+      "file": "wide-v14-20-3.020.png",
+      "sha256": "f46f3bfb8184a8af60860cce87aef1bc734c997364af2c77136b7185421ade8f",
+      "state": {
+        "time": 3.02,
+        "scene": 1,
+        "transition": "ledger",
+        "lyric": "山海伙伴"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "ledger",
+      "time": 3.16,
+      "label": "5 / 6",
+      "group_title": "算盘横梁 → 山海伙伴",
+      "file": "wide-v14-21-3.160.png",
+      "sha256": "5c6e0a5c7b1cbf4168acd8650376704830da03da0fc330087e58ed85e704851c",
+      "state": {
+        "time": 3.16,
+        "scene": 1,
+        "transition": "ledger",
+        "lyric": "山海伙伴"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "ledger",
+      "time": 3.18,
+      "label": "6 / 6",
+      "group_title": "算盘横梁 → 山海伙伴",
+      "file": "wide-v14-22-3.180.png",
+      "sha256": "898fe35ff0568d6b50218c5989944ae82510c8f6d606b10a014a73b4ec85b51d",
+      "state": {
+        "time": 3.18,
+        "scene": 1,
+        "transition": null,
+        "lyric": "山海伙伴"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "paper",
+      "time": 5.86,
+      "label": "1 / 4",
+      "group_title": "帮忙纸条 → 掌柜落位",
+      "file": "wide-v14-23-5.860.png",
+      "sha256": "ec0e6d87fe4b960415d6784cbaa4222dfca2549a6028ce291217d400dadb5b75",
+      "state": {
+        "time": 5.86,
+        "scene": 1,
+        "transition": "paper",
+        "lyric": "来帮忙"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "paper",
+      "time": 5.998600000000001,
+      "label": "2 / 4",
+      "group_title": "帮忙纸条 → 掌柜落位",
+      "file": "wide-v14-24-5.999.png",
+      "sha256": "df6c69fd62cf0949f23b5da8206a43fb722ca7904b35ffc4a232578ee57e80c4",
+      "state": {
+        "time": 5.998600000000001,
+        "scene": 1,
+        "transition": "paper",
+        "lyric": "来帮忙"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "paper",
+      "time": 6.1414,
+      "label": "3 / 4",
+      "group_title": "帮忙纸条 → 掌柜落位",
+      "file": "wide-v14-25-6.141.png",
+      "sha256": "e35b6fbc86a71183e76268cd36d37ffd3e21de1ee5b9a0a4e52fe4eee50d69f8",
+      "state": {
+        "time": 6.1414,
+        "scene": 2,
+        "transition": "paper",
+        "lyric": "来帮忙"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "paper",
+      "time": 6.28,
+      "label": "4 / 4",
+      "group_title": "帮忙纸条 → 掌柜落位",
+      "file": "wide-v14-26-6.280.png",
+      "sha256": "5ea33162cb0aa09f082390f1ec98a9ff06b04c21fabd2c9bb080bbfe17ab1501",
+      "state": {
+        "time": 6.28,
+        "scene": 2,
+        "transition": null,
+        "lyric": "你当掌柜"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "roles",
+      "time": 6.6,
+      "label": "1 / 6",
+      "group_title": "掌柜落定 / 跑堂错步",
+      "file": "wide-v14-27-6.600.png",
+      "sha256": "66f63ca882430b0797b922a7c18eb4602e6b9be3b319a19e761f50bdb6a0865d",
+      "state": {
+        "time": 6.6,
+        "scene": 2,
+        "transition": null,
+        "lyric": "你当掌柜"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "roles",
+      "time": 6.82,
+      "label": "2 / 6",
+      "group_title": "掌柜落定 / 跑堂错步",
+      "file": "wide-v14-28-6.820.png",
+      "sha256": "53026f309db6131aaca543e18ba32c7d270a421d2ec5d9d65d28e40f575e581c",
+      "state": {
+        "time": 6.82,
+        "scene": 2,
+        "transition": null,
+        "lyric": "你当掌柜"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "roles",
+      "time": 7.12,
+      "label": "3 / 6",
+      "group_title": "掌柜落定 / 跑堂错步",
+      "file": "wide-v14-29-7.120.png",
+      "sha256": "18eaa1b8845c797402e3857eda32493d9a167ea16ba177d17ca3fd855b0e06fd",
+      "state": {
+        "time": 7.12,
+        "scene": 2,
+        "transition": null,
+        "lyric": "你当掌柜"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "roles",
+      "time": 7.42,
+      "label": "4 / 6",
+      "group_title": "掌柜落定 / 跑堂错步",
+      "file": "wide-v14-30-7.420.png",
+      "sha256": "64d5defcc18fd1bd99620ec14a128ba378dffd1bd821f546ebe25fc6598522e3",
+      "state": {
+        "time": 7.42,
+        "scene": 2,
+        "transition": null,
+        "lyric": "我来跑堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "roles",
+      "time": 7.8,
+      "label": "5 / 6",
+      "group_title": "掌柜落定 / 跑堂错步",
+      "file": "wide-v14-31-7.800.png",
+      "sha256": "50169e3e1230e0c375b2b0a6c6c174e49340700621e2c77744809bd3e66f4c5b",
+      "state": {
+        "time": 7.8,
+        "scene": 2,
+        "transition": null,
+        "lyric": "我来跑堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "roles",
+      "time": 8.32,
+      "label": "6 / 6",
+      "group_title": "掌柜落定 / 跑堂错步",
+      "file": "wide-v14-32-8.320.png",
+      "sha256": "170a85967bb000fdc6797f389d514358441629a76714ea4a77e0bae954535110",
+      "state": {
+        "time": 8.32,
+        "scene": 2,
+        "transition": null,
+        "lyric": "我来跑堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "counter",
+      "time": 8.76,
+      "label": "1 / 4",
+      "group_title": "跑堂展开 → 小小客栈",
+      "file": "wide-v14-33-8.760.png",
+      "sha256": "701802664d9cb412a133e7fb6fee533e88f38b3d7381587f77a2d8854213ed5d",
+      "state": {
+        "time": 8.76,
+        "scene": 2,
+        "transition": "counter",
+        "lyric": "我来跑堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "counter",
+      "time": 8.905199999999999,
+      "label": "2 / 4",
+      "group_title": "跑堂展开 → 小小客栈",
+      "file": "wide-v14-34-8.905.png",
+      "sha256": "6102130423f128e19c3a6390d0af86f9c3ed2c0240c33603c9ba7e42c2a167af",
+      "state": {
+        "time": 8.905199999999999,
+        "scene": 2,
+        "transition": "counter",
+        "lyric": "我来跑堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "counter",
+      "time": 9.0548,
+      "label": "3 / 4",
+      "group_title": "跑堂展开 → 小小客栈",
+      "file": "wide-v14-35-9.055.png",
+      "sha256": "0b62d4644aa4fefc3cbf7271bbd44dd70655aa28857149168f4891a2b68cc090",
+      "state": {
+        "time": 9.0548,
+        "scene": 3,
+        "transition": "counter",
+        "lyric": "我来跑堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "counter",
+      "time": 9.2,
+      "label": "4 / 4",
+      "group_title": "跑堂展开 → 小小客栈",
+      "file": "wide-v14-36-9.200.png",
+      "sha256": "bfc1a1cbfe4c95528034dcd35c4b7c64ffb887566e841ebb78d3bcec17054d2c",
+      "state": {
+        "time": 9.2,
+        "scene": 3,
+        "transition": null,
+        "lyric": "小小客栈"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "gate",
+      "time": 12.35,
+      "label": "1 / 5",
+      "group_title": "大字纸角 → 邀请",
+      "file": "wide-v14-37-12.350.png",
+      "sha256": "1ead9713d1f4debe9f7d37b97f9c906f0d39aa208eb3fd30e55b96bfc7a9b8bb",
+      "state": {
+        "time": 12.35,
+        "scene": 3,
+        "transition": "corner",
+        "lyric": "大有名堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "gate",
+      "time": 12.4816,
+      "label": "2 / 5",
+      "group_title": "大字纸角 → 邀请",
+      "file": "wide-v14-38-12.482.png",
+      "sha256": "58c09ed6b4905a4d1f8fdec4b9f6d87de6bb2de86c176a7e3f4a8b0906909cd5",
+      "state": {
+        "time": 12.4816,
+        "scene": 3,
+        "transition": "corner",
+        "lyric": "大有名堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "gate",
+      "time": 12.5991,
+      "label": "3 / 5",
+      "group_title": "大字纸角 → 邀请",
+      "file": "wide-v14-39-12.599.png",
+      "sha256": "eb7ac7b230d87a037330dd1471878c1515b3508df31d5483a937a515171f8274",
+      "state": {
+        "time": 12.5991,
+        "scene": 4,
+        "transition": "corner",
+        "lyric": "大有名堂"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "gate",
+      "time": 12.7777,
+      "label": "4 / 5",
+      "group_title": "大字纸角 → 邀请",
+      "file": "wide-v14-40-12.778.png",
+      "sha256": "0afa337b77444985fa4f83c79b14aa67f8f37c5a965ff4d43f42d7bcea187829",
+      "state": {
+        "time": 12.7777,
+        "scene": 4,
+        "transition": "corner",
+        "lyric": "来来来"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "gate",
+      "time": 12.82,
+      "label": "5 / 5",
+      "group_title": "大字纸角 → 邀请",
+      "file": "wide-v14-41-12.820.png",
+      "sha256": "c249080c58c38ca1a51346bffc5315cd95b0d1d7489bde9af01126364da57d94",
+      "state": {
+        "time": 12.82,
+        "scene": 4,
+        "transition": null,
+        "lyric": "来来来"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "invitation",
+      "time": 12.8,
+      "label": "1 / 4",
+      "group_title": "来 → 坐 / 横向递进",
+      "file": "wide-v14-42-12.800.png",
+      "sha256": "f929a09de3d01878b215e92e769a7c07c93fa58f2a2fca33639775402d76c778",
+      "state": {
+        "time": 12.8,
+        "scene": 4,
+        "transition": "corner",
+        "lyric": "来来来"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "invitation",
+      "time": 13.16,
+      "label": "2 / 4",
+      "group_title": "来 → 坐 / 横向递进",
+      "file": "wide-v14-43-13.160.png",
+      "sha256": "f67845f92290b8574cc3b36a4990466c295f4a1e93244439a9d3168debb1b9d2",
+      "state": {
+        "time": 13.16,
+        "scene": 4,
+        "transition": null,
+        "lyric": "来来来"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "invitation",
+      "time": 13.55,
+      "label": "3 / 4",
+      "group_title": "来 → 坐 / 横向递进",
+      "file": "wide-v14-44-13.550.png",
+      "sha256": "31e615aec55afa5c0cf699dd03036e696674b420171faee25d8ad8106cd2c8a9",
+      "state": {
+        "time": 13.55,
+        "scene": 4,
+        "transition": null,
+        "lyric": "来来来"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "invitation",
+      "time": 14.24,
+      "label": "4 / 4",
+      "group_title": "来 → 坐 / 横向递进",
+      "file": "wide-v14-45-14.240.png",
+      "sha256": "9b11e49ea401c213c774f50d1d9a8ab8522a8e8ba7e3f96ce4c5784a3833aad3",
+      "state": {
+        "time": 14.24,
+        "scene": 4,
+        "transition": null,
+        "lyric": "坐坐坐"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "table",
+      "time": 15.4,
+      "label": "1 / 4",
+      "group_title": "座位横线 → 一桌烟火",
+      "file": "wide-v14-46-15.400.png",
+      "sha256": "0bbe7dcafae741eae45bf2536025a81aa34ddd1ecdc873f679c66162aad84e34",
+      "state": {
+        "time": 15.4,
+        "scene": 4,
+        "transition": null,
+        "lyric": "坐坐坐"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "table",
+      "time": 15.68,
+      "label": "2 / 4",
+      "group_title": "座位横线 → 一桌烟火",
+      "file": "wide-v14-47-15.680.png",
+      "sha256": "89123cd2927da3347bc77ed585ab58f629088df61dd78c3eb1e814ad8b22a1a3",
+      "state": {
+        "time": 15.68,
+        "scene": 5,
+        "transition": null,
+        "lyric": "坐坐坐"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "table",
+      "time": 16,
+      "label": "3 / 4",
+      "group_title": "座位横线 → 一桌烟火",
+      "file": "wide-v14-48-16.000.png",
+      "sha256": "31901b7b00c5a24d0c6d47fec70d8f8af46bfc55a90da37c16c99354d5c8557a",
+      "state": {
+        "time": 16,
+        "scene": 5,
+        "transition": null,
+        "lyric": "一桌烟火"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "table",
+      "time": 16.8,
+      "label": "4 / 4",
+      "group_title": "座位横线 → 一桌烟火",
+      "file": "wide-v14-49-16.800.png",
+      "sha256": "dbf4d83e950a747851e8196361779cbb1f54c479d8311534e357d5f2177fc29f",
+      "state": {
+        "time": 16.8,
+        "scene": 5,
+        "transition": null,
+        "lyric": "一桌烟火"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "bustle",
+      "time": 17.5,
+      "label": "1 / 4",
+      "group_title": "热热闹闹 / 字牌接力",
+      "file": "wide-v14-50-17.500.png",
+      "sha256": "eeb80f6c7ee17f4d9b7db9821dc38703b5eba987646cbda23684b5d8ff8e62ea",
+      "state": {
+        "time": 17.5,
+        "scene": 5,
+        "transition": null,
+        "lyric": "热热闹闹"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "bustle",
+      "time": 17.82,
+      "label": "2 / 4",
+      "group_title": "热热闹闹 / 字牌接力",
+      "file": "wide-v14-51-17.820.png",
+      "sha256": "4deb2768194fd91219c837f081e413ab8b03d638e35f9161a025d87bfdb695ab",
+      "state": {
+        "time": 17.82,
+        "scene": 5,
+        "transition": null,
+        "lyric": "热热闹闹"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "bustle",
+      "time": 18.15,
+      "label": "3 / 4",
+      "group_title": "热热闹闹 / 字牌接力",
+      "file": "wide-v14-52-18.150.png",
+      "sha256": "5fe1fe015ecf45868737be8d6a7a553ed00d59c4b6871d2372d4bdc2a77d2fca",
+      "state": {
+        "time": 18.15,
+        "scene": 5,
+        "transition": null,
+        "lyric": "热热闹闹"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "bustle",
+      "time": 18.4,
+      "label": "4 / 4",
+      "group_title": "热热闹闹 / 字牌接力",
+      "file": "wide-v14-53-18.400.png",
+      "sha256": "a90cc097ff53fb2f5290c2d51e62a0541ebbb3a525f54fcb238adb94d141ddb3",
+      "state": {
+        "time": 18.4,
+        "scene": 5,
+        "transition": null,
+        "lyric": "热热闹闹"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "opening",
+      "time": 19.5,
+      "label": "1 / 4",
+      "group_title": "字牌合拢 / 两次开张",
+      "file": "wide-v14-54-19.500.png",
+      "sha256": "2214564aa89936d6cd459aed4caa89f58c62149fad0875b72da6933902aebad0",
+      "state": {
+        "time": 19.5,
+        "scene": 5,
+        "transition": null,
+        "lyric": "热热闹闹"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "opening",
+      "time": 20.1,
+      "label": "2 / 4",
+      "group_title": "字牌合拢 / 两次开张",
+      "file": "wide-v14-55-20.100.png",
+      "sha256": "07d0f39bc63ab5cdc56d7fabd5d10a260c24545a360dd2f6a5e3bbe1e2207b99",
+      "state": {
+        "time": 20.1,
+        "scene": 6,
+        "transition": null,
+        "lyric": "开张"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "opening",
+      "time": 20.65,
+      "label": "3 / 4",
+      "group_title": "字牌合拢 / 两次开张",
+      "file": "wide-v14-56-20.650.png",
+      "sha256": "af87abc274daa2049d6ec71d588291a526e0f9c8d82f182667bf6d655af8935e",
+      "state": {
+        "time": 20.65,
+        "scene": 6,
+        "transition": null,
+        "lyric": "开张"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "opening",
+      "time": 21.55,
+      "label": "4 / 4",
+      "group_title": "字牌合拢 / 两次开张",
+      "file": "wide-v14-57-21.550.png",
+      "sha256": "4b8830649eacab1a6ad96d8516086709e9c6ea1091c8480a4cdfb6fbd9b71695",
+      "state": {
+        "time": 21.55,
+        "scene": 6,
+        "transition": null,
+        "lyric": "开张"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "doors",
+      "time": 21.78,
+      "label": "1 / 4",
+      "group_title": "开张推门 → 品牌横幅",
+      "file": "wide-v14-58-21.780.png",
+      "sha256": "1f0169a870f199a5392b0e38954531f3b6dae5b65a01fc3dede87562d439b8cc",
+      "state": {
+        "time": 21.78,
+        "scene": 6,
+        "transition": "doors",
+        "lyric": "开张"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "doors",
+      "time": 21.978,
+      "label": "2 / 4",
+      "group_title": "开张推门 → 品牌横幅",
+      "file": "wide-v14-59-21.978.png",
+      "sha256": "b17efe474d6036a4f07a108075bfd8faf9f6e9cf7687edeac7796b8849556c5a",
+      "state": {
+        "time": 21.978,
+        "scene": 6,
+        "transition": "doors",
+        "lyric": "开张"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "doors",
+      "time": 22.182,
+      "label": "3 / 4",
+      "group_title": "开张推门 → 品牌横幅",
+      "file": "wide-v14-60-22.182.png",
+      "sha256": "e4a42b58667dc83c4118bc6c12220bf57160fbaf081bdd6e61dea055c596c50f",
+      "state": {
+        "time": 22.182,
+        "scene": 7,
+        "transition": "doors",
+        "lyric": "妖怪客栈"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "doors",
+      "time": 22.38,
+      "label": "4 / 4",
+      "group_title": "开张推门 → 品牌横幅",
+      "file": "wide-v14-61-22.380.png",
+      "sha256": "ba807fcf8bbfe8428abb9a5a06ae2e1f0c4f2bd4ffdc67ee916648c01ba4af48",
+      "state": {
+        "time": 22.38,
+        "scene": 7,
+        "transition": null,
+        "lyric": "妖怪客栈"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "loop",
+      "time": 26.68,
+      "label": "1 / 4",
+      "group_title": "片尾落款 → 片头",
+      "file": "wide-v14-62-26.680.png",
+      "sha256": "4d86b775901880b4b6cfbda6974f38c97c52b8b9175ade7339e3d15f0f41ab3a",
+      "state": {
+        "time": 26.68,
+        "scene": 7,
+        "transition": "seal-loop",
+        "lyric": "等你当家"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "loop",
+      "time": 26.76,
+      "label": "2 / 4",
+      "group_title": "片尾落款 → 片头",
+      "file": "wide-v14-63-26.760.png",
+      "sha256": "e128b8eaac2aa1974f8fe4ac11c0ca9cd4e4637a0876e8ddbe1182033cf04317",
+      "state": {
+        "time": 26.76,
+        "scene": 7,
+        "transition": "seal-loop",
+        "lyric": "等你当家"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "loop",
+      "time": 26.86,
+      "label": "3 / 4",
+      "group_title": "片尾落款 → 片头",
+      "file": "wide-v14-64-26.860.png",
+      "sha256": "8d170b560ffdb078a825582c48abade26d3bb4ce8964101b85c0ee84c6e67601",
+      "state": {
+        "time": 26.86,
+        "scene": 7,
+        "transition": "seal-loop",
+        "lyric": "等你当家"
+      }
+    },
+    {
+      "kind": "motion",
+      "group": "loop",
+      "time": 26.96,
+      "label": "4 / 4",
+      "group_title": "片尾落款 → 片头",
+      "file": "wide-v14-65-26.960.png",
+      "sha256": "1a9966d8b0450ce862abbb52bd558a701d416df805c4c2aa08aa5a472f25c35c",
+      "state": {
+        "time": 26.96,
+        "scene": 7,
+        "transition": "seal-loop",
+        "lyric": "等你当家"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "ledger",
+      "title": "算盘横梁 → 山海伙伴",
+      "count": 6
+    },
+    {
+      "id": "paper",
+      "title": "帮忙纸条 → 掌柜落位",
+      "count": 4
+    },
+    {
+      "id": "roles",
+      "title": "掌柜落定 / 跑堂错步",
+      "count": 6
+    },
+    {
+      "id": "counter",
+      "title": "跑堂展开 → 小小客栈",
+      "count": 4
+    },
+    {
+      "id": "gate",
+      "title": "大字纸角 → 邀请",
+      "count": 5
+    },
+    {
+      "id": "invitation",
+      "title": "来 → 坐 / 横向递进",
+      "count": 4
+    },
+    {
+      "id": "table",
+      "title": "座位横线 → 一桌烟火",
+      "count": 4
+    },
+    {
+      "id": "bustle",
+      "title": "热热闹闹 / 字牌接力",
+      "count": 4
+    },
+    {
+      "id": "opening",
+      "title": "字牌合拢 / 两次开张",
+      "count": 4
+    },
+    {
+      "id": "doors",
+      "title": "开张推门 → 品牌横幅",
+      "count": 4
+    },
+    {
+      "id": "loop",
+      "title": "片尾落款 → 片头",
+      "count": 4
+    }
+  ],
+  "measurements": {
+    "loop": {
+      "before_seconds": 0,
+      "after_seconds": 27,
+      "changedPixels": 0,
+      "totalPixels": 2073600,
+      "meanRGBDelta": 0,
+      "maxChannelDelta": 0,
+      "exact": true
+    },
+    "epsilon_seconds": 0.000001,
+    "continuity": [
+      {
+        "kind": "bridge-start",
+        "label": "ledger start",
+        "boundary_seconds": 2.68,
+        "before_seconds": 2.679999,
+        "after_seconds": 2.6800010000000003,
+        "changedPixels": 2027,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.028743248456790122,
+        "maxChannelDelta": 40
+      },
+      {
+        "kind": "scene-cut",
+        "label": "scene cut",
+        "boundary_seconds": 2.92,
+        "before_seconds": 2.919999,
+        "after_seconds": 2.920001,
+        "changedPixels": 730,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.00022489068930041153,
+        "maxChannelDelta": 3
+      },
+      {
+        "kind": "bridge-end",
+        "label": "ledger end",
+        "boundary_seconds": 3.18,
+        "before_seconds": 3.179999,
+        "after_seconds": 3.1800010000000003,
+        "changedPixels": 381,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.0001345486111111111,
+        "maxChannelDelta": 4
+      },
+      {
+        "kind": "bridge-start",
+        "label": "paper start",
+        "boundary_seconds": 5.86,
+        "before_seconds": 5.859999,
+        "after_seconds": 5.8600010000000005,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0
+      },
+      {
+        "kind": "scene-cut",
+        "label": "scene cut",
+        "boundary_seconds": 6.1,
+        "before_seconds": 6.0999989999999995,
+        "after_seconds": 6.100001,
+        "changedPixels": 1702,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.0007015174897119341,
+        "maxChannelDelta": 3
+      },
+      {
+        "kind": "bridge-end",
+        "label": "paper end",
+        "boundary_seconds": 6.28,
+        "before_seconds": 6.279999,
+        "after_seconds": 6.280001,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0
+      },
+      {
+        "kind": "bridge-start",
+        "label": "counter start",
+        "boundary_seconds": 8.76,
+        "before_seconds": 8.759999,
+        "after_seconds": 8.760000999999999,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0
+      },
+      {
+        "kind": "scene-cut",
+        "label": "scene cut",
+        "boundary_seconds": 8.98,
+        "before_seconds": 8.979999000000001,
+        "after_seconds": 8.980001,
+        "changedPixels": 1836,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.0006830311213991769,
+        "maxChannelDelta": 2
+      },
+      {
+        "kind": "bridge-end",
+        "label": "counter end",
+        "boundary_seconds": 9.2,
+        "before_seconds": 9.199999,
+        "after_seconds": 9.200000999999999,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0
+      },
+      {
+        "kind": "bridge-start",
+        "label": "corner start",
+        "boundary_seconds": 12.35,
+        "before_seconds": 12.349999,
+        "after_seconds": 12.350000999999999,
+        "changedPixels": 4104,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.0070836548353909465,
+        "maxChannelDelta": 9
+      },
+      {
+        "kind": "scene-cut",
+        "label": "scene cut",
+        "boundary_seconds": 12.56,
+        "before_seconds": 12.559999000000001,
+        "after_seconds": 12.560001,
+        "changedPixels": 2510,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.001077514146090535,
+        "maxChannelDelta": 6
+      },
+      {
+        "kind": "bridge-end",
+        "label": "corner end",
+        "boundary_seconds": 12.82,
+        "before_seconds": 12.819999000000001,
+        "after_seconds": 12.820001,
+        "changedPixels": 1362,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.001598508230452675,
+        "maxChannelDelta": 45
+      },
+      {
+        "kind": "scene-cut",
+        "label": "scene cut",
+        "boundary_seconds": 15.68,
+        "before_seconds": 15.679999,
+        "after_seconds": 15.680000999999999,
+        "changedPixels": 72,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.0000329539609053498,
+        "maxChannelDelta": 2
+      },
+      {
+        "kind": "scene-cut",
+        "label": "scene cut",
+        "boundary_seconds": 20,
+        "before_seconds": 19.999999,
+        "after_seconds": 20.000001,
+        "changedPixels": 424,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.00007490997942386831,
+        "maxChannelDelta": 2
+      },
+      {
+        "kind": "bridge-start",
+        "label": "doors start",
+        "boundary_seconds": 21.78,
+        "before_seconds": 21.779999,
+        "after_seconds": 21.780001000000002,
+        "changedPixels": 5028,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.007696598508230452,
+        "maxChannelDelta": 19
+      },
+      {
+        "kind": "scene-cut",
+        "label": "scene cut",
+        "boundary_seconds": 22.02,
+        "before_seconds": 22.019999,
+        "after_seconds": 22.020001,
+        "changedPixels": 4789,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.0021799447016460907,
+        "maxChannelDelta": 9
+      },
+      {
+        "kind": "bridge-end",
+        "label": "doors end",
+        "boundary_seconds": 22.38,
+        "before_seconds": 22.379998999999998,
+        "after_seconds": 22.380001,
+        "changedPixels": 40,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0.00001398533950617284,
+        "maxChannelDelta": 2
+      },
+      {
+        "kind": "visual-loop-start",
+        "label": "loop start",
+        "boundary_seconds": 26.68,
+        "before_seconds": 26.679999,
+        "after_seconds": 26.680001,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0
+      },
+      {
+        "kind": "visual-loop-end",
+        "label": "loop end",
+        "boundary_seconds": 26.96,
+        "before_seconds": 26.959999,
+        "after_seconds": 26.960001000000002,
+        "changedPixels": 0,
+        "totalPixels": 2073600,
+        "meanRGBDelta": 0,
+        "maxChannelDelta": 0
+      }
+    ],
+    "title_hold": {
+      "before_seconds": 25.06,
+      "after_seconds": 26.66,
+      "changedPixels": 0,
+      "totalPixels": 2073600,
+      "meanRGBDelta": 0,
+      "maxChannelDelta": 0
+    }
+  },
+  "errors": [],
+  "review_status": "Frames captured; visual assessment is recorded separately.",
+  "measurement_scope": "Deterministic Canvas frames before lossy encoding; epsilon deltas do not measure perceived motion quality.",
+  "limitations": "These samples are not a full-video audio-listening review; visual loops do not imply seamless audio."
+}
